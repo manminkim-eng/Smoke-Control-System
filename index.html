@@ -147,15 +147,17 @@ button{cursor:pointer;}
 .hdr-right .accent{color:#90cdf4;font-size:10px;margin-top:4px;}
 /* ══ PWA 설치 버튼 ══ */
 .pwa-install-btn{
-  display:none;align-items:center;gap:7px;
+  display:none; /* JS: style.display='flex' 로 표시 */
+  align-items:center;gap:7px;
   background:linear-gradient(135deg,rgba(49,130,206,.25),rgba(99,179,237,.18));
   border:1.5px solid rgba(99,179,237,.55);
   color:#90cdf4;padding:7px 14px;border-radius:10px;
   font-size:12px;font-weight:800;font-family:'Noto Sans KR',sans-serif;
   cursor:pointer;letter-spacing:.02em;flex-shrink:0;
-  transition:all .2s;
+  transition:background .2s,box-shadow .2s,transform .2s,border-color .2s;
   animation:pwa-pulse 2.8s ease-in-out infinite;
 }
+.pwa-install-btn.visible{display:flex;}
 .pwa-install-btn:hover{
   background:linear-gradient(135deg,#2b6cb0,#3182ce);
   color:#fff;border-color:#63b3ed;animation:none;
@@ -178,7 +180,12 @@ button{cursor:pointer;}
   border-top:2px solid rgba(99,179,237,.4);
   padding:14px 20px;
   box-shadow:0 -6px 30px rgba(0,0,0,.5);
-  animation:bannerUp .35s ease;
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+#pwa-banner.visible{
+  display:block; /* 먼저 block */
+  transform:translateY(0);
 }
 @keyframes bannerUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
 .pwa-banner-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:14px;}
@@ -209,12 +216,19 @@ button{cursor:pointer;}
   .pwa-btn-ok{padding:8px 14px;font-size:12px;}
 }
 #sw-update-bar{
-  display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  display:flex; /* 항상 flex, visibility로 표시 제어 */
+  visibility:hidden;pointer-events:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:9999;
   background:linear-gradient(135deg,#1a3a5c,#2b6cb0);
   color:#fff;padding:11px 18px;
   align-items:center;justify-content:space-between;gap:10px;
   font-size:12px;font-weight:700;
   box-shadow:0 -4px 16px rgba(0,0,0,.4);
+  transition:visibility .0s,opacity .2s;
+  opacity:0;
+}
+#sw-update-bar.visible{
+  visibility:visible;pointer-events:auto;opacity:1;
 }
 .sw-upd-btn{
   background:#90cdf4;color:#0d1f33;border:none;
@@ -2204,104 +2218,178 @@ function bindLive(id, fn) {
 /* ════════════════════════════════════════════════
    PWA — Service Worker + Install Prompt
    제연설비 설계 계산서 MANMIN Ver-3.0
+   ── 수정 이력 ──
+   · display:none/flex 충돌 → visible class 방식으로 통일
+   · #sw-update-bar flex 레이아웃 분리 (display:flex + visibility)
+   · #pwa-banner CSS transition 방식으로 슬라이드 애니메이션
+   · alert() 내 raw 개행 제거 → \n 이스케이프
+   · standalone 즉시 감지 (DOMContentLoaded 대기 없이)
+   · userChoice 후 설치 거부 시에도 _prompt 초기화
 ════════════════════════════════════════════════ */
 (function(){
+  'use strict';
   var _prompt = null;
 
-  /* ── Service Worker 등록 ── */
+  /* ── 헬퍼: 요소 가져오기 ── */
+  function $id(id){ return document.getElementById(id); }
+
+  /* ── 헬퍼: standalone 여부 ── */
+  function isStandalone(){
+    return window.matchMedia('(display-mode:standalone)').matches
+        || window.navigator.standalone === true;
+  }
+
+  /* ── 헬퍼: 헤더 버튼 표시/숨김 ── */
+  function showHdrBtn(){
+    var btn = $id('pwa-hdr-btn');
+    if(btn) btn.style.display = 'flex';
+  }
+  function hideHdrBtn(){
+    var btn = $id('pwa-hdr-btn');
+    if(btn) btn.style.display = 'none';
+  }
+
+  /* ── 헬퍼: 배너 표시/숨김 (슬라이드 애니메이션) ── */
+  function showBanner(){
+    var b = $id('pwa-banner');
+    if(!b) return;
+    b.style.display = 'block';
+    /* reflow 강제 후 transform 전환 시작 */
+    void b.offsetWidth;
+    b.style.transform = 'translateY(0)';
+  }
+  function hideBanner(){
+    var b = $id('pwa-banner');
+    if(!b) return;
+    b.style.transform = 'translateY(100%)';
+    setTimeout(function(){ b.style.display = 'none'; }, 350);
+  }
+
+  /* ── 헬퍼: SW 업데이트 바 표시/숨김 ── */
+  function showUpdateBar(){
+    var bar = $id('sw-update-bar');
+    if(bar) bar.classList.add('visible');
+  }
+  function hideUpdateBar(){
+    var bar = $id('sw-update-bar');
+    if(bar) bar.classList.remove('visible');
+  }
+
+  /* ════ Service Worker 등록 ════ */
   if('serviceWorker' in navigator){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('./sw.js').then(function(reg){
-        console.log('[SW] 등록 완료:', reg.scope);
-        reg.addEventListener('updatefound', function(){
-          var nw = reg.installing;
-          if(!nw) return;
-          nw.addEventListener('statechange', function(){
-            if(nw.state === 'installed' && navigator.serviceWorker.controller){
-              var bar = document.getElementById('sw-update-bar');
-              if(bar){ bar.style.display = 'flex'; }
-            }
+      navigator.serviceWorker.register('./sw.js')
+        .then(function(reg){
+          console.log('[SW] 등록 완료 scope:', reg.scope);
+          reg.addEventListener('updatefound', function(){
+            var nw = reg.installing;
+            if(!nw) return;
+            nw.addEventListener('statechange', function(){
+              /* 새 SW 설치 완료 + 기존 SW 활성 중 → 업데이트 알림 */
+              if(nw.state === 'installed' && navigator.serviceWorker.controller){
+                showUpdateBar();
+              }
+            });
           });
+        })
+        .catch(function(err){
+          console.warn('[SW] 등록 실패:', err);
         });
-      }).catch(function(e){ console.warn('[SW] 등록 실패:', e); });
     });
   }
 
-  /* ── beforeinstallprompt 캐치 ── */
+  /* ════ beforeinstallprompt — 설치 프롬프트 저장 ════ */
   window.addEventListener('beforeinstallprompt', function(e){
-    e.preventDefault();
+    e.preventDefault();         /* 브라우저 자동 프롬프트 차단 */
     _prompt = e;
-    var hdrBtn = document.getElementById('pwa-hdr-btn');
-    if(hdrBtn) hdrBtn.style.display = 'flex';
-    if(!sessionStorage.getItem('pwa-dismissed')){
-      setTimeout(function(){
-        var banner = document.getElementById('pwa-banner');
-        if(banner) banner.style.display = 'block';
-      }, 2800);
+    showHdrBtn();               /* 헤더 설치 버튼 표시 */
+    /* 배너: 이미 닫은 적 없으면 2.8초 후 표시 */
+    if(!sessionStorage.getItem('pwa-banner-dismissed')){
+      setTimeout(showBanner, 2800);
     }
+    console.log('[PWA] beforeinstallprompt 저장 완료');
   });
 
-  /* ── 설치 실행 ── */
+  /* ════ 설치 실행 함수 (헤더 버튼 · 배너 버튼 공용) ════ */
   window.pwaTriggerInstall = function(src){
-    var banner = document.getElementById('pwa-banner');
-    if(banner) banner.style.display = 'none';
-    if(!_prompt){
-      var standalone = window.matchMedia('(display-mode:standalone)').matches
-                    || window.navigator.standalone === true;
-      if(standalone){
-        alert('✅ 이미 앱으로 설치되어 있습니다.');
-      } else {
-        alert('📱 수동 설치 방법
+    hideBanner();
+    console.log('[PWA] Install triggered from:', src);
 
-• Android Chrome: 주소창 오른쪽 메뉴 → "앱 설치"
-• iPhone Safari: 하단 공유 버튼 → "홈 화면에 추가"
-• PC Chrome/Edge: 주소창 오른쪽 설치 아이콘 클릭');
+    if(!_prompt){
+      /* prompt 없음 → 이미 설치됐거나 브라우저 미지원 */
+      if(isStandalone()){
+        alert('\u2705 이미 앱으로 설치되어 있습니다.');
+      } else {
+        alert(
+          '\ud83d\udcf1 수동 설치 방법\n\n' +
+          '\u2022 Android Chrome : 주소창 오른쪽 \u2807 메뉴 \u2192 [앱 설치]\n' +
+          '\u2022 iPhone Safari  : 하단 공유 \u2191 버튼 \u2192 [홈 화면에 추가]\n' +
+          '\u2022 PC Chrome/Edge : 주소창 오른쪽 \u229e 설치 아이콘 클릭'
+        );
       }
       return;
     }
+
+    /* 설치 다이얼로그 표시 */
     _prompt.prompt();
-    _prompt.userChoice.then(function(r){
-      if(r.outcome === 'accepted'){
-        var hdrBtn = document.getElementById('pwa-hdr-btn');
-        if(hdrBtn) hdrBtn.style.display = 'none';
-      }
-      _prompt = null;
-    });
+    _prompt.userChoice
+      .then(function(result){
+        console.log('[PWA] userChoice:', result.outcome);
+        if(result.outcome === 'accepted'){
+          hideHdrBtn();
+          console.log('[PWA] 설치 승인됨');
+        } else {
+          console.log('[PWA] 설치 거부됨');
+        }
+      })
+      .catch(function(err){
+        console.warn('[PWA] userChoice 오류:', err);
+      })
+      .finally(function(){
+        _prompt = null;   /* 재사용 불가 → 반드시 초기화 */
+      });
   };
 
-  /* ── 배너 닫기 ── */
+  /* ════ 배너 닫기 ════ */
   window.pwaDismiss = function(){
-    var banner = document.getElementById('pwa-banner');
-    if(banner) banner.style.display = 'none';
-    try{ sessionStorage.setItem('pwa-dismissed','1'); }catch(e){}
+    hideBanner();
+    try{ sessionStorage.setItem('pwa-banner-dismissed','1'); }catch(e){}
   };
 
-  /* ── SW 업데이트 ── */
+  /* ════ SW 업데이트 적용 ════ */
   window.swDoUpdate = function(){
-    navigator.serviceWorker.ready.then(function(reg){
-      if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
+    hideUpdateBar();
+    navigator.serviceWorker.ready
+      .then(function(reg){
+        if(reg.waiting){
+          reg.waiting.postMessage({type:'SKIP_WAITING'});
+        }
+      })
+      .catch(function(e){ console.warn('[SW] ready 오류:', e); });
+    /* SW 컨트롤러 교체 감지 후 리로드 */
+    navigator.serviceWorker.addEventListener('controllerchange', function(){
+      location.reload();
     });
-    var bar = document.getElementById('sw-update-bar');
-    if(bar) bar.style.display = 'none';
-    location.reload();
   };
 
-  /* ── 설치 완료 시 버튼·배너 제거 ── */
+  /* ════ 앱 설치 완료 이벤트 ════ */
   window.addEventListener('appinstalled', function(){
-    var hdrBtn = document.getElementById('pwa-hdr-btn');
-    if(hdrBtn) hdrBtn.style.display = 'none';
-    var banner = document.getElementById('pwa-banner');
-    if(banner) banner.style.display = 'none';
+    hideHdrBtn();
+    hideBanner();
     _prompt = null;
+    console.log('[PWA] 앱 설치 완료!');
   });
 
-  /* ── standalone 모드 → 버튼 숨김 ── */
-  if(window.matchMedia('(display-mode:standalone)').matches || window.navigator.standalone === true){
-    document.addEventListener('DOMContentLoaded', function(){
-      var hdrBtn = document.getElementById('pwa-hdr-btn');
-      if(hdrBtn) hdrBtn.style.display = 'none';
-    });
+  /* ════ 이미 standalone이면 즉시 버튼 숨김 ════ */
+  if(isStandalone()){
+    /* DOM 준비 여부 무관하게 즉시 처리 */
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', hideHdrBtn);
+    } else {
+      hideHdrBtn();
+    }
   }
+
 })();
 </script>
 </body>
