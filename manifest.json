@@ -1,0 +1,150 @@
+{
+  "name": "제연설비 설계 계산서 — NFTC 501 MANMIN Ver-3.0",
+  "short_name": "제연설비",
+  "description": "제연설비의 화재안전기술기준 NFTC 501 (2024.10.1 시행) 적용 배출량·풍도·전원 설계 계산 웹앱 — ENGINEER KIM MANMIN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1f33",
+  "theme_color": "#1e3a5f",
+  "lang": "ko",
+  "dir": "ltr",
+  "categories": ["utilities", "productivity", "education"],
+  "icons": [
+    {
+      "src": "./icons/icon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "제연설비 설계 계산서 — 모바일"
+    },
+    {
+      "src": "./icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "제연설비 설계 계산서 — 데스크탑"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "제연설비",
+      "short_name": "제연설비",
+      "description": "NFTC 501 제연설비 설계 계산서 바로 실행",
+      "url": "./index.html",
+      "icons": [
+        { "src": "./icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "배출량 계산",
+      "short_name": "배출량",
+      "description": "합리식 기반 배출량 산정",
+      "url": "./index.html#calc",
+      "icons": [
+        { "src": "./icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "풍도 설계",
+      "short_name": "풍도",
+      "description": "덕트 단면적 및 풍속 검토",
+      "url": "./index.html#duct",
+      "icons": [
+        { "src": "./icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "법규 요람",
+      "short_name": "법규",
+      "description": "NFTC 501 핵심 기준 조항",
+      "url": "./index.html#law",
+      "icons": [
+        { "src": "./icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

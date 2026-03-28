@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>제연설비 설계 계산서 — NFTC 501</title>
+<meta name="theme-color" content="#1e3a5f"/>
+<meta name="description" content="제연설비의 화재안전기술기준 NFTC 501 (2024.10.1 시행) 적용 설계 계산서 — MANMIN Ver-3.0"/>
+<!-- ══ PWA Manifest ══ -->
+<link rel="manifest" href="./manifest.json"/>
+<!-- ══ iOS PWA ══ -->
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="제연설비"/>
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png"/>
+<link rel="apple-touch-icon" sizes="152x152" href="./icons/icon-152x152.png"/>
+<link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192x192.png"/>
+<!-- ══ Favicon ══ -->
+<link rel="icon" type="image/x-icon" href="./icons/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="./icons/icon-16x16.png"/>
+<!-- ══ Windows Tile ══ -->
+<meta name="msapplication-TileColor" content="#1e3a5f"/>
+<meta name="msapplication-TileImage" content="./icons/icon-144x144.png"/>
+<!-- ══ OG / SNS ══ -->
+<meta property="og:title" content="제연설비 설계 계산서 — NFTC 501 MANMIN Ver-3.0"/>
+<meta property="og:description" content="제연설비의 화재안전기술기준 NFTC 501 기반 배출량·풍도·전원 설계 계산 웹앱"/>
+<meta property="og:image" content="./icons/icon-512x512.png"/>
+<meta property="og:type" content="website"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Noto+Sans+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+/* ════════════════════════════════════════════════
+   0. RESET & BASE
+════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background:#1a2332;
+  color:#e2e8f0;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+input,select,button,td,th,div,span,p,h1,h2,h3,label{
+  font-family:'Noto Sans KR',sans-serif !important;
+}
+input[type=number]::-webkit-inner-spin-button{opacity:.4;}
+button{cursor:pointer;}
+
+/* ════════════════════════════════════════════════
+   1. PRINT — 완전 격리 출력
+   전략: body * visibility:hidden → #print-zone만 visible 복원
+         position:absolute(top:0) 방식으로 페이지 흐름에 따라 출력
+         ※ position:fixed 는 다중 페이지 출력 시 1페이지만 반복되는 버그 유발
+════════════════════════════════════════════════ */
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:14mm 12mm 22mm 14mm;
+  }
+  /* Step 1: 모든 것 숨김 */
+  html { background:white !important; }
+  body { background:white !important; margin:0 !important; padding:0 !important; }
+  body > * { display:none !important; }
+  /* Step 2: 인쇄 전용 구역만 표시 */
+  #print-zone { display:block !important; }
+  #print-zone * { visibility:visible !important; }
+  /* Step 3: 정상 흐름으로 A4 출력 — fixed 사용 금지 */
+  #print-zone {
+    visibility:visible !important;
+    position:static !important;
+    width:100% !important;
+    height:auto !important;
+    background:white !important;
+    padding:0 !important;
+    margin:0 !important;
+    overflow:visible !important;
+  }
+  /* Step 4: 계산서 본문 스타일 */
+  #print-zone #rpt-print-doc {
+    font-family:'Noto Sans KR',sans-serif !important;
+    font-size:10.5pt !important;
+    line-height:1.65 !important;
+    color:#111 !important;
+    background:white !important;
+    width:100% !important;
+  }
+  /* Step 5: 컬러 강제 인쇄 - 인라인 스타일 배경색 포함 */
+  * {
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+    color-adjust:exact !important;
+  }
+  /* TH는 인라인 스타일로 #1e3a5f 지정되어 있으나 혹시 모를 덮어쓰기 방지 */
+  #print-zone table th {
+    background:#1e3a5f !important;
+    color:white !important;
+  }
+  #print-zone tr:nth-child(even) td {
+    background:#f8fafc !important;
+  }
+  /* 페이지 분리 방지 */
+  .no-break { break-inside:avoid; page-break-inside:avoid; }
+  table { break-inside:auto; }
+  tr { break-inside:avoid; }
+  /* 인쇄 시 report-zone 패딩/그림자 제거 (@page margin이 여백 처리) */
+  #report-zone {
+    padding:0 !important;
+    margin:0 !important;
+    box-shadow:none !important;
+    border:none !important;
+    border-radius:0 !important;
+    width:100% !important;
+  }
+  .rpt-outer, .rpt-inner { background:white !important; padding:0 !important; overflow:visible !important; border-radius:0 !important; }
+  .rpt-hint { display:none !important; }
+  /* 링크 URL 숨김 */
+  a::after { content:none !important; }
+}
+/* 화면에서 print-zone 숨김 */
+#print-zone { display:none; }
+
+/* ════════════════════════════════════════════════
+   2. HEADER (옥외소화전 원본 동일 구조)
+════════════════════════════════════════════════ */
+.site-header{
+  background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 55%,#1a3050 100%);
+  color:white;padding:20px 0 0;
+  position:sticky;top:0;z-index:800;
+  box-shadow:0 4px 24px rgba(0,0,0,.55);
+}
+.hdr-inner{max-width:1300px;margin:0 auto;padding:0 24px;}
+.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.hdr-eng{font-size:11px;font-weight:600;opacity:.7;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.hdr-h1{font-size:26px;font-weight:900;letter-spacing:.03em;line-height:1.2;}
+.hdr-desc{font-size:11px;margin-top:8px;opacity:.85;letter-spacing:.02em;}
+.hdr-manmin{
+  font-family:'Orbitron',sans-serif !important;
+  font-weight:900;font-size:12px;color:#90cdf4;
+  letter-spacing:.08em;text-shadow:0 0 8px rgba(144,205,244,.6);
+}
+.hdr-right{text-align:right;opacity:.75;font-size:11px;flex-shrink:0;margin-left:12px;}
+.hdr-right b{font-size:13px;font-weight:700;display:block;}
+.hdr-right .accent{color:#90cdf4;font-size:10px;margin-top:4px;}
+/* ══ PWA 설치 버튼 ══ */
+.pwa-install-btn{
+  display:none;align-items:center;gap:7px;
+  background:linear-gradient(135deg,rgba(49,130,206,.25),rgba(99,179,237,.18));
+  border:1.5px solid rgba(99,179,237,.55);
+  color:#90cdf4;padding:7px 14px;border-radius:10px;
+  font-size:12px;font-weight:800;font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;letter-spacing:.02em;flex-shrink:0;
+  transition:all .2s;
+  animation:pwa-pulse 2.8s ease-in-out infinite;
+}
+.pwa-install-btn:hover{
+  background:linear-gradient(135deg,#2b6cb0,#3182ce);
+  color:#fff;border-color:#63b3ed;animation:none;
+  box-shadow:0 4px 18px rgba(49,130,206,.5);
+  transform:translateY(-1px);
+}
+.pwa-install-btn .pwa-icon{font-size:16px;line-height:1;}
+@keyframes pwa-pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(99,179,237,0);}
+  50%{box-shadow:0 0 0 5px rgba(99,179,237,.2);}
+}
+@media(max-width:600px){
+  .pwa-install-btn .pwa-txt{display:none;}
+  .pwa-install-btn{padding:7px 9px;gap:0;}
+}
+/* ══ PWA 하단 설치 배너 ══ */
+#pwa-banner{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:9998;
+  background:linear-gradient(135deg,#0d1f33,#1e3a5f);
+  border-top:2px solid rgba(99,179,237,.4);
+  padding:14px 20px;
+  box-shadow:0 -6px 30px rgba(0,0,0,.5);
+  animation:bannerUp .35s ease;
+}
+@keyframes bannerUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.pwa-banner-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:14px;}
+.pwa-banner-icon{width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 4px 14px rgba(0,0,0,.4);}
+.pwa-banner-icon img{width:100%;height:100%;object-fit:cover;}
+.pwa-banner-texts{flex:1;min-width:0;}
+.pwa-banner-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:3px;}
+.pwa-banner-sub{font-size:11px;color:#90cdf4;opacity:.9;}
+.pwa-banner-btns{display:flex;gap:9px;flex-shrink:0;}
+.pwa-btn-ok{
+  background:linear-gradient(135deg,#2b6cb0,#3182ce);
+  color:#fff;border:none;padding:9px 18px;
+  border-radius:9px;font-size:13px;font-weight:800;
+  cursor:pointer;font-family:inherit;
+  box-shadow:0 3px 12px rgba(49,130,206,.45);transition:all .15s;
+}
+.pwa-btn-ok:hover{background:linear-gradient(135deg,#1e4e8c,#2b6cb0);}
+.pwa-btn-x{
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.15);padding:9px 13px;
+  border-radius:9px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:all .15s;
+}
+.pwa-btn-x:hover{background:rgba(255,255,255,.18);color:#fff;}
+@media(max-width:500px){
+  .pwa-banner-inner{gap:10px;}
+  .pwa-banner-icon{width:42px;height:42px;border-radius:10px;}
+  .pwa-btn-ok{padding:8px 14px;font-size:12px;}
+}
+#sw-update-bar{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  background:linear-gradient(135deg,#1a3a5c,#2b6cb0);
+  color:#fff;padding:11px 18px;
+  align-items:center;justify-content:space-between;gap:10px;
+  font-size:12px;font-weight:700;
+  box-shadow:0 -4px 16px rgba(0,0,0,.4);
+}
+.sw-upd-btn{
+  background:#90cdf4;color:#0d1f33;border:none;
+  padding:6px 16px;border-radius:8px;
+  cursor:pointer;font-weight:800;font-size:11px;font-family:inherit;flex-shrink:0;
+}
+
+/* ── 탭 바 ── */
+.tab-bar-wrap{
+  display:flex;overflow-x:auto;white-space:nowrap;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.tab-bar-wrap::-webkit-scrollbar{display:none;}
+.tab-btn{
+  padding:11px 22px;border:none;font-weight:700;font-size:13px;
+  letter-spacing:.02em;flex-shrink:0;transition:all .15s;
+  background:transparent;color:rgba(255,255,255,.7);
+  border-bottom:3px solid transparent;
+}
+.tab-btn:hover:not(.active){color:white;background:rgba(255,255,255,.06);}
+.tab-btn.active{color:white;background:rgba(49,130,206,.3);border-bottom-color:#63b3ed;}
+.tab-btn.print-tab{color:#fbbf24 !important;}
+.tab-btn.print-tab.active{background:rgba(251,191,36,.15) !important;border-bottom-color:#fbbf24 !important;}
+
+/* ── 요약 바 ── */
+.sum-bar-wrap{background:#0a1628;padding:9px 0;border-bottom:1px solid rgba(49,130,206,.15);}
+.sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
+.sum-item{font-size:12px;color:#94a3b8;}
+.sum-val{color:#63b3ed;font-family:'Noto Sans Mono',monospace !important;font-weight:700;}
+
+/* ════════════════════════════════════════════════
+   3. MAIN LAYOUT
+════════════════════════════════════════════════ */
+.main-outer{max-width:1300px;margin:0 auto;padding:22px 24px 100px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ════════════════════════════════════════════════
+   4. BOX COMPONENT (옥외소화전 동일)
+════════════════════════════════════════════════ */
+.box{
+  background:white;border-radius:12px;
+  border:1px solid #e5e7eb;overflow:hidden;
+  box-shadow:0 1px 6px rgba(0,0,0,.07);
+  margin-bottom:18px;
+}
+.box-hd{
+  color:white;padding:10px 18px;font-size:12px;
+  font-weight:800;letter-spacing:.04em;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.box-hd .ico{font-size:15px;opacity:.85;}
+.box-bd{padding:18px;}
+
+/* ════════════════════════════════════════════════
+   5. GRID
+════════════════════════════════════════════════ */
+.g-proj{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;}
+.g-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.g-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.g-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g-2sm{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ════════════════════════════════════════════════
+   6. FORM ELEMENTS
+════════════════════════════════════════════════ */
+.lbl{
+  display:block;font-size:11px;font-weight:700;
+  color:#6b7280;text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:5px;
+}
+.inp{
+  width:100%;padding:9px 12px;border-radius:8px;
+  border:1px solid #d1d5db;background:white;
+  font-size:13px;color:#111;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.inp:focus{border-color:#3182ce;box-shadow:0 0 0 3px rgba(49,130,206,.15);}
+select.inp option{background:white;color:#111;}
+.inp-wrap{position:relative;}
+.inp-wrap .inp{padding-right:46px;}
+.inp-unit{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-size:10px;font-weight:700;color:#9ca3af;
+  font-family:'Noto Sans Mono',monospace !important;pointer-events:none;
+}
+
+/* ════════════════════════════════════════════════
+   7. RESULT CARDS (옥외소화전 Card 컴포넌트 동일)
+════════════════════════════════════════════════ */
+.rc{border-radius:12px;padding:13px 14px;border-width:1.5px;border-style:solid;}
+.rc-label{
+  font-size:10px;font-weight:700;color:#9ca3af;
+  text-transform:uppercase;letter-spacing:.07em;
+  margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;
+}
+.rc-val{
+  font-size:22px;font-weight:900;line-height:1.1;
+  font-family:'Noto Sans Mono',monospace !important;
+}
+.rc-unit{font-size:12px;color:#9ca3af;margin-left:4px;font-family:'Noto Sans KR',sans-serif !important;}
+.rc-sub{font-size:10px;color:#6b7280;margin-top:4px;font-family:'Noto Sans Mono',monospace !important;}
+/* 색상 */
+.rc-blue{background:#eff6ff;border-color:#bfdbfe;}.rc-blue .rc-val{color:#1d4ed8;}
+.rc-sky{background:#f0f7ff;border-color:#93c5fd;}.rc-sky .rc-val{color:#1e40af;}
+.rc-green{background:#f0fdf4;border-color:#bbf7d0;}.rc-green .rc-val{color:#15803d;}
+.rc-amber{background:#fffbeb;border-color:#fde68a;}.rc-amber .rc-val{color:#92400e;}
+.rc-slate{background:#f8fafc;border-color:#e2e8f0;}.rc-slate .rc-val{color:#334155;}
+.rc-red{background:#fef2f2;border-color:#fecaca;}.rc-red .rc-val{color:#b91c1c;}
+
+/* ════════════════════════════════════════════════
+   8. RESULT BOX (상세 결과 큰 박스)
+════════════════════════════════════════════════ */
+.result-box{
+  background:linear-gradient(135deg,#eff6ff,#f0f7ff);
+  border:2px solid #bfdbfe;border-radius:12px;padding:16px;
+}
+.result-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:9px;}
+.result-row:last-child{margin-bottom:0;}
+.rl{font-size:11px;font-weight:700;color:#6b7280;}
+.rv{font-family:'Noto Sans Mono',monospace !important;font-size:15px;font-weight:700;color:#1d4ed8;}
+.rv.lg{font-size:20px;color:#1e3a5f;}
+.rv.ok{color:#15803d;}
+.rv.err{color:#b91c1c;}
+.r-divider{border:none;border-top:1px solid #bfdbfe;margin:9px 0;}
+
+/* ════════════════════════════════════════════════
+   9. JUDGE BADGES
+════════════════════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;}
+.badge-ok{background:#f0fdf4;border:1px solid #86efac;color:#15803d;}
+.badge-ng{background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;}
+.badge-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
+
+/* ════════════════════════════════════════════════
+   10. TABLE
+════════════════════════════════════════════════ */
+.tbl-wrap{width:100%;overflow-x:auto;border-radius:8px;-webkit-overflow-scrolling:touch;}
+.tbl-wrap::-webkit-scrollbar{height:4px;}
+.tbl-wrap::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
+table.dt{width:100%;border-collapse:collapse;font-size:12px;}
+table.dt th{
+  background:#1e3a5f;color:#e0f2fe;
+  padding:9px 12px;text-align:center;
+  font-weight:800;font-size:11px;letter-spacing:.04em;
+  border:1px solid #1e3a5f;
+}
+table.dt td{
+  padding:8px 12px;border:1px solid #d1d5db;
+  color:#111827;text-align:center;background:white;
+  font-size:12px;font-weight:500;
+}
+table.dt tr:nth-child(even) td{background:#eff6ff;color:#1e3a5f;}
+table.dt td.L{text-align:left;}
+table.dt td b{color:#1e40af;font-weight:800;}
+.tbl-note{
+  font-size:11px;color:#374151;margin-top:6px;
+  line-height:1.8;padding:10px 14px;
+  background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;
+}
+
+/* ════════════════════════════════════════════════
+   11. LAW / INFO CARDS
+════════════════════════════════════════════════ */
+.law-banner{
+  background:linear-gradient(135deg,#0d1f33,#1e3a5f);
+  border-radius:12px;padding:13px 18px;
+  display:flex;gap:18px;flex-wrap:wrap;align-items:center;
+  margin-bottom:18px;
+}
+.lbk{font-size:11px;font-weight:700;color:#90cdf4;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;}
+.lbi{display:flex;gap:4px;font-size:11px;}
+.lbi-k{color:#90cdf4;font-weight:600;}
+.lbi-v{color:white;font-family:'Noto Sans Mono',monospace !important;font-weight:700;}
+.info-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:13px 14px;}
+.info-title{font-size:10px;font-weight:800;color:#1e40af;margin-bottom:8px;letter-spacing:.04em;}
+.info-list{list-style:none;}
+.info-list li{font-size:11px;color:#374151;line-height:1.8;padding-left:13px;position:relative;}
+.info-list li::before{content:"▸";position:absolute;left:0;color:#3182ce;font-size:9px;top:1px;}
+.law-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;}
+.law-ref{font-size:10px;font-weight:800;color:#1e40af;margin-bottom:4px;}
+.law-text{font-size:11px;color:#374151;line-height:1.75;}
+
+/* ════════════════════════════════════════════════
+   12. FORMULA CODE
+════════════════════════════════════════════════ */
+.fml{
+  font-family:'Noto Sans Mono',monospace !important;
+  font-size:12px;font-weight:700;color:#1e40af;
+  background:#eff6ff;border-radius:6px;
+  padding:7px 11px;display:block;margin:5px 0;
+  word-break:break-all;line-height:1.6;
+}
+.fml.green{color:#166534;background:#f0fdf4;}
+.fml.amber{color:#92400e;background:#fffbeb;}
+
+/* ════════════════════════════════════════════════
+   13. CALC BUTTON
+════════════════════════════════════════════════ */
+.calc-btn{
+  width:100%;background:linear-gradient(135deg,#1e3a5f,#2d5282);
+  color:white;border:none;border-radius:9px;
+  padding:13px;font-size:13px;font-weight:800;
+  letter-spacing:.04em;margin-top:14px;
+  box-shadow:0 4px 14px rgba(30,58,95,.4);
+  transition:all .15s;
+}
+.calc-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(30,58,95,.55);}
+.calc-btn:active{transform:scale(.98);}
+
+/* ════════════════════════════════════════════════
+   14. OVERVIEW CARDS (상단 요약 카드)
+════════════════════════════════════════════════ */
+.ov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px;}
+.ov-card{
+  background:white;border:1px solid #e5e7eb;border-radius:12px;
+  padding:16px 14px;text-align:center;
+  box-shadow:0 1px 5px rgba(0,0,0,.06);
+  transition:border-color .18s,transform .13s;
+}
+.ov-card:hover{border-color:#3182ce;transform:translateY(-2px);}
+.ov-icon{font-size:24px;margin-bottom:6px;}
+.ov-val{font-family:'Noto Sans Mono',monospace !important;font-size:20px;font-weight:900;color:#1d4ed8;margin-bottom:3px;}
+.ov-lbl{font-size:10px;color:#9ca3af;font-weight:700;letter-spacing:.04em;}
+
+/* ════════════════════════════════════════════════
+   15. PROGRESS BAR
+════════════════════════════════════════════════ */
+.prog-wrap{margin-top:9px;}
+.prog-row{display:flex;justify-content:space-between;font-size:10px;color:#6b7280;margin-bottom:3px;}
+.prog-bar{height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s ease;background:linear-gradient(90deg,#3182ce,#63b3ed);}
+
+/* ════════════════════════════════════════════════
+   16. TAG BADGES
+════════════════════════════════════════════════ */
+.tag{
+  display:inline-flex;align-items:center;
+  background:#eff6ff;border:1px solid #bfdbfe;
+  color:#1e40af;padding:2px 8px;border-radius:12px;
+  font-size:9px;font-weight:700;letter-spacing:.04em;margin:2px;
+}
+.tag.new{background:#fffbeb;border-color:#fde68a;color:#92400e;}
+
+/* ════════════════════════════════════════════════
+   17. FAB / MODAL (옥외소화전 완전 동일)
+════════════════════════════════════════════════ */
+.fml-fab{
+  position:fixed;bottom:18px;right:18px;z-index:1200;
+  background:linear-gradient(135deg,#1e3a5f,#0d1f33);
+  color:white;border:1px solid rgba(99,179,237,.3);
+  border-radius:16px;padding:11px 15px;
+  box-shadow:0 4px 20px rgba(30,58,95,.65);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  line-height:1.3;transition:transform .15s,box-shadow .15s;
+  animation:fabIn .55s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes fabIn{
+  from{opacity:0;transform:scale(.3) rotate(-20deg);}
+  to{opacity:1;transform:scale(1) rotate(0);}
+}
+.fml-fab:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(49,130,206,.65);}
+.fml-fab:active{transform:translateY(0);}
+
+.fml-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(5px);
+  display:flex;align-items:center;justify-content:center;padding:16px;
+  animation:fadeIn .2s;
+}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.fml-box{
+  background:white;border-radius:20px;width:100%;max-width:800px;
+  max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+  overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4);
+  animation:slideUp .25s cubic-bezier(.34,1.5,.64,1);
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:none;opacity:1;}}
+.fml-hd{
+  background:linear-gradient(135deg,#0d1f33,#1e3a5f,#2d5282);
+  color:white;padding:18px 22px 0;flex-shrink:0;
+}
+.fml-hd-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px;}
+.fml-close{
+  background:rgba(255,255,255,.13);border:none;color:white;
+  border-radius:50%;width:34px;height:34px;flex-shrink:0;font-size:18px;
+  display:flex;align-items:center;justify-content:center;transition:background .15s;
+}
+.fml-close:hover{background:rgba(255,255,255,.26);}
+.fml-tabs{display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.fml-tabs::-webkit-scrollbar{display:none;}
+.fml-tab{
+  padding:9px 18px;border:none;background:transparent;
+  color:rgba(255,255,255,.6);font-size:12px;font-weight:700;
+  white-space:nowrap;border-bottom:3px solid transparent;transition:all .15s;flex-shrink:0;
+}
+.fml-tab.on{color:white;border-bottom-color:#90cdf4;}
+.fml-tab:hover:not(.on){color:rgba(255,255,255,.88);}
+.fml-bd{overflow-y:auto;padding:20px 22px 26px;flex:1;-webkit-overflow-scrolling:touch;}
+.fml-bd::-webkit-scrollbar{width:5px;}
+.fml-bd::-webkit-scrollbar-thumb{background:#90cdf4;border-radius:3px;}
+.fml-sec{margin-bottom:20px;}
+.fml-sec-ttl{
+  font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:7px;
+  border-left:3px solid currentColor;padding-left:9px;
+}
+.fml-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.fml-card-ttl{font-size:12px;font-weight:700;color:#1e293b;margin-bottom:6px;}
+.fml-eq{
+  display:block;font-family:'Noto Sans Mono',monospace !important;
+  font-size:12.5px;font-weight:700;color:#1e40af;
+  background:#eff6ff;border-radius:6px;
+  padding:7px 11px;margin:6px 0;word-break:break-all;line-height:1.6;
+}
+.fml-eq.amber{background:#fffbeb;color:#92400e;}
+.fml-note{font-size:10px;color:#6b7280;margin-top:5px;line-height:1.8;}
+.fml-g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fml-hibox{border:1.5px solid #90cdf4;background:#eff6ff;border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.fml-panel{display:none;}
+.fml-panel.on{display:block;}
+
+/* ════════════════════════════════════════════════
+   18. A4 REPORT PREVIEW
+════════════════════════════════════════════════ */
+.rpt-outer{
+  width:100%;overflow:hidden;
+  background:#c8d0da;padding:20px 0;
+  border-radius:8px;
+}
+.rpt-inner{width:794px;} /* JS로 scale */
+#report-zone{
+  width:794px;background:white;
+  /* A4 여백 비례: @page margin:14mm 12mm 22mm 14mm → 96dpi 환산 ≈ 53px 45px 83px 53px */
+  padding:53px 45px 83px 53px;
+  box-shadow:0 4px 28px rgba(0,0,0,.22);
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:11px;line-height:1.7;color:#111;
+}
+/* 모바일 미리보기 안내 힌트 */
+.rpt-hint{
+  display:none;
+  align-items:center;gap:6px;
+  background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;
+  padding:8px 13px;font-size:10px;font-weight:600;color:#1e40af;
+  margin-bottom:10px;
+}
+@media(max-width:860px){.rpt-hint{display:flex;}}
+.rz-hd{border-bottom:3px solid #1e3a5f;padding-bottom:13px;margin-bottom:16px;}
+.rz-h1{font-size:19px;font-weight:900;color:#1e3a5f;letter-spacing:.02em;line-height:1.1;}
+.rz-sub{font-size:9px;color:#64748b;margin-top:4px;}
+.rz-info{
+  display:flex;gap:0;margin-top:11px;
+  border:1px solid #cbd5e1;border-radius:6px;overflow:hidden;
+}
+.rz-info-cell{padding:7px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;flex:1;}
+.rz-info-cell:last-child{border-right:none;}
+.rz-info-lbl{font-size:8px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;}
+.rz-info-val{font-size:12px;font-weight:800;color:#1e3a5f;}
+.rz-sec-hd{
+  color:white;padding:6px 12px;
+  font-size:11px;font-weight:800;letter-spacing:.04em;
+  border-radius:5px 5px 0 0;margin-top:14px;
+}
+.rz-tbl{width:100%;border-collapse:collapse;font-size:10.5px;}
+.rz-tbl th{background:#eef2f7;border:1px solid #cbd5e1;padding:6px 10px;font-weight:700;color:#1e3a5f;text-align:center;}
+.rz-tbl td{border:1px solid #cbd5e1;padding:5px 10px;color:#111;text-align:center;}
+.rz-tbl tr:nth-child(even) td{background:#f8fafc;}
+.rz-tbl td.L{text-align:left;}
+.rz-tbl td.B{font-weight:700;color:#1e3a5f;}
+.rz-sign{display:flex;gap:0;border:1px solid #cbd5e1;border-radius:6px;overflow:hidden;margin-top:14px;}
+.rz-sign-cell{flex:1;padding:8px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;}
+.rz-sign-cell:last-child{border-right:none;}
+.rz-sign-lbl{font-size:8px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:14px;}
+.rz-stamp{text-align:right;font-size:9px;color:#9ca3af;margin-top:10px;}
+
+/* ════════════════════════════════════════════════
+   19. RESPONSIVE — 반응형
+════════════════════════════════════════════════ */
+/* 태블릿 (≤1024px) */
+@media(max-width:1024px){
+  .g-4{grid-template-columns:repeat(2,1fr);}
+  .g-3{grid-template-columns:repeat(2,1fr);}
+  .ov-grid{grid-template-columns:repeat(2,1fr);}
+}
+/* 모바일 (≤768px) */
+@media(max-width:768px){
+  .site-header{padding:14px 0 0;}
+  .hdr-inner{padding:0 14px;}
+  .hdr-h1{font-size:20px !important;}
+  .hdr-right{display:none;}
+  .tab-btn{padding:10px 16px;font-size:12px;}
+  .main-outer{padding:14px 12px 80px;}
+  .g-proj{grid-template-columns:1fr 1fr;}
+  .g-2{grid-template-columns:1fr;}
+  .box-hd{font-size:11px;padding:9px 14px;}
+  .box-bd{padding:14px 12px;}
+  .sum-bar{padding:0 14px;gap:10px;}
+  .fml-fab{bottom:18px;right:14px;}
+}
+/* 모바일 소형 (≤540px) */
+@media(max-width:540px){
+  .g-proj{grid-template-columns:1fr;}
+  .g-3{grid-template-columns:1fr;}
+  .g-2sm{grid-template-columns:1fr;}
+  .g-4{grid-template-columns:1fr 1fr;}
+  .ov-grid{grid-template-columns:1fr 1fr;}
+  .hdr-h1{font-size:17px !important;}
+  .tab-btn{padding:9px 12px;font-size:11px;}
+  /* 모달 바텀시트 */
+  .fml-overlay{padding:0;align-items:flex-end;}
+  .fml-box{border-radius:20px 20px 0 0;max-height:92vh;}
+  .fml-hd{padding:14px 16px 0;}
+  .fml-bd{padding:16px 16px 36px;}
+  .fml-g2{grid-template-columns:1fr;}
+  .fml-tab{padding:9px 13px;font-size:11px;}
+  .fml-fab{bottom:16px;right:12px;padding:10px 13px;}
+}
+@media(max-width:380px){
+  .g-4{grid-template-columns:1fr;}
+  .ov-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="site-header no-print">
+  <div class="hdr-inner">
+    <div class="hdr-row">
+      <div>
+        <div class="hdr-eng">Smoke Control Equipment — NFTC 501</div>
+        <h1 class="hdr-h1">제연설비 설계 계산서</h1>
+        <div class="hdr-desc">
+          Smoke Control System Design Calculator · NFTC 501 적용&nbsp;
+          <span class="hdr-manmin">MANMIN · Ver-3.0</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button id="pwa-hdr-btn" class="pwa-install-btn" onclick="pwaTriggerInstall('header')" title="제연설비 앱 설치">
+          <span class="pwa-icon">&#128242;</span>
+          <span class="pwa-txt">앱 설치</span>
+        </button>
+        <div class="hdr-right">
+          <b>NFTC 501</b>
+          <div>제연설비의</div>
+          <div>화재안전기술기준</div>
+          <div class="accent">[시행 2024. 10. 1.]</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-bar-wrap">
+      <button class="tab-btn active" data-tab="calc">① 배출량 계산</button>
+      <button class="tab-btn" data-tab="zone">② 제연구역 설계</button>
+      <button class="tab-btn" data-tab="duct">③ 풍도 설계</button>
+      <button class="tab-btn" data-tab="power">④ 전원·기동</button>
+      <button class="tab-btn" data-tab="check">⑤ 성능 확인</button>
+      <button class="tab-btn" data-tab="law">⑥ 법규 요람</button>
+      <button class="tab-btn print-tab" data-tab="print">🖨️ 계산서 출력</button>
+    </div>
+  </div>
+</header>
+
+<!-- 요약 바 -->
+<div class="sum-bar-wrap no-print">
+  <div class="sum-bar">
+    <span class="sum-item">📐 바닥면적: <b class="sum-val" id="sb-area">—</b></span>
+    <span class="sum-item">💨 배출량: <b class="sum-val" id="sb-q">—</b></span>
+    <span class="sum-item">🌬️ 유입구: <b class="sum-val" id="sb-ai">—</b></span>
+    <span class="sum-item">⚡ 비상전원: <b class="sum-val">20분</b></span>
+    <span class="sum-item">📋 기준: <b class="sum-val">NFTC 501</b></span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════ -->
+<div class="main-outer">
+
+<!-- ══════════ TAB ① 배출량 계산 ══════════ -->
+<div class="tab-panel active" id="tab-calc">
+
+  <!-- 핵심기준 배너 -->
+  <div class="law-banner">
+    <span class="lbk">NFTC 501 핵심기준</span>
+    <span class="lbi"><span class="lbi-k">최소배출량:</span><span class="lbi-v">5,000 ㎥/h</span></span>
+    <span class="lbi"><span class="lbi-k">구역면적:</span><span class="lbi-v">≤ 1,000 ㎡</span></span>
+    <span class="lbi"><span class="lbi-k">유입풍속:</span><span class="lbi-v">≤ 5 ㎧</span></span>
+    <span class="lbi"><span class="lbi-k">흡입측:</span><span class="lbi-v">≤ 15 ㎧</span></span>
+    <span class="lbi"><span class="lbi-k">배출측:</span><span class="lbi-v">≤ 20 ㎧</span></span>
+    <span class="lbi"><span class="lbi-k">비상전원:</span><span class="lbi-v">20분</span></span>
+  </div>
+
+  <!-- Ⅰ-0. 프로젝트 정보 -->
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
+      <span class="ico">◆</span>Ⅰ-0. 프로젝트 정보
+    </div>
+    <div class="box-bd">
+      <div class="g-proj">
+        <div>
+          <label class="lbl">공사명</label>
+          <input class="inp" id="proj-name" type="text" value="만민 건축사 신축공사 현장"/>
+        </div>
+        <div>
+          <label class="lbl">설계자</label>
+          <input class="inp" id="proj-eng" type="text" value="김만민"/>
+        </div>
+        <div>
+          <label class="lbl">작성일</label>
+          <input class="inp" id="proj-date" type="date"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 개요 카드 -->
+  <div class="ov-grid">
+    <div class="ov-card"><div class="ov-icon">📐</div><div class="ov-val" id="ov-area">—</div><div class="ov-lbl">바닥면적 (㎡)</div></div>
+    <div class="ov-card"><div class="ov-icon">💨</div><div class="ov-val" id="ov-q">—</div><div class="ov-lbl">배출량 (㎥/h)</div></div>
+    <div class="ov-card"><div class="ov-icon">🌬️</div><div class="ov-val" id="ov-ai">—</div><div class="ov-lbl">유입구 면적 (㎠)</div></div>
+    <div class="ov-card"><div class="ov-icon">⚡</div><div class="ov-val">20분</div><div class="ov-lbl">비상전원 운전시간</div></div>
+  </div>
+
+  <!-- Ⅰ-1. 배출량 조건 -->
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+      <span class="ico">◆</span>Ⅰ-1. 제연구역 조건 입력 (NFTC 501 §2.3)
+    </div>
+    <div class="box-bd">
+      <div class="g-3" style="margin-bottom:14px;">
+        <div>
+          <label class="lbl">예상제연구역 유형</label>
+          <select class="inp" id="zone-type">
+            <option value="room_lt400">거실 (바닥면적 &lt; 400 ㎡)</option>
+            <option value="room_ge400_lt40">거실 (≥ 400 ㎡, 직경 ≤ 40 m 원)</option>
+            <option value="room_ge400_gt40">거실 (≥ 400 ㎡, 직경 &gt; 40 m 원)</option>
+            <option value="corridor">통로 (복도)</option>
+            <option value="corr_outlet">통로배출방식 (50 ㎡ 미만 거실 대체)</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">제연경계 구획 여부</label>
+          <select class="inp" id="has-boundary">
+            <option value="wall">벽으로 구획</option>
+            <option value="boundary">제연경계(보·경계벽)로 구획</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">수직거리 (제연경계 시 적용)</label>
+          <div class="inp-wrap">
+            <input class="inp" id="vert-dist" type="number" step="0.1" min="0" max="5" value="1.0"/>
+            <span class="inp-unit">m</span>
+          </div>
+        </div>
+      </div>
+      <div class="g-3">
+        <div>
+          <label class="lbl">바닥면적</label>
+          <div class="inp-wrap">
+            <input class="inp" id="floor-area" type="number" step="10" min="0" value="300"/>
+            <span class="inp-unit">㎡</span>
+          </div>
+        </div>
+        <div id="corr-len-wrap" style="display:none;">
+          <label class="lbl">보행중심선 길이</label>
+          <div class="inp-wrap">
+            <input class="inp" id="corr-len" type="number" step="1" min="0" value="30"/>
+            <span class="inp-unit">m</span>
+          </div>
+        </div>
+        <div>
+          <label class="lbl">제연구역 개수</label>
+          <input class="inp" id="zone-count" type="number" min="1" value="1"/>
+        </div>
+      </div>
+      <button class="calc-btn" id="btn-calc">💨 배출량 계산</button>
+    </div>
+  </div>
+
+  <!-- 결과 영역 -->
+  <div id="result-area" style="display:none;">
+    <!-- 결과 요약 카드 -->
+    <div class="g-4" style="margin-bottom:16px;">
+      <div class="rc rc-blue">
+        <div class="rc-label">적용 조항</div>
+        <div style="font-size:12px;font-weight:800;color:#1d4ed8;margin-top:6px;" id="r-ref-short">—</div>
+      </div>
+      <div class="rc rc-sky">
+        <div class="rc-label">필요 배출량</div>
+        <div class="rc-val" id="r-q">—<span class="rc-unit">㎥/h</span></div>
+        <div class="rc-sub" id="r-q-min">— ㎥/min</div>
+      </div>
+      <div class="rc rc-slate">
+        <div class="rc-label">유입구 최소 면적</div>
+        <div class="rc-val" id="r-ai">—<span class="rc-unit">㎠</span></div>
+        <div class="rc-sub" id="r-ai-m2">— ㎡</div>
+      </div>
+      <div class="rc rc-green">
+        <div class="rc-label">판정</div>
+        <div id="r-judge" style="margin-top:8px;">—</div>
+      </div>
+    </div>
+
+    <!-- 상세 결과 -->
+    <div class="box">
+      <div class="box-hd" style="background:linear-gradient(135deg,#2d5282,#3b6fa0);">
+        <span class="ico">◆</span>배출량 산출 상세
+      </div>
+      <div class="box-bd">
+        <div class="g-2" style="gap:14px;">
+          <div class="result-box">
+            <div class="result-row"><span class="rl">📐 적용 기준조항</span><span class="rv" id="r-ref" style="font-size:11px;">—</span></div>
+            <hr class="r-divider"/>
+            <div class="result-row"><span class="rl">💨 필요 배출량</span><span class="rv lg" id="r-q2">—</span></div>
+            <div class="result-row"><span class="rl">&nbsp;&nbsp;&nbsp;단위환산</span><span class="rv" id="r-q-min2" style="font-size:13px;">—</span></div>
+            <hr class="r-divider"/>
+            <div id="r-formula" style="margin-top:8px;"></div>
+          </div>
+          <div class="result-box">
+            <div class="result-row"><span class="rl">🌬️ 유입구 최소 면적</span><span class="rv lg" id="r-ai2">—</span></div>
+            <div class="result-row"><span class="rl">&nbsp;&nbsp;&nbsp;㎡ 환산</span><span class="rv" id="r-ai-m2-2" style="font-size:13px;">—</span></div>
+            <hr class="r-divider"/>
+            <div class="result-row"><span class="rl">💨 유입 풍속 제한 (§2.5.5)</span><span class="rv">≤ 5 ㎧</span></div>
+            <div class="result-row"><span class="rl">📏 배출구 수평거리 (§2.4.2)</span><span class="rv">≤ 10 m</span></div>
+            <code class="fml" style="margin-top:8px;">유입구 최소면적(㎠) = 배출량(㎥/min) × 35</code>
+          </div>
+        </div>
+        <!-- 풍속기준 카드 -->
+        <div class="g-3" style="margin-top:14px;">
+          <div class="rc rc-slate"><div class="rc-label">흡입측 (§2.6.2.2)</div><div class="rc-val">≤ 15<span class="rc-unit">㎧</span></div></div>
+          <div class="rc rc-slate"><div class="rc-label">배출측 (§2.6.2.2)</div><div class="rc-val">≤ 20<span class="rc-unit">㎧</span></div></div>
+          <div class="rc rc-slate"><div class="rc-label">유입풍도 (§2.7.1)</div><div class="rc-val">≤ 20<span class="rc-unit">㎧</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-calc -->
+
+
+<!-- ══════════ TAB ② 제연구역 설계 ══════════ -->
+<div class="tab-panel" id="tab-zone">
+  <div class="law-banner">
+    <span class="lbk">§2.1 구획 기준</span>
+    <span class="lbi"><span class="lbi-k">면적:</span><span class="lbi-v">≤ 1,000 ㎡</span></span>
+    <span class="lbi"><span class="lbi-k">직경:</span><span class="lbi-v">60 m 원 내</span></span>
+    <span class="lbi"><span class="lbi-k">경계 폭:</span><span class="lbi-v">≥ 0.6 m</span></span>
+    <span class="lbi"><span class="lbi-k">수직거리:</span><span class="lbi-v">≤ 2 m</span></span>
+    <span class="lbi"><span class="lbi-k">통로길이:</span><span class="lbi-v">≤ 60 m</span></span>
+  </div>
+
+  <div class="g-2" style="gap:14px;margin-bottom:0;">
+    <!-- 면적 검토 -->
+    <div class="box">
+      <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+        <span class="ico">◆</span>Ⅱ-1. 제연구역 면적 검토 (§2.1.1.1)
+      </div>
+      <div class="box-bd">
+        <label class="lbl">제연구역 바닥면적</label>
+        <div class="inp-wrap" style="margin-bottom:12px;">
+          <input class="inp" id="za-input" type="number" step="10" value="800"/>
+          <span class="inp-unit">㎡</span>
+        </div>
+        <div class="result-box">
+          <div class="result-row"><span class="rl">기준 최대면적</span><span class="rv">1,000 ㎡</span></div>
+          <div class="result-row"><span class="rl">입력 면적</span><span class="rv" id="za-val">800 ㎡</span></div>
+          <div class="result-row"><span class="rl">판정</span><span id="za-judge">—</span></div>
+          <div class="prog-wrap">
+            <div class="prog-row"><span>사용률</span><span id="za-pct">80%</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="za-bar" style="width:80%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 직경 검토 -->
+    <div class="box">
+      <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+        <span class="ico">◆</span>Ⅱ-2. 직경 60 m 원 검토 (§2.1.1.4)
+      </div>
+      <div class="box-bd">
+        <label class="lbl">제연구역 최장 대각선 거리</label>
+        <div class="inp-wrap" style="margin-bottom:12px;">
+          <input class="inp" id="zd-input" type="number" step="1" value="45"/>
+          <span class="inp-unit">m</span>
+        </div>
+        <div class="result-box">
+          <div class="result-row"><span class="rl">기준 (직경 60 m 원)</span><span class="rv">≤ 60 m</span></div>
+          <div class="result-row"><span class="rl">입력 최장거리</span><span class="rv" id="zd-val">45 m</span></div>
+          <div class="result-row"><span class="rl">판정</span><span id="zd-judge">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 제연경계 치수 -->
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+      <span class="ico">◆</span>Ⅱ-3. 제연경계 치수 검토 (§2.1.2.2)
+    </div>
+    <div class="box-bd">
+      <div class="g-2" style="gap:14px;">
+        <div>
+          <label class="lbl">제연경계의 폭 (천장→하단 끝)</label>
+          <div class="inp-wrap" style="margin-bottom:10px;">
+            <input class="inp" id="bw-input" type="number" step="0.05" value="0.8"/>
+            <span class="inp-unit">m</span>
+          </div>
+          <div id="bw-result"></div>
+        </div>
+        <div>
+          <label class="lbl">수직거리 (경계 하단→바닥)</label>
+          <div class="inp-wrap" style="margin-bottom:10px;">
+            <input class="inp" id="bv-input" type="number" step="0.1" value="1.5"/>
+            <span class="inp-unit">m</span>
+          </div>
+          <div id="bv-result"></div>
+        </div>
+      </div>
+      <div class="tbl-note" style="margin-top:12px;">
+        ▸ 제연경계의 폭: 0.6 m 이상 (§2.1.2.2) &nbsp;|&nbsp; 수직거리: 2 m 이내 (구조상 불가피 시 초과 가능)<br/>
+        ▸ 재질: 내화재료·불연재료 또는 성능인정품, 기밀성 확보 (§2.1.2.1)<br/>
+        ▸ 제연경계벽: 배연 기류에 흔들리지 않을 것, 가동식은 급속 하강 시 인명 위해 없을 것 (§2.1.2.3)
+      </div>
+    </div>
+  </div>
+
+  <!-- 통로 + 제연방식 -->
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+      <span class="ico">◆</span>Ⅱ-4. 통로 제연구역 · 제연방식 기준 (§2.1.1.3, §2.2)
+    </div>
+    <div class="box-bd">
+      <div class="g-2" style="gap:14px;margin-bottom:14px;">
+        <div>
+          <label class="lbl">보행중심선 길이 (§2.1.1.3)</label>
+          <div class="inp-wrap" style="margin-bottom:10px;">
+            <input class="inp" id="wl-input" type="number" step="1" value="45"/>
+            <span class="inp-unit">m</span>
+          </div>
+          <div id="wl-result"></div>
+          <div class="tbl-note" style="margin-top:8px;">
+            ▸ 기준: ≤ 60 m (§2.1.1.3) &nbsp;|&nbsp; 거실·통로 각각 제연구획 (§2.1.1.2)
+          </div>
+        </div>
+        <div class="info-card" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="info-title">§2.1.1.5 층간 제연구역</div>
+          <ul class="info-list">
+            <li>하나의 제연구역은 2개 이상 층에 미치지 않을 것</li>
+            <li>층 구분이 불분명한 부분은 별도로 제연구획</li>
+          </ul>
+        </div>
+      </div>
+      <div class="g-3">
+        <div class="info-card">
+          <div class="info-title">§2.2.1 기본 제연방식</div>
+          <ul class="info-list">
+            <li>화재 시 연기배출 + 공기유입 동시 실시</li>
+            <li>거실 배출 시 통로에도 동시 공기유입</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-title">§2.2.2 통로배출 대체 조건</div>
+          <ul class="info-list">
+            <li>인접 거실 바닥면적 50 ㎡ 미만</li>
+            <li>벽으로 구획 (제연경계 제외)</li>
+            <li>경유거실은 직접배출 필수</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-title">§2.2.3 통로 제외 조건</div>
+          <ul class="info-list">
+            <li>주요구조부 내화구조</li>
+            <li>마감 불연·난연재료</li>
+            <li>통로 내 가연성 물질 없을 것</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-zone -->
+
+
+<!-- ══════════ TAB ③ 풍도 설계 ══════════ -->
+<div class="tab-panel" id="tab-duct">
+
+  <div class="g-2" style="gap:14px;margin-bottom:0;">
+    <!-- 강판 두께 -->
+    <div class="box">
+      <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+        <span class="ico">◆</span>Ⅲ-1. 배출풍도 강판 두께 (§2.6.2.1 표 2.6.2.1)
+      </div>
+      <div class="box-bd">
+        <div class="g-2sm" style="margin-bottom:12px;">
+          <div>
+            <label class="lbl">풍도 단변 치수</label>
+            <div class="inp-wrap">
+              <input class="inp" id="ds-input" type="number" step="50" value="600"/>
+              <span class="inp-unit">mm</span>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">풍도 장변 치수</label>
+            <div class="inp-wrap">
+              <input class="inp" id="dl-input" type="number" step="50" value="900"/>
+              <span class="inp-unit">mm</span>
+            </div>
+          </div>
+        </div>
+        <div class="g-2" style="gap:10px;margin-bottom:12px;">
+          <div class="rc rc-blue"><div class="rc-label">장변 기준</div><div class="rc-val" id="d-ref">900<span class="rc-unit">mm</span></div></div>
+          <div class="rc rc-sky"><div class="rc-label">최소 강판 두께</div><div class="rc-val" id="d-thick">0.8<span class="rc-unit">mm</span></div></div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="dt">
+            <thead><tr><th>풍도 장변 크기</th><th>최소 강판 두께</th></tr></thead>
+            <tbody>
+              <tr><td class="L">450 mm 이하</td><td>0.5 mm</td></tr>
+              <tr><td class="L">450 초과 ~ 750 mm 이하</td><td>0.6 mm</td></tr>
+              <tr><td class="L">750 초과 ~ 1,500 mm 이하</td><td>0.8 mm</td></tr>
+              <tr><td class="L">1,500 초과 ~ 2,250 mm 이하</td><td>1.0 mm</td></tr>
+              <tr><td class="L">2,250 mm 초과</td><td>1.2 mm</td></tr>
+            </tbody>
+          </table>
+          <div class="tbl-note">※ 표 2.6.2.1 — 아연도금강판 또는 동등 이상 내식성·내열성 재료. 불연재료 단열재 외부 단열처리 필수. 유입풍도에도 동일 기준 적용 (§2.7.1)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 풍속 검토 -->
+    <div class="box">
+      <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+        <span class="ico">◆</span>Ⅲ-2. 풍속 검토 (§2.6.2.2 · §2.7.1)
+      </div>
+      <div class="box-bd">
+        <div class="g-2sm" style="margin-bottom:12px;">
+          <div>
+            <label class="lbl">배출량</label>
+            <div class="inp-wrap">
+              <input class="inp" id="ws-q" type="number" step="500" value="20000"/>
+              <span class="inp-unit">㎥/h</span>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">풍도 단면적</label>
+            <div class="inp-wrap">
+              <input class="inp" id="ws-a" type="number" step="0.01" value="0.54"/>
+              <span class="inp-unit">㎡</span>
+            </div>
+          </div>
+        </div>
+        <label class="lbl">풍도 위치</label>
+        <select class="inp" id="ws-type" style="margin-bottom:12px;">
+          <option value="suction">배출기 흡입측 (기준 ≤ 15 ㎧)</option>
+          <option value="exhaust">배출기 배출측 (기준 ≤ 20 ㎧)</option>
+          <option value="inlet">유입풍도 (기준 ≤ 20 ㎧)</option>
+        </select>
+        <div class="g-3" style="gap:10px;margin-bottom:10px;">
+          <div class="rc rc-blue"><div class="rc-label">계산 풍속</div><div class="rc-val" id="ws-result">—<span class="rc-unit">㎧</span></div></div>
+          <div class="rc rc-slate"><div class="rc-label">기준 풍속</div><div class="rc-val" id="ws-limit">—<span class="rc-unit">㎧</span></div></div>
+          <div class="rc rc-green"><div class="rc-label">판정</div><div id="ws-judge" style="margin-top:7px;">—</div></div>
+        </div>
+        <code class="fml">풍속(㎧) = 배출량(㎥/h) ÷ 3,600 ÷ 단면적(㎡)</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- 댐퍼 기준 -->
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
+      <span class="ico">◆</span>Ⅲ-3. 댐퍼 설치기준 (§2.8) <span class="tag new" style="margin-left:6px;">신설 2024.10.1</span>
+    </div>
+    <div class="box-bd">
+      <div class="g-3">
+        <div class="info-card">
+          <div class="info-title">§2.8.1.1 점검구 설치</div>
+          <ul class="info-list">
+            <li>댐퍼 확인·정비용 점검구 풍도에 설치</li>
+            <li>반자 내부 설치 시: 댐퍼 직근 반자에도 설치</li>
+            <li>점검구 크기: 지름 60 cm 이상 원 내접 가능</li>
+            <li>"제연설비용 점검구" 표시 필수</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-title">§2.8.1.2 제어반 확인</div>
+          <ul class="info-list">
+            <li>댐퍼 개방·폐쇄 상태 제어반에서 상시 확인 가능</li>
+            <li>설정된 상태 모니터링 기능 필수</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-title">§2.8.1.3 공조 겸용 시</div>
+          <ul class="info-list">
+            <li>영 별표 5 제17호 가목 1) 겸용 설치 시 적용</li>
+            <li>풍량조절댐퍼: 각 설비별 기능 작동 시</li>
+            <li>각각의 풍량 충족하는 개구율로 자동 조절</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-duct -->
+
+
+<!-- ══════════ TAB ④ 전원·기동 ══════════ -->
+<div class="tab-panel" id="tab-power">
+  <div class="box" style="margin-bottom:14px;">
+    <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+      <span class="ico">◆</span>Ⅳ-1. 비상전원 기준 (§2.9.1)
+    </div>
+    <div class="box-bd">
+      <div class="g-3">
+        <div class="info-card">
+          <div class="info-title">비상전원 종류</div>
+          <ul class="info-list">
+            <li>자가발전설비</li><li>축전지설비</li><li>전기저장장치 (ESS)</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-title">설치 요건 (§2.9.1.1~1.5)</div>
+          <ul class="info-list">
+            <li>점검 편리, 화재·침수 피해 우려 없는 곳</li>
+            <li style="font-weight:700;color:#1e40af;">유효 운전시간: 20분 이상</li>
+            <li>상용전원 차단 시 자동 전환</li>
+            <li>다른 장소와 방화구획</li>
+            <li>실내 설치 시 비상조명등 설치</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-title">적용 제외 조건</div>
+          <ul class="info-list">
+            <li>2 이상의 변전소에서 동시 전력 공급</li>
+            <li>1개 변전소 중단 시 자동으로 다른 변전소 전환</li>
+            <li>→ 상용전원 설치로 대체 가능</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+      <span class="ico">◆</span>Ⅳ-2. 기동 기준 (§2.9.2·§2.9.3) <span class="tag new" style="margin-left:6px;">개정 2024.10.1</span>
+    </div>
+    <div class="box-bd">
+      <div class="g-2" style="gap:14px;">
+        <div>
+          <div class="law-box" style="margin-bottom:12px;">
+            <div class="law-ref">§2.9.3 기동 작동사항 (신설 2024.10.1)</div>
+            <div class="law-text">
+              ① 해당 제연구역 제연경계벽 및 벽의 작동<br/>
+              ② 해당 제연구역 공기유입·연기배출 관련 댐퍼의 작동<br/>
+              ③ 공기유입송풍기 및 배출송풍기의 작동
+            </div>
+          </div>
+          <div class="law-box">
+            <div class="law-ref">수동기동장치 설치 위치</div>
+            <div class="law-text">
+              ▸ 바닥으로부터 <b>0.8 m 이상 ~ 1.5 m 이하</b><br/>
+              ▸ 문 개방 등으로 위치 확인 장애 없을 것<br/>
+              ▸ 접근이 쉬운 위치에 설치<br/>
+              ▸ 예상제연구역(또는 인접장소)마다 설치
+            </div>
+          </div>
+        </div>
+        <div class="box" style="margin-bottom:0;border:1px solid #e5e7eb;">
+          <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);font-size:11px;">
+            <span class="ico">◆</span>수동기동장치 설치 높이 확인
+          </div>
+          <div class="box-bd">
+            <label class="lbl">설치 높이 입력</label>
+            <div class="inp-wrap" style="margin-bottom:12px;">
+              <input class="inp" id="mh-input" type="number" step="0.05" value="1.2"/>
+              <span class="inp-unit">m</span>
+            </div>
+            <div class="rc rc-blue">
+              <div class="rc-label">기준: 0.8 m ~ 1.5 m</div>
+              <div id="mh-judge" style="margin-top:7px;">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-power -->
+
+
+<!-- ══════════ TAB ⑤ 성능 확인 ══════════ -->
+<div class="tab-panel" id="tab-check">
+  <div class="law-banner">
+    <span class="lbk">§2.10 성능확인 <span class="tag new">신설 2024.10.1</span></span>
+    <span class="lbi"><span class="lbi-k">배출구 달성률:</span><span class="lbi-v">≥ 60%</span></span>
+    <span class="lbi"><span class="lbi-k">유입구 달성률:</span><span class="lbi-v">≥ 60%</span></span>
+    <span class="lbi"><span class="lbi-k">측정:</span><span class="lbi-v">모든 유입구·배출구</span></span>
+  </div>
+
+  <div class="g-2" style="gap:14px;margin-bottom:0;">
+    <!-- 배출구 -->
+    <div class="box">
+      <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+        <span class="ico">◆</span>Ⅴ-1. 배출구별 배출량 평가 (§2.10.3.1)
+      </div>
+      <div class="box-bd">
+        <div class="g-2sm" style="margin-bottom:12px;">
+          <div>
+            <label class="lbl">설계 배출량 (배출구별)</label>
+            <div class="inp-wrap"><input class="inp" id="pe-design" type="number" step="100" value="5000"/><span class="inp-unit">㎥/h</span></div>
+          </div>
+          <div>
+            <label class="lbl">측정 배출량 (배출구별)</label>
+            <div class="inp-wrap"><input class="inp" id="pe-meas" type="number" step="100" value="3200"/><span class="inp-unit">㎥/h</span></div>
+          </div>
+        </div>
+        <div class="g-3" style="gap:10px;margin-bottom:10px;">
+          <div class="rc rc-blue"><div class="rc-label">달성률</div><div class="rc-val" id="pe-pct">—<span class="rc-unit">%</span></div></div>
+          <div class="rc rc-slate"><div class="rc-label">기준 (60%)</div><div class="rc-val" id="pe-limit">—<span class="rc-unit">㎥/h</span></div></div>
+          <div class="rc rc-green"><div class="rc-label">판정</div><div id="pe-judge" style="margin-top:7px;">—</div></div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-row"><span>달성률</span><span id="pe-pct-lbl">—</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="pe-bar" style="width:0%;"></div></div>
+        </div>
+        <div class="tbl-note" style="margin-top:10px;">
+          ▸ 배출구별 ≥ 설계배출량의 60% 이상 (§2.10.3.1)<br/>
+          ▸ 제연구역별 배출구 합계 ≥ 설계배출량
+        </div>
+      </div>
+    </div>
+    <!-- 유입구 -->
+    <div class="box">
+      <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+        <span class="ico">◆</span>Ⅴ-2. 유입구별 공기유입량 평가 (§2.10.3.2)
+      </div>
+      <div class="box-bd">
+        <div class="g-2sm" style="margin-bottom:12px;">
+          <div>
+            <label class="lbl">설계 유입량 (유입구별)</label>
+            <div class="inp-wrap"><input class="inp" id="pi-design" type="number" step="100" value="4000"/><span class="inp-unit">㎥/h</span></div>
+          </div>
+          <div>
+            <label class="lbl">측정 유입량 (유입구별)</label>
+            <div class="inp-wrap"><input class="inp" id="pi-meas" type="number" step="100" value="2700"/><span class="inp-unit">㎥/h</span></div>
+          </div>
+        </div>
+        <div class="g-3" style="gap:10px;margin-bottom:10px;">
+          <div class="rc rc-blue"><div class="rc-label">달성률</div><div class="rc-val" id="pi-pct">—<span class="rc-unit">%</span></div></div>
+          <div class="rc rc-slate"><div class="rc-label">기준 (60%)</div><div class="rc-val" id="pi-limit">—<span class="rc-unit">㎥/h</span></div></div>
+          <div class="rc rc-green"><div class="rc-label">판정</div><div id="pi-judge" style="margin-top:7px;">—</div></div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-row"><span>달성률</span><span id="pi-pct-lbl">—</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="pi-bar" style="width:0%;"></div></div>
+        </div>
+        <div class="tbl-note" style="margin-top:10px;">
+          ▸ 유입구별 ≥ 설계유입량의 60% 이상 (§2.10.3.2)<br/>
+          ▸ §2.10.3.3: 배출량 충족 시 유입량 일부 미달도 적합 인정 가능
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
+      <span class="ico">◆</span>Ⅴ-3. 시험 체크리스트 (§2.10.2) · 설치제외 구역 (§2.11)
+    </div>
+    <div class="box-bd">
+      <div class="g-2" style="gap:16px;">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">시험 항목</div>
+          <label style="display:flex;gap:8px;margin-bottom:8px;cursor:pointer;align-items:flex-start;">
+            <input type="checkbox" style="margin-top:2px;accent-color:#3182ce;flex-shrink:0;"/><span style="font-size:11px;color:#374151;line-height:1.5;">§2.10.2.1 송풍기 풍량 측정</span>
+          </label>
+          <label style="display:flex;gap:8px;margin-bottom:8px;cursor:pointer;align-items:flex-start;">
+            <input type="checkbox" style="margin-top:2px;accent-color:#3182ce;flex-shrink:0;"/><span style="font-size:11px;color:#374151;line-height:1.5;">§2.10.2.1 송풍기 모터 전류·전압 측정</span>
+          </label>
+          <label style="display:flex;gap:8px;margin-bottom:8px;cursor:pointer;align-items:flex-start;">
+            <input type="checkbox" style="margin-top:2px;accent-color:#3182ce;flex-shrink:0;"/><span style="font-size:11px;color:#374151;line-height:1.5;">§2.10.2.2 화재감지기(수동기동장치) 동작으로 제연설비 정상 작동 확인</span>
+          </label>
+          <label style="display:flex;gap:8px;margin-bottom:8px;cursor:pointer;align-items:flex-start;">
+            <input type="checkbox" style="margin-top:2px;accent-color:#3182ce;flex-shrink:0;"/><span style="font-size:11px;color:#374151;line-height:1.5;">§2.10.2.3 모든 유입구·배출구에서 공기유입량·유입풍속·배출량 측정</span>
+          </label>
+          <label style="display:flex;gap:8px;margin-bottom:8px;cursor:pointer;align-items:flex-start;">
+            <input type="checkbox" style="margin-top:2px;accent-color:#3182ce;flex-shrink:0;"/><span style="font-size:11px;color:#374151;line-height:1.5;">§2.10.2.4 출입문·방화셔터·공기조화설비 연동 상태에서 측정</span>
+          </label>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">설치제외 구역 (§2.11)</div>
+          <div class="tbl-note">
+            다음 구역은 배출구·공기유입구 설치 및 배출량 산정 제외 가능:<br/><br/>
+            ▸ 화장실·목욕실<br/>
+            ▸ 주차장<br/>
+            ▸ 발코니 설치 숙박시설 객실 (가족호텔·휴양콘도미니엄 한함)<br/>
+            ▸ 기계실·전기실·공조실<br/>
+            ▸ 50 ㎡ 미만 창고
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-check -->
+
+
+<!-- ══════════ TAB ⑥ 법규 요람 ══════════ -->
+<div class="tab-panel" id="tab-law">
+  <div class="box" style="margin-bottom:14px;">
+    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
+      <span class="ico">◆</span>Ⅵ-1. NFTC 501 조문 요람 (2024.10.01 시행)
+    </div>
+    <div class="box-bd">
+      <div class="tbl-wrap">
+        <table class="dt">
+          <thead><tr><th style="width:95px;">조항</th><th>기준 내용</th><th style="width:70px;">비고</th></tr></thead>
+          <tbody>
+            <tr><td class="L"><b>§2.1.1.1</b></td><td class="L">제연구역 면적 ≤ 1,000 ㎡</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.1.1.2</b></td><td class="L">거실·통로 각각 제연구획</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.1.1.3</b></td><td class="L">통로 보행중심선 길이 ≤ 60 m</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.1.1.4</b></td><td class="L">직경 60 m 원 내에 포함</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.1.1.5</b></td><td class="L">제연구역은 2개 이상 층에 미치지 않을 것</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.1.2.2</b></td><td class="L">제연경계 폭 ≥ 0.6 m, 수직거리 ≤ 2 m</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.3.1.1</b></td><td class="L">바닥면적 &lt; 400 ㎡ : 1 ㎥/min/㎡, 최소 5,000 ㎥/h</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.3.2.1</b></td><td class="L">≥ 400 ㎡, 직경 ≤ 40 m : 40,000 ㎥/h (제연경계 시 표 적용)</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.3.2.2</b></td><td class="L">≥ 400 ㎡, 직경 &gt; 40 m : 45,000 ㎥/h (제연경계 시 표 적용)</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.3.3</b></td><td class="L">통로 예상제연구역 : 45,000 ㎥/h 이상</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.4.2</b></td><td class="L">배출구까지 수평거리 ≤ 10 m</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.5.5</b></td><td class="L">유입 풍속 ≤ 5 ㎧ (바닥 유입구 ≤ 1 ㎧)</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.5.6</b></td><td class="L">유입구 크기 ≥ 35 ㎠/㎥/min</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.6.2.2</b></td><td class="L">흡입측 ≤ 15 ㎧, 배출측 ≤ 20 ㎧</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.7.1</b></td><td class="L">유입풍도 내 풍속 ≤ 20 ㎧</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.8</b></td><td class="L">댐퍼 점검구 설치, 제어반 상시 확인, 공조 겸용 시 자동 개구율 조절</td><td class="L"><span class="tag new">신설</span></td></tr>
+            <tr><td class="L"><b>§2.9.1.2</b></td><td class="L">비상전원 ≥ 20분 운전 가능</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.9.3</b></td><td class="L">수동기동장치 높이 0.8~1.5 m, 작동사항 3가지 포함</td><td class="L"><span class="tag new">신설</span></td></tr>
+            <tr><td class="L"><b>§2.10.3.1</b></td><td class="L">배출구별 측정 ≥ 설계값 60%, 구역 합계 ≥ 설계배출량</td><td class="L"><span class="tag new">신설</span></td></tr>
+            <tr><td class="L"><b>§2.10.3.2</b></td><td class="L">유입구별 측정 ≥ 설계값 60%</td><td class="L"><span class="tag new">신설</span></td></tr>
+            <tr><td class="L"><b>§2.11</b></td><td class="L">화장실·주차장·50 ㎡ 미만 창고 등 설치 제외 가능</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-bottom:14px;">
+    <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#2d5282);">
+      <span class="ico">◆</span>Ⅵ-2. 수직거리별 배출량 기준표
+    </div>
+    <div class="box-bd">
+      <div class="g-2" style="gap:14px;">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#1e40af;margin-bottom:8px;">표 2.3.2.1 — 직경 ≤ 40 m (§2.3.2.1)</div>
+          <div class="tbl-wrap">
+            <table class="dt">
+              <thead><tr><th>수직거리</th><th>배출량 (㎥/h)</th></tr></thead>
+              <tbody>
+                <tr><td class="L">2 m 미만</td><td>35,000</td></tr>
+                <tr><td class="L">2 m 이상 ~ 2.5 m 미만</td><td>40,000</td></tr>
+                <tr><td class="L">2.5 m 이상 ~ 3 m 미만</td><td>45,000</td></tr>
+                <tr><td class="L">3 m 이상</td><td>50,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#1e40af;margin-bottom:8px;">표 2.3.2.2 — 직경 &gt; 40 m / 통로 (§2.3.2.2, §2.3.3)</div>
+          <div class="tbl-wrap">
+            <table class="dt">
+              <thead><tr><th>수직거리</th><th>배출량 (㎥/h)</th></tr></thead>
+              <tbody>
+                <tr><td class="L">2 m 미만</td><td>45,000</td></tr>
+                <tr><td class="L">2 m 이상 ~ 2.5 m 미만</td><td>50,000</td></tr>
+                <tr><td class="L">2.5 m 이상 ~ 3 m 미만</td><td>55,000</td></tr>
+                <tr><td class="L">3 m 이상</td><td>60,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:11px;font-weight:800;color:#1e40af;margin-bottom:8px;">표 2.3.1.2 — 통로배출방식 배출량 (바닥면적 50 ㎡ 미만 거실, §2.3.1.2)</div>
+        <div class="tbl-wrap">
+          <table class="dt">
+            <thead>
+              <tr><th rowspan="2">보행중심선 길이</th><th colspan="4">수직거리별 배출량 (㎥/h)</th></tr>
+              <tr><th>2 m 미만</th><th>2~2.5 m</th><th>2.5~3 m</th><th>3 m 이상</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="L">40 m 미만</td><td>25,000</td><td>30,000</td><td>35,000</td><td>40,000</td></tr>
+              <tr><td class="L">40 m 이상 ~ 60 m 이하</td><td>30,000</td><td>35,000</td><td>40,000</td><td>45,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
+      <span class="ico">◆</span>Ⅵ-3. 적용 법령 및 관련 기준
+    </div>
+    <div class="box-bd">
+      <div class="g-2" style="gap:14px;">
+        <div class="law-box">
+          <div class="law-ref">주 적용 기준</div>
+          <div class="law-text">제연설비의 화재안전기술기준(NFTC 501)<br/>국립소방연구원공고 제2024-52호 / 2024.10.01 시행<br/>화재예방연구과 : 041-559-0531</div>
+        </div>
+        <div class="law-box">
+          <div class="law-ref">관련 법령</div>
+          <div class="law-text">
+            ▸ 소방시설 설치 및 관리에 관한 법률 제2조제1항제6호나목<br/>
+            ▸ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4 제5호가목1)~5)<br/>
+            ▸ 건축법 시행령 제64조 (방화문) / 제2조제10호 (불연재료)
+          </div>
+        </div>
+      </div>
+      <div style="text-align:right;margin-top:14px;font-size:10px;color:#9ca3af;">
+        <span style="font-family:'Orbitron',sans-serif !important;font-weight:700;letter-spacing:.08em;">MANMIN · Ver-3.0</span>
+        &nbsp;|&nbsp; NFTC 501 · 2024.10.01 기준
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-law -->
+
+
+<!-- ══════════ TAB 🖨️ 계산서 출력 ══════════ -->
+<div class="tab-panel" id="tab-print">
+
+  <!-- 액션 버튼 + 안내 -->
+  <div class="box no-print">
+    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
+      <span class="ico">◆</span>출력 · PDF 저장
+    </div>
+    <div class="box-bd">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px;">
+        <button onclick="doPrint()" style="
+          display:flex;align-items:center;gap:8px;
+          background:linear-gradient(135deg,#1e3a5f,#2d5282);
+          color:white;border:none;border-radius:10px;
+          padding:13px 24px;font-size:13px;font-weight:800;
+          box-shadow:0 4px 14px rgba(30,58,95,.45);
+          transition:all .15s;
+        " onmouseover="this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.transform=''">
+          <span style="font-size:18px;">🖨️</span> 인쇄 / PDF 저장
+        </button>
+        <div style="font-size:11px;color:#374151;line-height:1.7;">
+          💡 인쇄 대화상자에서 <b>「PDF로 저장」</b> 선택 시 PDF 파일로 저장됩니다.<br/>
+          &nbsp;&nbsp;&nbsp;용지: <b>A4 세로</b> · 여백: 기본값 · 배경 그래픽 인쇄 포함 권장
+        </div>
+      </div>
+      <div class="law-banner" style="margin-bottom:0;">
+        <span class="lbk">출력 설정 권장</span>
+        <span class="lbi"><span class="lbi-k">용지:</span><span class="lbi-v">A4 세로</span></span>
+        <span class="lbi"><span class="lbi-k">여백:</span><span class="lbi-v">상14·하22·좌14·우12 mm</span></span>
+        <span class="lbi"><span class="lbi-k">배경 그래픽:</span><span class="lbi-v">포함</span></span>
+        <span class="lbi"><span class="lbi-k">푸터:</span><span class="lbi-v">MANMIN-Ver3.0 자동 인쇄</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- A4 미리보기 (화면) + 인쇄 본문 -->
+  <div class="box no-print">
+    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
+      <span class="ico">◆</span>A4 계산서 미리보기
+      <span style="margin-left:auto;font-size:10px;font-weight:500;opacity:.7;">※ 화면과 실제 인쇄 비율이 다를 수 있습니다</span>
+    </div>
+    <div class="box-bd" style="padding:16px;background:#dde3ea;border-radius:0 0 12px 12px;">
+      <div class="rpt-hint">
+        <span>📱</span>
+        <span>미리보기가 축소 표시됩니다. 실제 인쇄 시 A4 전체로 출력됩니다.</span>
+      </div>
+      <div class="rpt-outer" id="rpt-outer">
+        <div id="rpt-inner">
+          <div id="report-zone"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-print -->
+
+</div><!-- /main-outer -->
+
+
+<!-- ══════════ FAB ══════════ -->
+<button class="fml-fab no-print" id="btn-fml-fab">
+  <span style="font-size:20px;line-height:1;">📐</span>
+  <span style="font-size:10px;font-weight:800;letter-spacing:.04em;">이용안내</span>
+  <span style="font-size:9px;opacity:.8;">법규자료</span>
+</button>
+
+<!-- ══════════ MODAL ══════════ -->
+<div class="fml-overlay no-print" id="modal" style="display:none;">
+  <div class="fml-box">
+    <div class="fml-hd">
+      <div class="fml-hd-row">
+        <div>
+          <div style="font-size:14px;font-weight:900;letter-spacing:.04em;margin-bottom:3px;">🌫️ 제연설비 계산서 안내</div>
+          <div style="font-size:10px;opacity:.65;font-weight:500;">NFTC 501 · 2024.10.01 시행 · MANMIN Ver-3.0</div>
+        </div>
+        <button class="fml-close" id="btn-modal-close">✕</button>
+      </div>
+      <div class="fml-tabs">
+        <button class="fml-tab on" data-mp="0">🗺️ 이용방법</button>
+        <button class="fml-tab" data-mp="1">핵심 계산식</button>
+        <button class="fml-tab" data-mp="2">법규 기준</button>
+        <button class="fml-tab" data-mp="3">관련 자료</button>
+      </div>
+    </div>
+    <div class="fml-bd">
+      <!-- 이용방법 -->
+      <div class="fml-panel on" id="mp-0">
+        <div style="background:linear-gradient(135deg,#0d1f33,#1e3a5f,#2d5282);border-radius:13px;padding:16px 18px;margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:900;color:#90cdf4;margin-bottom:5px;display:flex;align-items:center;gap:8px;"><span style="font-size:20px;">🌫️</span>제연설비 설계 계산서 이용방법</div>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.75);line-height:1.7;">NFTC 501 제연설비의 화재안전기술기준 [시행 2024.10.1.] · MANMIN Ver-3.0</div>
+        </div>
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#f8fafc;border:1.5px solid #e2e8f0;border-left:4px solid #3182ce;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#3182ce,#1e3a5f);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0;">1</div>
+          <div><div style="font-size:12px;font-weight:900;color:#1e40af;margin-bottom:5px;">📋 프로젝트 정보 입력</div><div style="font-size:10.5px;color:#374151;line-height:1.85;">① 탭 「① 배출량 계산」 → 공사명 <b>"만민 건축사 신축공사 현장"</b>, 설계자 <b>"김만민"</b> 기본 입력<br/>② 출력 계산서 상단에 자동 반영됩니다.</div></div>
+        </div>
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#eff6ff;border:1.5px solid #bfdbfe;border-left:4px solid #3182ce;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#3182ce,#2d5282);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0;">2</div>
+          <div><div style="font-size:12px;font-weight:900;color:#1e40af;margin-bottom:5px;">💨 배출량 계산</div><div style="font-size:10.5px;color:#374151;line-height:1.85;">제연구역 유형·제연경계 여부·수직거리·바닥면적 입력 → [배출량 계산] 클릭<br/>NFTC 501 §2.3 기준으로 배출량·유입구 면적이 자동 산출됩니다.</div></div>
+        </div>
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#fefce8;border:1.5px solid #fde047;border-left:4px solid #ca8a04;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#ca8a04,#854d0e);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0;">3</div>
+          <div><div style="font-size:12px;font-weight:900;color:#854d0e;margin-bottom:5px;">🏗️ 각 탭별 검토</div><div style="font-size:10.5px;color:#374151;line-height:1.85;">② 제연구역 설계 → ③ 풍도 설계 → ④ 전원·기동 → ⑤ 성능 확인 탭 순서대로 각 입력값을 확인하고 적합성을 판정합니다.</div></div>
+        </div>
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#fff1f2;border:1.5px solid #fecdd3;border-left:4px solid #e11d48;border-radius:10px;padding:13px 14px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#e11d48,#9f1239);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0;">4</div>
+          <div><div style="font-size:12px;font-weight:900;color:#9f1239;margin-bottom:5px;">🖨️ 계산서 출력</div><div style="font-size:10.5px;color:#374151;line-height:1.85;">「🖨️ 계산서 출력」 탭 → A4 미리보기 확인 → [인쇄/PDF 저장] 버튼<br/>인쇄 대화상자에서 「PDF로 저장」 선택 시 PDF 파일로 저장됩니다.</div></div>
+        </div>
+      </div>
+      <!-- 핵심 계산식 -->
+      <div class="fml-panel" id="mp-1">
+        <div class="fml-sec">
+          <div class="fml-sec-ttl" style="color:#1e40af;">💨 배출량 계산식 (§2.3)</div>
+          <div class="fml-g2">
+            <div class="fml-card"><div class="fml-card-ttl">거실 &lt; 400 ㎡ (§2.3.1.1)</div><code class="fml-eq">Q = max(A × 1㎥/min/㎡ × 60, 5,000) [㎥/h]</code><div class="fml-note">A: 바닥면적(㎡) | 최소 5,000 ㎥/h</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">거실 ≥ 400 ㎡, 직경 ≤ 40 m (§2.3.2.1)</div><code class="fml-eq">Q ≥ 40,000 ㎥/h (벽 구획)</code><div class="fml-note">제연경계 시 수직거리별 표 2.3.2.1 적용</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">거실 ≥ 400 ㎡, 직경 &gt; 40 m (§2.3.2.2)</div><code class="fml-eq">Q ≥ 45,000 ㎥/h (벽 구획)</code><div class="fml-note">제연경계 시 수직거리별 표 2.3.2.2 적용</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">통로 예상제연구역 (§2.3.3)</div><code class="fml-eq">Q ≥ 45,000 ㎥/h</code><div class="fml-note">제연경계 시 표 2.3.2.2 적용</div></div>
+          </div>
+        </div>
+        <div class="fml-sec">
+          <div class="fml-sec-ttl" style="color:#1e40af;">🌬️ 유입구 · 풍속 · 성능확인</div>
+          <div class="fml-hibox"><div class="fml-card-ttl" style="color:#1e40af;">유입구 최소면적 (§2.5.6)</div><code class="fml-eq">유입구면적(㎠) = 배출량(㎥/min) × 35</code></div>
+          <div class="fml-hibox"><div class="fml-card-ttl" style="color:#1e40af;">풍속 계산</div><code class="fml-eq">풍속(㎧) = 배출량(㎥/h) ÷ 3,600 ÷ 단면적(㎡)</code></div>
+          <div class="fml-hibox"><div class="fml-card-ttl" style="color:#1e40af;">성능확인 달성률 (§2.10, 신설 2024)</div><code class="fml-eq">달성률(%) = 측정값 ÷ 설계값 × 100 ≥ 60%</code></div>
+        </div>
+      </div>
+      <!-- 법규 기준 -->
+      <div class="fml-panel" id="mp-2">
+        <div class="fml-sec">
+          <div class="fml-sec-ttl" style="color:#1e40af;">📋 적용 법규</div>
+          <div class="fml-hibox"><div class="fml-card-ttl" style="color:#1e40af;">주 적용 기준</div><div class="fml-note" style="font-size:11px;line-height:2;">제연설비의 화재안전기술기준(NFTC 501)<br/>국립소방연구원공고 제2024-52호 / 2024.10.01 시행<br/>소방시설 설치 및 관리에 관한 법률 제2조제1항제6호나목</div></div>
+        </div>
+        <div class="fml-sec">
+          <div class="fml-sec-ttl" style="color:#1e40af;">🆕 2024.10.1 주요 개정사항</div>
+          <div class="fml-card"><div class="fml-note" style="font-size:11px;line-height:2.1;">▸ §1.7.1.1 "제연설비" 용어 정의 신설<br/>▸ §1.7.1.16 "댐퍼" 용어 정의 신설<br/>▸ §1.7.1.17 "풍량조절댐퍼" 용어 정의 신설<br/>▸ §2.8 댐퍼 설치기준 전면 신설 (점검구·제어반·공조겸용)<br/>▸ §2.9.2 수동기동장치 위치 개정<br/>▸ §2.9.3 기동 작동사항 3가지 신설<br/>▸ §2.10 성능확인 조항 전면 신설 (시험·측정·조정, 60% 기준)</div></div>
+        </div>
+      </div>
+      <!-- 관련 자료 -->
+      <div class="fml-panel" id="mp-3">
+        <div class="fml-sec">
+          <div class="fml-sec-ttl" style="color:#1e40af;">📥 참고 자료</div>
+          <div class="fml-g2">
+            <div class="fml-card"><div class="fml-card-ttl">📄 NFTC 501 원문</div><div class="fml-note">국가법령정보센터 (www.law.go.kr)<br/>소방청 훈령 → 제연설비의 화재안전기술기준</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">📄 NFPC 501</div><div class="fml-note">제연설비의 화재안전성능기준<br/>성능 중심 기준 · NFTC와 병행 검토</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">🏛️ 소방청</div><div class="fml-note">www.nfa.go.kr<br/>소방법령·고시·예규 최신 개정사항</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">🔬 국립소방연구원</div><div class="fml-note">화재예방연구과 : 041-559-0531<br/>기준 해석 관련 문의</div></div>
+          </div>
+        </div>
+        <div class="fml-sec">
+          <div class="fml-sec-ttl" style="color:#b91c1c;">⚠️ 면책 사항</div>
+          <div class="fml-card" style="border-left:3px solid #b91c1c;"><div class="fml-note" style="font-size:11px;line-height:1.8;">본 계산서는 NFTC 501 (2024.10.01 시행) 기준을 바탕으로 작성되었으나, 설계 적용 시 반드시 담당 소방기술사 또는 관련 전문가의 검토를 받으시기 바랍니다.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ════════════════════════════════════════
+   0. 전역 상태
+════════════════════════════════════════ */
+const G = {
+  exhaust: 0,     // 계산된 배출량 (㎥/h)
+  exhaustMin: 0,  // 배출량 (㎥/min)
+  inletCm2: 0,    // 유입구 최소 면적 (㎠)
+  ref: '',        // 적용 조항
+  formula: '',    // 산출식
+  area: 0,        // 바닥면적
+  calculated: false
+};
+
+/* ════════════════════════════════════════
+   1. 탭 전환
+════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+    if (id === 'print') {
+      buildReport();
+      // DOM 업데이트 후 스케일 계산 (두 프레임 대기)
+      requestAnimationFrame(() => requestAnimationFrame(scaleReport));
+    }
+  });
+});
+
+/* ════════════════════════════════════════
+   2. 배출량 계산 핵심 로직
+════════════════════════════════════════ */
+function getQ_bdry(v, type) {
+  // 수직거리별 배출량 (표 2.3.2.1 / 2.3.2.2)
+  // 경계값: 2m 이하, 2m 초과~2.5m 이하, 2.5m 초과~3m 이하, 3m 초과
+  if (type === 'lt40') {
+    return v <= 2 ? 35000 : v <= 2.5 ? 40000 : v <= 3 ? 45000 : 50000;
+  } else {
+    return v <= 2 ? 45000 : v <= 2.5 ? 50000 : v <= 3 ? 55000 : 60000;
+  }
+}
+
+function getQ_corrOutlet(len, v) {
+  // 표 2.3.1.2 통로배출방식
+  // 경계값: 40m 미만 / 40m 이상
+  if (len < 40) return v <= 2 ? 25000 : v <= 2.5 ? 30000 : v <= 3 ? 35000 : 40000;
+  else          return v <= 2 ? 30000 : v <= 2.5 ? 35000 : v <= 3 ? 40000 : 45000;
+}
+
+document.getElementById('zone-type').addEventListener('change', () => {
+  const t = document.getElementById('zone-type').value;
+  document.getElementById('corr-len-wrap').style.display =
+    (t === 'corridor' || t === 'corr_outlet') ? 'block' : 'none';
+});
+
+document.getElementById('btn-calc').addEventListener('click', calcExhaust);
+
+function calcExhaust() {
+  const type    = document.getElementById('zone-type').value;
+  const hasBnd  = document.getElementById('has-boundary').value;
+  const vd      = parseFloat(document.getElementById('vert-dist').value) || 1.0;
+  const area    = parseFloat(document.getElementById('floor-area').value) || 0;
+  const corrLen = parseFloat(document.getElementById('corr-len').value) || 0;
+
+  let Q = 0, ref = '', fml = '';
+
+  switch (type) {
+    case 'room_lt400':
+      Q = Math.max(area * 60, 5000); // 1㎥/min/㎡ × 60 = ㎥/h
+      ref = 'NFTC 501 §2.3.1.1';
+      fml = 'Q = max(' + area + '㎡ × 1㎥/min/㎡ × 60, 5,000) = ' + Q.toLocaleString() + ' ㎥/h';
+      if (hasBnd === 'boundary') ref += ' (제연경계 — §2.3.1.2 참조)';
+      break;
+    case 'room_ge400_lt40':
+      if (hasBnd === 'wall') { Q = 40000; ref = '§2.3.2.1 (벽 구획)'; fml = '거실(≥400㎡, 직경≤40m, 벽 구획) : 40,000 ㎥/h'; }
+      else { Q = getQ_bdry(vd, 'lt40'); ref = '§2.3.2.1 표2.3.2.1 (제연경계)'; fml = '거실(≥400㎡, 직경≤40m, 제연경계, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h'; }
+      break;
+    case 'room_ge400_gt40':
+      if (hasBnd === 'wall') { Q = 45000; ref = '§2.3.2.2 (벽 구획)'; fml = '거실(≥400㎡, 직경>40m, 벽 구획) : 45,000 ㎥/h'; }
+      else { Q = getQ_bdry(vd, 'gt40'); ref = '§2.3.2.2 표2.3.2.2 (제연경계)'; fml = '거실(≥400㎡, 직경>40m, 제연경계, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h'; }
+      break;
+    case 'corridor':
+      if (hasBnd === 'wall') { Q = 45000; ref = '§2.3.3 (벽 구획)'; fml = '통로 예상제연구역 (벽 구획) : 45,000 ㎥/h'; }
+      else { Q = getQ_bdry(vd, 'gt40'); ref = '§2.3.3 표2.3.2.2 (제연경계)'; fml = '통로(제연경계, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h'; }
+      break;
+    case 'corr_outlet':
+      Q = getQ_corrOutlet(corrLen, vd);
+      ref = '§2.3.1.2 표2.3.1.2 (통로배출방식)';
+      fml = '통로배출방식 (보행중심선 ' + corrLen + 'm, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h';
+      break;
+  }
+
+  const Qmin = Q / 60;
+  const Ai   = Qmin * 35; // ㎠
+
+  // 전역 상태 저장
+  G.exhaust = Q; G.exhaustMin = Qmin; G.inletCm2 = Ai;
+  G.ref = ref; G.formula = fml; G.area = area; G.calculated = true;
+
+  // 개요 카드
+  setText('ov-area', area.toLocaleString());
+  setText('ov-q',    Q.toLocaleString());
+  setText('ov-ai',   Math.round(Ai).toLocaleString());
+
+  // 요약 바
+  setText('sb-area', area.toLocaleString() + ' ㎡');
+  setText('sb-q',    Q.toLocaleString() + ' ㎥/h');
+  setText('sb-ai',   Math.round(Ai).toLocaleString() + ' ㎠');
+
+  // 결과 카드
+  setHTML('r-ref-short', ref);
+  setHTML('r-q', Q.toLocaleString() + '<span class="rc-unit">㎥/h</span>');
+  setText('r-q-min', Qmin.toFixed(1) + ' ㎥/min');
+  setHTML('r-ai', Math.round(Ai).toLocaleString() + '<span class="rc-unit">㎠</span>');
+  setText('r-ai-m2', (Ai / 10000).toFixed(4) + ' ㎡');
+  setHTML('r-judge', '<span class="badge badge-ok">✔ 기준 충족</span>');
+
+  // 상세 결과
+  setText('r-ref', ref);
+  setText('r-q2', Q.toLocaleString() + ' ㎥/h');
+  setText('r-q-min2', Qmin.toFixed(1) + ' ㎥/min');
+  setText('r-ai2', Math.round(Ai).toLocaleString() + ' ㎠');
+  setText('r-ai-m2-2', (Ai / 10000).toFixed(4) + ' ㎡');
+  setHTML('r-formula', '<code class="fml green">' + fml + '</code>');
+
+  // 결과 영역 표시
+  const ra = document.getElementById('result-area');
+  ra.style.display = 'block';
+  ra.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ════════════════════════════════════════
+   3. 제연구역 설계 탭 — 실시간 이벤트
+════════════════════════════════════════ */
+function checkZoneArea() {
+  const v = parseFloat(document.getElementById('za-input').value) || 0;
+  setText('za-val', v.toLocaleString() + ' ㎡');
+  const pct = Math.min(v / 1000 * 100, 120).toFixed(1);
+  const dispPct = Math.min(parseFloat(pct), 100);
+  setText('za-pct', pct + '%');
+  document.getElementById('za-bar').style.width = dispPct + '%';
+  const ok = v <= 1000;
+  document.getElementById('za-bar').style.background = ok
+    ? 'linear-gradient(90deg,#3182ce,#63b3ed)'
+    : 'linear-gradient(90deg,#b91c1c,#f87171)';
+  setHTML('za-judge', ok
+    ? '<span class="badge badge-ok">✔ 적합 (≤ 1,000 ㎡)</span>'
+    : '<span class="badge badge-ng">✗ 부적합 (' + v.toLocaleString() + ' ㎡ > 1,000 ㎡)</span>');
+}
+
+function checkZoneDiam() {
+  const v = parseFloat(document.getElementById('zd-input').value) || 0;
+  setText('zd-val', v + ' m');
+  setHTML('zd-judge', v <= 60
+    ? '<span class="badge badge-ok">✔ 적합 (' + v + 'm ≤ 60m)</span>'
+    : '<span class="badge badge-ng">✗ 부적합 (' + v + 'm > 60m)</span>');
+}
+
+function checkBoundary() {
+  const w = parseFloat(document.getElementById('bw-input').value) || 0;
+  const v = parseFloat(document.getElementById('bv-input').value) || 0;
+  setHTML('bw-result', w >= 0.6
+    ? '<span class="badge badge-ok">✔ 폭 적합 (' + w + 'm ≥ 0.6m)</span>'
+    : '<span class="badge badge-ng">✗ 폭 부적합 (' + w + 'm &lt; 0.6m)</span>');
+  setHTML('bv-result', v <= 2
+    ? '<span class="badge badge-ok">✔ 수직거리 적합 (' + v + 'm ≤ 2m)</span>'
+    : '<span class="badge badge-warn">⚠ 수직거리 초과 (' + v + 'm > 2m) — 구조상 불가피 여부 검토 필요</span>');
+}
+
+function checkWalkLen() {
+  const v = parseFloat(document.getElementById('wl-input').value) || 0;
+  setHTML('wl-result', v <= 60
+    ? '<span class="badge badge-ok">✔ 적합 (' + v + 'm ≤ 60m)</span>'
+    : '<span class="badge badge-ng">✗ 부적합 (' + v + 'm > 60m)</span>');
+}
+
+bindLive('za-input', checkZoneArea);
+bindLive('zd-input', checkZoneDiam);
+bindLive('bw-input', checkBoundary);
+bindLive('bv-input', checkBoundary);
+bindLive('wl-input', checkWalkLen);
+
+/* ════════════════════════════════════════
+   4. 풍도 설계 탭
+════════════════════════════════════════ */
+function calcDuctThick() {
+  const s = parseFloat(document.getElementById('ds-input').value) || 0;
+  const l = parseFloat(document.getElementById('dl-input').value) || 0;
+  const ref = Math.max(s, l);
+  const t = ref <= 450 ? '0.5' : ref <= 750 ? '0.6' : ref <= 1500 ? '0.8' : ref <= 2250 ? '1.0' : '1.2';
+  setHTML('d-ref', ref + '<span class="rc-unit">mm</span>');
+  setHTML('d-thick', t + '<span class="rc-unit">mm</span>');
+}
+
+function calcWindspeed() {
+  const q = parseFloat(document.getElementById('ws-q').value) || 0;
+  const a = parseFloat(document.getElementById('ws-a').value) || 1;
+  const type = document.getElementById('ws-type').value;
+  const ws = (q / 3600 / a).toFixed(2);
+  const limit = type === 'suction' ? 15 : 20;
+  const ok = parseFloat(ws) <= limit;
+  setHTML('ws-result', ws + '<span class="rc-unit">㎧</span>');
+  setHTML('ws-limit', limit + '<span class="rc-unit">㎧</span>');
+  setHTML('ws-judge', ok
+    ? '<span class="badge badge-ok">✔ 적합 (' + ws + ' ≤ ' + limit + ' ㎧)</span>'
+    : '<span class="badge badge-ng">✗ 부적합 (' + ws + ' > ' + limit + ' ㎧) — 단면 확대 필요</span>');
+}
+
+bindLive('ds-input', calcDuctThick);
+bindLive('dl-input', calcDuctThick);
+bindLive('ws-q', calcWindspeed);
+bindLive('ws-a', calcWindspeed);
+document.getElementById('ws-type').addEventListener('change', calcWindspeed);
+
+/* ════════════════════════════════════════
+   5. 전원·기동 탭
+════════════════════════════════════════ */
+function checkManualHeight() {
+  const v = parseFloat(document.getElementById('mh-input').value) || 0;
+  setHTML('mh-judge', (v >= 0.8 && v <= 1.5)
+    ? '<span class="badge badge-ok">✔ 적합 (' + v + 'm, 0.8~1.5m 범위)</span>'
+    : '<span class="badge badge-ng">✗ 부적합 (기준: 0.8 m 이상 ~ 1.5 m 이하)</span>');
+}
+bindLive('mh-input', checkManualHeight);
+
+/* ════════════════════════════════════════
+   6. 성능 확인 탭
+════════════════════════════════════════ */
+function calcPerf(designId, measId, pctId, limitId, judgeId, barId, pctLblId) {
+  const d = parseFloat(document.getElementById(designId).value) || 1;
+  const m = parseFloat(document.getElementById(measId).value) || 0;
+  const pct = (m / d * 100).toFixed(1);
+  const limit = Math.round(d * 0.6);
+  const ok = parseFloat(pct) >= 60;
+  setHTML(pctId, pct + '<span class="rc-unit">%</span>');
+  setHTML(limitId, limit.toLocaleString() + '<span class="rc-unit">㎥/h</span>');
+  setHTML(judgeId, ok
+    ? '<span class="badge badge-ok">✔ 적합 (' + pct + '% ≥ 60%)</span>'
+    : '<span class="badge badge-ng">✗ 부적합 (' + pct + '% &lt; 60%)</span>');
+  const bp = Math.min(parseFloat(pct), 100);
+  const bar = document.getElementById(barId);
+  bar.style.width = bp + '%';
+  bar.style.background = ok
+    ? 'linear-gradient(90deg,#3182ce,#63b3ed)'
+    : 'linear-gradient(90deg,#b91c1c,#f87171)';
+  setText(pctLblId, pct + '%');
+}
+
+function calcPerfE() { calcPerf('pe-design','pe-meas','pe-pct','pe-limit','pe-judge','pe-bar','pe-pct-lbl'); }
+function calcPerfI() { calcPerf('pi-design','pi-meas','pi-pct','pi-limit','pi-judge','pi-bar','pi-pct-lbl'); }
+
+bindLive('pe-design', calcPerfE); bindLive('pe-meas', calcPerfE);
+bindLive('pi-design', calcPerfI); bindLive('pi-meas', calcPerfI);
+
+/* ════════════════════════════════════════
+   7. 계산서 출력 탭
+════════════════════════════════════════ */
+
+/* ── 계산서 HTML 생성 (공통) ── */
+function makeReportHTML() {
+  const name = (document.getElementById('proj-name').value || '').trim() || '—';
+  const eng  = (document.getElementById('proj-eng').value  || '').trim() || '—';
+  const date = (document.getElementById('proj-date').value || '—');
+
+  const B = '1px solid #cbd5e1';
+
+  /* ── 헬퍼: th / td ── */
+  const TH = (t,w) => `<th style="border:${B};padding:6px 9px;background:#1e3a5f;color:white;font-weight:700;text-align:center;font-size:10px;white-space:nowrap;${w?'width:'+w+';':''}">${t}</th>`;
+  const TD = (t,align,mono,even) => `<td style="border:${B};padding:5px 9px;text-align:${align||'center'};font-size:10.5px;color:#111;${mono?'font-family:\'Noto Sans Mono\',monospace;font-weight:700;color:#1e3a5f;':''}${even?'background:#f8fafc;':''}">${t}</td>`;
+
+  /* ── 배출량 테이블 ── */
+  let exRows;
+  if (G.calculated) {
+    const data = [
+      ['A',  '바닥면적', G.area.toLocaleString(), '㎡', '설계도면 기준', false],
+      ['Q',  '필요 배출량', G.exhaust.toLocaleString(), '㎥/h', G.ref, true],
+      ["Q'", '배출량 (분당 환산)', G.exhaustMin.toFixed(1), '㎥/min', 'Q ÷ 60', false],
+    ];
+    exRows = data.map((r,i) =>
+      `<tr${i%2===1?' style="background:#f8fafc;"':''}>`+
+      `<td style="border:${B};padding:5px 9px;text-align:center;font-family:'Noto Sans Mono',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[0]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10.5px;${r[5]?'font-weight:700;':''}color:#111;">${r[1]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:right;font-family:'Noto Sans Mono',monospace;font-weight:700;color:${r[5]?'#92400e':'#1e3a5f'};font-size:10.5px;${r[5]?'background:#fefce8;':''}">${r[2]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#111;">${r[3]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10px;color:#374151;">${r[4]}</td>`+
+      '</tr>'
+    ).join('');
+  } else {
+    exRows = `<tr><td colspan="5" style="border:${B};padding:10px;text-align:center;color:#64748b;font-size:10px;">① 배출량 계산 탭 → [배출량 계산] 버튼을 클릭한 후 이 탭을 확인하세요.</td></tr>`;
+  }
+
+  /* ── 유입구 테이블 ── */
+  let aiRows;
+  if (G.calculated) {
+    const data = [
+      ['Ai', '유입구 최소 면적', Math.round(G.inletCm2).toLocaleString(), '㎠', 'Q(㎥/min) × 35  (§2.5.6)'],
+      ['Ai', '유입구 최소 면적 (㎡환산)', (G.inletCm2/10000).toFixed(4), '㎡', 'Ai(㎠) ÷ 10,000'],
+      ['v',  '공기유입구 유입풍속 제한', '≤ 5', '㎧', '§2.5.5 (바닥 설치 시 ≤ 1 ㎧)'],
+    ];
+    aiRows = data.map((r,i) =>
+      `<tr${i%2===1?' style="background:#f8fafc;"':''}>`+
+      `<td style="border:${B};padding:5px 9px;text-align:center;font-family:'Noto Sans Mono',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[0]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10.5px;color:#111;">${r[1]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:right;font-family:'Noto Sans Mono',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[2]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#111;">${r[3]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10px;color:#374151;">${r[4]}</td>`+
+      '</tr>'
+    ).join('');
+  } else { aiRows = exRows; }
+
+  /* ── 풍도 두께 ── */
+  const ds = parseFloat(document.getElementById('ds-input').value)||0;
+  const dl = parseFloat(document.getElementById('dl-input').value)||0;
+  const dRef = Math.max(ds, dl);
+  const dThick = dRef<=450?'0.5':dRef<=750?'0.6':dRef<=1500?'0.8':dRef<=2250?'1.0':'1.2';
+  const dRows = [
+    ['450 mm 이하','0.5 mm'],
+    ['450 mm 초과 ~ 750 mm 이하','0.6 mm'],
+    ['750 mm 초과 ~ 1,500 mm 이하','0.8 mm'],
+    ['1,500 mm 초과 ~ 2,250 mm 이하','1.0 mm'],
+    ['2,250 mm 초과','1.2 mm'],
+  ].map((r,i) => {
+    const cur = (i===0&&dRef>0&&dRef<=450)||(i===1&&dRef>450&&dRef<=750)||
+                (i===2&&dRef>750&&dRef<=1500)||(i===3&&dRef>1500&&dRef<=2250)||(i===4&&dRef>2250);
+    return `<tr style="${cur?'background:#fefce8;':(i%2===1?'background:#f8fafc;':'')}">
+      <td style="border:${B};padding:5px 9px;text-align:left;font-size:10.5px;color:#111;">${r[0]}</td>
+      <td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;font-weight:${cur?'800':'700'};color:${cur?'#92400e':'#111'};">${r[1]}</td>
+      <td style="border:${B};padding:5px 9px;text-align:left;font-size:9.5px;color:#64748b;">${cur?'◀ 해당 규격 (유입풍도 동일 §2.7.1)':'유입풍도 동일 적용 (§2.7.1)'}</td>
+    </tr>`;
+  }).join('');
+
+  /* ── 섹션 헤더: 클래스 없이 인라인 색상만 사용 (화면+인쇄 동시 적용) ── */
+  const COLOR = {
+    navy: { bg:'#1e3a5f', accent:'#2d5282' },
+    blue: { bg:'#2d5282', accent:'#3b6fa0' },
+    gray: { bg:'#374151', accent:'#4b5563' },
+  };
+  const SecHd = (color, txt) => {
+    const c = COLOR[color] || COLOR.navy;
+    return `<div style="padding:7px 12px;font-size:11px;font-weight:800;letter-spacing:.04em;color:white;margin-top:14px;background:linear-gradient(135deg,${c.bg},${c.accent});border-radius:4px 4px 0 0;-webkit-print-color-adjust:exact;print-color-adjust:exact;">${txt}</div>`;
+  };
+
+  /* ══════════════════════════════════════════
+     계산서 HTML 본문 (서명란 없음)
+  ══════════════════════════════════════════ */
+  return `
+<div style="padding:9px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#1e3a5f,#2d5282);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+  <span style="font-size:13.5px;font-weight:900;letter-spacing:.04em;color:white;">제연설비 설계 계산서</span>
+  <span style="font-family:'Orbitron',sans-serif;font-size:9px;font-weight:900;color:#90cdf4;letter-spacing:.1em;">MANMIN-Ver3.0</span>
+</div>
+
+<div style="border:1px solid #cbd5e1;border-top:none;padding:8px 16px 9px;background:#eef4fb;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+  <div style="font-size:16px;font-weight:900;color:#1e3a5f;letter-spacing:.02em;">제연설비 설계 계산서</div>
+  <div style="font-size:9px;color:#475569;margin-top:3px;">화재안전기술기준(NFTC 501) · 화재안전성능기준(NFPC 501) 적용</div>
+</div>
+
+<div style="display:flex;border:1px solid #cbd5e1;border-top:none;margin-bottom:0;">
+  <div style="flex:2;padding:6px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">공사명</div>
+    <div style="font-size:12px;font-weight:800;color:#1e3a5f;">${name}</div>
+  </div>
+  <div style="flex:1;padding:6px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">설계자</div>
+    <div style="font-size:12px;font-weight:800;color:#1e3a5f;">${eng}</div>
+  </div>
+  <div style="flex:1;padding:6px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">작성일</div>
+    <div style="font-size:11px;font-weight:700;color:#1e3a5f;">${date}</div>
+  </div>
+  <div style="flex:1;padding:6px 12px;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">적용기준</div>
+    <div style="font-size:10px;font-weight:700;color:#2d5282;">NFTC 501 (2024.10.01)</div>
+  </div>
+</div>
+
+<div style="padding:0 0 24px;">
+
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('navy','Ⅰ-1. 배출량 산출 (NFTC 501 §2.3)')}
+<table style="width:100%;border-collapse:collapse;">
+  <thead><tr>${TH('기호','36px')}${TH('항목')}${TH('수치','82px')}${TH('단위','50px')}${TH('산출 근거')}</tr></thead>
+  <tbody>${exRows}</tbody>
+</table>
+</div>
+
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('blue','Ⅰ-2. 공기유입구 산출 (NFTC 501 §2.5.6)')}
+<table style="width:100%;border-collapse:collapse;">
+  <thead><tr>${TH('기호','36px')}${TH('항목')}${TH('수치','82px')}${TH('단위','50px')}${TH('산출 근거')}</tr></thead>
+  <tbody>${aiRows}</tbody>
+</table>
+</div>
+
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('gray','Ⅲ-1. 배출풍도 강판 두께 기준 (NFTC 501 §2.6.2.1 표 2.6.2.1)')}
+<table style="width:100%;border-collapse:collapse;">
+  <thead><tr>${TH('풍도 장변 크기')}${TH('최소 강판 두께','100px')}${TH('비고')}</tr></thead>
+  <tbody>${dRows}</tbody>
+</table>
+${dRef>0?`<div style="border:1px solid #cbd5e1;border-top:none;padding:6px 12px;background:#f0f7ff;font-size:10px;color:#1e3a5f;">입력 장변 ${dRef}mm → 최소 강판 두께 <b>${dThick} mm</b> 적용 (유입풍도 동일 §2.7.1)</div>`:''}
+</div>
+
+<div style="break-inside:avoid;page-break-inside:avoid;">
+${SecHd('blue','Ⅲ-2. 풍속 기준 검토 (NFTC 501 §2.6.2.2, §2.7.1)')}
+<table style="width:100%;border-collapse:collapse;">
+  <thead><tr>${TH('구분')}${TH('기준 풍속','95px')}${TH('적용 조항','85px')}</tr></thead>
+  <tbody>
+    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">배출기 흡입측 풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">15 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.6.2.2</td></tr>
+    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">배출기 배출측 풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">20 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.6.2.2</td></tr>
+    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">유입풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">20 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.7.1</td></tr>
+    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">공기유입구 유입 풍속</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">5 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.5.5</td></tr>
+    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">바닥 유입구 풍속</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">1 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.5.5 단서</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div style="break-before:page;page-break-before:always;">
+${SecHd('gray','Ⅳ-1. 비상전원 및 기동장치 기준 (NFTC 501 §2.9)')}
+<table style="width:100%;border-collapse:collapse;">
+  <tbody>
+    <tr><td style="border:${B};padding:5px 9px;font-weight:700;color:#1e3a5f;font-size:10.5px;width:130px;">비상전원 종류</td><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">자가발전설비, 축전지설비, 전기저장장치(ESS)</td></tr>
+    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-weight:700;color:#1e3a5f;font-size:10.5px;">최소 운전시간</td><td style="border:${B};padding:5px 9px;font-size:10.5px;font-weight:700;color:#1e3a5f;">20분 이상 (§2.9.1.2)</td></tr>
+    <tr><td style="border:${B};padding:5px 9px;font-weight:700;color:#1e3a5f;font-size:10.5px;">수동기동장치 높이</td><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">바닥으로부터 0.8 m 이상 ~ 1.5 m 이하 (§2.9.3)</td></tr>
+    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-weight:700;color:#1e3a5f;font-size:10.5px;">기동 연동</td><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">해당 제연구역 화재감지기 연동 + 수동기동장치 + 제어반 수동기동 (§2.9.2)</td></tr>
+    <tr><td style="border:${B};padding:5px 9px;font-weight:700;color:#1e3a5f;font-size:10.5px;">기동 작동사항</td><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">① 제연경계벽·벽 작동 &nbsp; ② 댐퍼 작동 &nbsp; ③ 공기유입송풍기·배출송풍기 작동 (§2.9.3)</td></tr>
+  </tbody>
+</table>
+
+${SecHd('navy','▣ 적용 법령 및 기준')}
+<div style="border:${B};border-top:none;padding:9px 12px;font-size:10px;color:#374151;line-height:1.95;">
+  ① 화재안전기술기준 NFTC 501 (제연설비의 화재안전기술기준) — 국립소방연구원공고 제2024-52호, 2024.10.01 시행<br/>
+  &nbsp;&nbsp;&nbsp;- §2.3 (배출량): 거실 &lt;400㎡ : 1㎥/min/㎡ 이상(최소 5,000㎥/h) / 거실 ≥400㎡·직경≤40m : 40,000㎥/h / 직경&gt;40m : 45,000㎥/h<br/>
+  &nbsp;&nbsp;&nbsp;- §2.5.6 (유입구): 배출량 1㎥/min당 유입구 면적 35㎠ 이상<br/>
+  &nbsp;&nbsp;&nbsp;- §2.8 (댐퍼): 점검구 설치·제어반 상시 확인·공조겸용 자동 개구율 조절 [신설 2024.10.1]<br/>
+  ② 화재안전성능기준 NFPC 501 (제연설비의 화재안전성능기준)<br/>
+  ③ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4 제5호가목1)~5)<br/>
+  ④ 건축법 시행령 제64조 (방화문), 제2조제10호 (불연재료), 제2조제9호 (난연재료)
+</div>
+
+<div style="text-align:right;font-size:8.5px;color:#9ca3af;margin-top:10px;letter-spacing:.05em;padding-right:2px;">
+  <span style="font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.08em;">MANMIN · Ver-3.0</span>
+  &nbsp;|&nbsp; NFTC 501 · 2024.10.01 기준
+</div>
+</div>
+
+</div>
+`;}  
+
+function buildReport() {
+  const html = makeReportHTML();
+  /* 화면 미리보기 */
+  const rz = document.getElementById('report-zone');
+  if (rz) rz.innerHTML = html;
+  /* 인쇄 전용 구역도 항상 동기화 */
+  const pz = document.getElementById('rpt-print-doc');
+  if (pz) pz.innerHTML = html;
+}
+
+function scaleReport() {
+  const outer = document.getElementById('rpt-outer');
+  const inner = document.getElementById('rpt-inner');
+  if (!outer || !inner) return;
+  const A4W = 794;
+  const ow = outer.clientWidth - 40;
+  const scale = Math.min(1, ow / A4W);
+  if (scale >= 1) {
+    inner.style.cssText = 'width:794px;margin:0 auto;';
+    outer.style.height = 'auto';
+  } else {
+    const loff = Math.max(0, (ow - A4W * scale) / 2);
+    // 스케일 적용 후 실제 높이를 transform 후에 측정
+    inner.style.cssText = `width:794px;transform-origin:0 0;transform:translateX(${loff}px) scale(${scale});`;
+    // scrollHeight는 scale 전 원본 크기 → scale 곱해서 실제 표시 높이 계산
+    requestAnimationFrame(() => {
+      outer.style.height = (inner.scrollHeight * scale + 40) + 'px';
+    });
+  }
+}
+window.addEventListener('resize', () => {
+  if (document.getElementById('tab-print').classList.contains('active')) scaleReport();
+});
+
+function doPrint() {
+  /* 최신 데이터로 계산서 HTML 생성 */
+  const html = makeReportHTML();
+
+  /* 화면 미리보기 갱신 */
+  const rz = document.getElementById('report-zone');
+  if (rz) rz.innerHTML = html;
+
+  /* 인쇄 전용 div에 삽입 (#print-zone 은 @media print 에서만 표시) */
+  const pz = document.getElementById('rpt-print-doc');
+  if (pz) pz.innerHTML = html;
+
+  /* 인쇄 다이얼로그 열기 */
+  window.print();
+
+  /* 인쇄 후 스케일 복원 */
+  setTimeout(scaleReport, 500);
+}
+
+/* ════════════════════════════════════════
+   8. 모달
+════════════════════════════════════════ */
+document.getElementById('btn-fml-fab').addEventListener('click', () => {
+  document.getElementById('modal').style.display = 'flex';
+});
+document.getElementById('btn-modal-close').addEventListener('click', () => {
+  document.getElementById('modal').style.display = 'none';
+});
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal'))
+    document.getElementById('modal').style.display = 'none';
+});
+document.querySelectorAll('.fml-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const idx = btn.dataset.mp;
+    document.querySelectorAll('.fml-tab').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.fml-panel').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('mp-' + idx).classList.add('on');
+  });
+});
+
+/* ════════════════════════════════════════
+   9. 유틸리티
+════════════════════════════════════════ */
+function setText(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
+function setHTML(id, v) { const e = document.getElementById(id); if (e) e.innerHTML = v; }
+function bindLive(id, fn) {
+  const el = document.getElementById(id);
+  if (el) { el.addEventListener('input', fn); el.addEventListener('change', fn); }
+}
+
+/* ════════════════════════════════════════
+   10. 초기화
+════════════════════════════════════════ */
+(function init() {
+  // 오늘 날짜
+  const d = new Date();
+  const ds = d.getFullYear() + '-'
+    + String(d.getMonth() + 1).padStart(2, '0') + '-'
+    + String(d.getDate()).padStart(2, '0');
+  document.getElementById('proj-date').value = ds;
+
+  // 각 탭 초기 계산
+  checkZoneArea(); checkZoneDiam();
+  checkBoundary(); checkWalkLen();
+  calcDuctThick(); calcWindspeed();
+  checkManualHeight();
+  calcPerfE(); calcPerfI();
+
+  // 계산서 미리보기 초기 플레이스홀더
+  const rz = document.getElementById('report-zone');
+  if (rz) {
+    rz.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#94a3b8;">
+      <div style="font-size:40px;margin-bottom:14px;">🖨️</div>
+      <div style="font-size:14px;font-weight:700;color:#64748b;margin-bottom:8px;">계산서 미리보기</div>
+      <div style="font-size:12px;color:#94a3b8;line-height:1.7;">
+        ① 배출량 계산 탭에서 <b style="color:#1e3a5f;">[배출량 계산]</b> 버튼을 누른 후<br/>
+        이 탭으로 이동하면 A4 계산서가 자동 생성됩니다.
+      </div>
+    </div>`;
+  }
+})();
+</script>
+<!-- ══════════════════════════════════════════════
+     인쇄 전용 구역 — 화면에서 display:none
+     @media print : body > * { display:none } 후
+     이 div만 display:block 으로 복원 → A4 정상 출력
+     ※ position:fixed 미사용 (다중 페이지 출력 보장)
+══════════════════════════════════════════════ -->
+<div id="print-zone">
+  <div id="rpt-print-doc"></div>
+</div>
+
+
+<!-- ══ PWA 설치 하단 배너 ══ -->
+<div id="pwa-banner">
+  <div class="pwa-banner-inner">
+    <div class="pwa-banner-icon">
+      <img src="./icons/icon-96x96.png" alt="제연설비 아이콘"/>
+    </div>
+    <div class="pwa-banner-texts">
+      <div class="pwa-banner-title">📲 제연설비 앱으로 설치하기</div>
+      <div class="pwa-banner-sub">NFTC 501 계산기 · 오프라인 사용 가능 · 홈화면 바로가기</div>
+    </div>
+    <div class="pwa-banner-btns">
+      <button class="pwa-btn-ok" onclick="pwaTriggerInstall('banner')">설치</button>
+      <button class="pwa-btn-x" onclick="pwaDismiss()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SW 업데이트 알림 바 ══ -->
+<div id="sw-update-bar">
+  <span>🔄 새 버전이 준비되었습니다</span>
+  <button class="sw-upd-btn" onclick="swDoUpdate()">업데이트</button>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════
+   PWA — Service Worker + Install Prompt
+   제연설비 설계 계산서 MANMIN Ver-3.0
+════════════════════════════════════════════════ */
+(function(){
+  var _prompt = null;
+
+  /* ── Service Worker 등록 ── */
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./sw.js').then(function(reg){
+        console.log('[SW] 등록 완료:', reg.scope);
+        reg.addEventListener('updatefound', function(){
+          var nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener('statechange', function(){
+            if(nw.state === 'installed' && navigator.serviceWorker.controller){
+              var bar = document.getElementById('sw-update-bar');
+              if(bar){ bar.style.display = 'flex'; }
+            }
+          });
+        });
+      }).catch(function(e){ console.warn('[SW] 등록 실패:', e); });
+    });
+  }
+
+  /* ── beforeinstallprompt 캐치 ── */
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    _prompt = e;
+    var hdrBtn = document.getElementById('pwa-hdr-btn');
+    if(hdrBtn) hdrBtn.style.display = 'flex';
+    if(!sessionStorage.getItem('pwa-dismissed')){
+      setTimeout(function(){
+        var banner = document.getElementById('pwa-banner');
+        if(banner) banner.style.display = 'block';
+      }, 2800);
+    }
+  });
+
+  /* ── 설치 실행 ── */
+  window.pwaTriggerInstall = function(src){
+    var banner = document.getElementById('pwa-banner');
+    if(banner) banner.style.display = 'none';
+    if(!_prompt){
+      var standalone = window.matchMedia('(display-mode:standalone)').matches
+                    || window.navigator.standalone === true;
+      if(standalone){
+        alert('✅ 이미 앱으로 설치되어 있습니다.');
+      } else {
+        alert('📱 수동 설치 방법
+
+• Android Chrome: 주소창 오른쪽 메뉴 → "앱 설치"
+• iPhone Safari: 하단 공유 버튼 → "홈 화면에 추가"
+• PC Chrome/Edge: 주소창 오른쪽 설치 아이콘 클릭');
+      }
+      return;
+    }
+    _prompt.prompt();
+    _prompt.userChoice.then(function(r){
+      if(r.outcome === 'accepted'){
+        var hdrBtn = document.getElementById('pwa-hdr-btn');
+        if(hdrBtn) hdrBtn.style.display = 'none';
+      }
+      _prompt = null;
+    });
+  };
+
+  /* ── 배너 닫기 ── */
+  window.pwaDismiss = function(){
+    var banner = document.getElementById('pwa-banner');
+    if(banner) banner.style.display = 'none';
+    try{ sessionStorage.setItem('pwa-dismissed','1'); }catch(e){}
+  };
+
+  /* ── SW 업데이트 ── */
+  window.swDoUpdate = function(){
+    navigator.serviceWorker.ready.then(function(reg){
+      if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
+    });
+    var bar = document.getElementById('sw-update-bar');
+    if(bar) bar.style.display = 'none';
+    location.reload();
+  };
+
+  /* ── 설치 완료 시 버튼·배너 제거 ── */
+  window.addEventListener('appinstalled', function(){
+    var hdrBtn = document.getElementById('pwa-hdr-btn');
+    if(hdrBtn) hdrBtn.style.display = 'none';
+    var banner = document.getElementById('pwa-banner');
+    if(banner) banner.style.display = 'none';
+    _prompt = null;
+  });
+
+  /* ── standalone 모드 → 버튼 숨김 ── */
+  if(window.matchMedia('(display-mode:standalone)').matches || window.navigator.standalone === true){
+    document.addEventListener('DOMContentLoaded', function(){
+      var hdrBtn = document.getElementById('pwa-hdr-btn');
+      if(hdrBtn) hdrBtn.style.display = 'none';
+    });
+  }
+})();
+</script>
+</body>
+</html>
