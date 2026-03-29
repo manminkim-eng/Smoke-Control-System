@@ -1,105 +1,43 @@
-# 제연설비 설계 계산서 — NFTC 501 MANMIN Ver-3.0
+# 제연설비 설계 계산서 — NFTC 501 · MANMIN Ver-3.0
 
-**ENGINEER KIM MANMIN** — PWA (Progressive Web App)
-
----
-
-## 📌 개요
-
-제연설비의 화재안전기술기준 **NFTC 501** (2024.10.1 시행) 을 적용한  
-배출량 · 풍도 · 전원 · 성능확인 통합 설계 계산 웹 애플리케이션입니다.
-
----
-
-## 🛠 적용 기술 기준
-
-| 구분 | 기준 |
-|------|------|
-| 주요 기준 | NFTC 501 — 제연설비의 화재안전기술기준 (2024.10.1) |
-| 최소 배출량 | 5,000 ㎥/h |
-| 제연구역 면적 | ≤ 1,000 ㎡ |
-| 유입 풍속 | ≤ 5 ㎧ |
-| 흡입측 풍속 | ≤ 15 ㎧ |
-| 배출측 풍속 | ≤ 20 ㎧ |
-| 비상전원 | 20분 이상 |
-
----
-
-## 🖥 주요 기능 탭
-
-| 탭 | 기능 |
-|----|------|
-| ① 배출량 계산 | 제연구역 조건 입력 → 배출량 산정 |
-| ② 제연구역 설계 | 구역 분할·경계 설계 |
-| ③ 풍도 설계 | 덕트 단면적 및 풍속 검토 |
-| ④ 전원·기동 | 비상전원·기동방식 검토 |
-| ⑤ 성능 확인 | NFTC 501 적합성 판정 |
-| ⑥ 법규 요람 | 핵심 기준 조항 참조 |
-| 🖨️ 계산서 출력 | A4 계산서 인쇄·저장 |
-
----
+> 제연설비의 화재안전기술기준 NFTC 501 (2024.10.1 시행) 기반 웹 계산서
 
 ## 📁 파일 구조
 
 ```
-📦 jeyeon-pwa/
-├── index.html            # 메인 앱 (반응형 · PWA 완성)
-├── manifest.json         # PWA 매니페스트
-├── sw.js                 # Service Worker (오프라인·캐시)
-├── offline.html          # 오프라인 폴백 페이지
-├── .nojekyll             # GitHub Pages Jekyll 비활성화
-├── README.md
-└── icons/
-    ├── favicon.ico
-    ├── apple-touch-icon.png   (180×180, iOS)
-    ├── icon-16x16.png  ~ icon-512x512.png  (14종)
-    └── 제연설비.jpg           (원본 소스)
+├── index.html          # 메인 앱 (모든 기능 포함)
+├── manifest.json       # PWA 매니페스트
+├── sw.js               # Service Worker (오프라인 캐시)
+├── icons/
+│   ├── favicon.ico
+│   ├── icon-16x16.png  ~ icon-512x512.png
+│   ├── apple-touch-icon.png  (iOS 홈화면)
+│   └── icon-maskable-512x512.png  (Android 어댑티브)
+└── .github/workflows/deploy.yml   # GitHub Pages 자동 배포
 ```
 
----
+## 🚀 GitHub Pages 배포 방법
 
-## 🚀 GitHub Pages 배포
+1. 이 폴더 전체를 GitHub 저장소에 업로드
+2. Settings → Pages → Source: **GitHub Actions** 선택
+3. `main` 브랜치에 push → 자동 배포
 
-1. 이 저장소를 **Fork** 또는 파일 업로드
-2. `Settings` → `Pages` → Source: `main` / `/ (root)`
-3. 저장 → `https://{username}.github.io/{repo}/` 접속
+배포 후 URL: `https://<username>.github.io/<repo-name>/`
 
----
+## 📲 PWA 설치
 
-## 📱 PWA 설치
+| 환경 | 설치 방법 |
+|------|----------|
+| Android Chrome | 주소창 우측 ⋮ 메뉴 → **앱 설치** (또는 화면 내 설치 버튼) |
+| iPhone Safari | 하단 공유 버튼 → **홈 화면에 추가** |
+| PC Chrome/Edge | 주소창 우측 ⊞ 아이콘 클릭 → **설치** |
 
-| 환경 | 방법 |
-|------|------|
-| Android Chrome | 헤더 **[📲 앱 설치]** 버튼 또는 하단 배너 → 설치 |
-| iPhone Safari | 하단 공유 버튼 → "홈 화면에 추가" |
-| PC Chrome/Edge | 주소창 오른쪽 설치 아이콘 또는 헤더 버튼 클릭 |
+## ✨ 주요 기능
 
-### 앱 바로가기 (Shortcuts)
-설치 후 홈화면 아이콘 길게 누르면:
-- **제연설비** — 앱 바로 실행
-- **배출량 계산** — 계산 탭 바로가기
-- **풍도 설계** — 풍도 탭 바로가기
-- **법규 요람** — 법규 탭 바로가기
-
----
-
-## ⚙️ PWA 기술 스펙
-
-| 항목 | 내용 |
-|------|------|
-| Service Worker | Cache First + Stale-While-Revalidate |
-| 오프라인 지원 | ✅ 캐시된 앱 완전 작동 |
-| 업데이트 감지 | ✅ 새 버전 자동 알림 배너 |
-| 설치 프롬프트 | ✅ 헤더 버튼 + 하단 배너 |
-| Push 알림 | 🔧 확장 준비 (sw.js) |
-
----
-
-## 👤 제작
-
-**ENGINEER KIM MANMIN**  
-제연설비 NFTC 501 설계 전문
-
----
-
-*NFTC 501 · 제연설비의 화재안전기술기준 · 2024.10.1 시행*
+- 배출량 산출 (NFTC 501 §2.3)
+- 공기유입구 산출 (NFTC 501 §2.5.6)
+- 배출풍도 강판 두께 기준 (§2.6.2.1)
+- 풍속 기준 검토 (§2.6.2.2, §2.7.1)
+- 비상전원 및 기동장치 기준 (§2.9)
+- A4 계산서 인쇄 / PDF 저장
+- 완전 오프라인 동작 (PWA)
