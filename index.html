@@ -569,9 +569,11 @@ table.dt td b{color:#1e40af;font-weight:800;}
   box-sizing:border-box;
   overflow:hidden;
   background:#c8d0da;
-  padding:20px 0;
+  padding:20px 0;          /* 좌우 반드시 0 — offset 계산 기준 */
+  margin:0;                /* 외부 margin 차단 */
   border-radius:8px;
   position:relative;
+  display:block;
 }
 .rpt-inner{
   width:794px;
@@ -2094,33 +2096,49 @@ function scaleReport() {
   const outer = document.getElementById('rpt-outer');
   const inner = document.getElementById('rpt-inner');
   if (!outer || !inner) return;
+
   const A4W = 794;
-  /* 좌우 패딩 없이 실제 사용 가능한 너비 그대로 사용 */
-  const outerW = outer.clientWidth;
-  const scale = Math.min(1, (outerW - 16) / A4W);
+
+  /* getBoundingClientRect: 소수점 포함 실제 렌더링 너비
+     → 부모 padding·border 영향 없이 outer 자체 내부 너비를 정밀 측정 */
+  const outerW = outer.getBoundingClientRect().width;
+
+  /* scale: 최대 1.0, 좌우 8px 여유만 확보 */
+  const scale   = Math.min(1, (outerW - 8) / A4W);
   const scaledW = A4W * scale;
-  const offset = Math.max(0, (outerW - scaledW) / 2);   /* 픽셀 정중앙 */
+
+  /* offset: 수학적 정중앙 — (전체너비 - 축소된너비) / 2 */
+  const offset  = Math.max(0, (outerW - scaledW) / 2);
+
   if (scale >= 1) {
-    /* 데스크탑: 원본 크기, 수평 중앙 배치 */
+    /* 데스크탑: 원본 크기, 수평 중앙 */
     inner.style.cssText =
       'width:794px;box-sizing:border-box;' +
       'transform-origin:top left;' +
       `transform:translateX(${offset}px) scale(1);`;
     outer.style.height = 'auto';
   } else {
-    /* 태블릿·모바일: 축소 + 정중앙 배치 */
+    /* 태블릿·모바일: 축소 + 정중앙 */
     inner.style.cssText =
       'width:794px;box-sizing:border-box;' +
       'transform-origin:top left;' +
       `transform:translateX(${offset}px) scale(${scale});`;
+    /* rAF 2중 적용: transform 완료 후 scrollHeight 측정 */
     requestAnimationFrame(() => {
-      outer.style.height = (inner.scrollHeight * scale + 40) + 'px';
+      requestAnimationFrame(() => {
+        outer.style.height = (inner.scrollHeight * scale + 40) + 'px';
+      });
     });
   }
 }
-window.addEventListener('resize', () => {
-  if (document.getElementById('tab-print').classList.contains('active')) scaleReport();
-});
+(function(){
+  let _rTimer = null;
+  window.addEventListener('resize', () => {
+    if (!document.getElementById('tab-print').classList.contains('active')) return;
+    clearTimeout(_rTimer);
+    _rTimer = setTimeout(scaleReport, 80);  /* debounce 80ms */
+  });
+})();
 
 function doPrint() {
   /* 최신 데이터로 계산서 HTML 생성 */
