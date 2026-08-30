@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <title>제연설비 설계 계산서 — NFTC 501</title>
 <meta name="theme-color" content="#1e3a5f"/>
-<meta name="description" content="제연설비의 화재안전기술기준 NFTC 501 (2024.10.1 시행) 적용 설계 계산서 — MANMIN Ver-3.0"/>
+<meta name="description" content="제연설비의 화재안전기술기준 NFTC 501 (2024.10.1 시행) 적용 설계 계산서 — MANMIN Ver-5.0"/>
 <!-- ══ PWA Manifest ══ -->
 <link rel="manifest" href="./manifest.json"/>
 <!-- ══ iOS PWA ══ -->
@@ -24,14 +24,36 @@
 <meta name="msapplication-TileColor" content="#1e3a5f"/>
 <meta name="msapplication-TileImage" content="./icons/icon-144x144.png"/>
 <!-- ══ OG / SNS ══ -->
-<meta property="og:title" content="제연설비 설계 계산서 — NFTC 501 MANMIN Ver-3.0"/>
+<meta property="og:title" content="제연설비 설계 계산서 — NFTC 501 MANMIN Ver-5.0"/>
 <meta property="og:description" content="제연설비의 화재안전기술기준 NFTC 501 기반 배출량·풍도·전원 설계 계산 웹앱"/>
 <meta property="og:image" content="./icons/icon-512x512.png"/>
 <meta property="og:type" content="website"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Noto+Sans+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
 <style>
+/* ═══ MANMIN 출력 버튼 규격 v5.1 — 전 39종 공통 ═══════════════
+   주(主) 인쇄·PDF = 남색 채움 / 보조 JPG = 남색 선
+   색상 #1E3A5F 는 분야색이 아닌 뼈대색이므로 39종 전부 동일하다. */
+.mm-out{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:14px;}
+.mm-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  height:40px;padding:0 20px;border-radius:10px;border:1.5px solid transparent;
+  font-family:'Noto Sans KR','Noto Sans KR Local',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:-0.01em;line-height:1;
+  white-space:nowrap;cursor:pointer;
+  transition:filter .15s ease,transform .15s ease,box-shadow .15s ease;}
+.mm-btn:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(30,58,95,.22);}
+.mm-btn:active:not(:disabled){transform:translateY(0);box-shadow:none;}
+.mm-btn:focus-visible{outline:2px solid #1E3A5F;outline-offset:2px;}
+.mm-btn:disabled{opacity:.55;cursor:default;transform:none;filter:none;box-shadow:none;}
+.mm-btn-pdf{background:#1E3A5F;color:#FFFFFF;border-color:#1E3A5F;}
+.mm-btn-jpg{background:#FFFFFF;color:#1E3A5F;border-color:#1E3A5F;}
+@media(max-width:480px){
+  .mm-out{flex-direction:column-reverse;align-items:stretch;gap:6px;}
+  .mm-btn{width:100%;height:44px;}
+}
+
 /* ════════════════════════════════════════════════
    0. RESET & BASE
 ════════════════════════════════════════════════ */
@@ -57,17 +79,18 @@ button{cursor:pointer;}
          ※ position:fixed 는 다중 페이지 출력 시 1페이지만 반복되는 버그 유발
 ════════════════════════════════════════════════ */
 @media print{
+  /* v5.0 하단 각인 — Chrome은 position:fixed 요소를 매 페이지 반복 출력한다 */
+  #mm-print-stamp{
+    display:block !important; position:fixed !important;
+    right:12mm !important; bottom:9mm !important; z-index:99999;
+    font-family:'Orbitron','JetBrains Mono',sans-serif !important;
+    font-weight:700 !important; font-size:8pt !important;
+    color:#9ca3af !important; letter-spacing:0.08em !important;
+  }
   @page{
     size:A4 portrait;
     margin:14mm 12mm 22mm 14mm;
-    @bottom-right{
-      content:"MANMIN-Ver3.0  |  NFTC 501";
-      font-family:'Orbitron',sans-serif;
-      font-size:7.5pt;
-      font-weight:700;
-      color:#9ca3af;
-      letter-spacing:0.08em;
-    }
+    /* v5.0 — @bottom-right 마진박스는 Chrome 미구현. #mm-print-stamp 실 DOM으로 이관 */
   }
   /* Step 1: 모든 것 숨김 */
   html { background:white !important; }
@@ -266,7 +289,7 @@ button{cursor:pointer;}
 .sum-bar-wrap{background:#0a1628;padding:9px 0;border-bottom:1px solid rgba(49,130,206,.15);}
 .sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
 .sum-item{font-size:12px;color:#94a3b8;}
-.sum-val{color:#63b3ed;font-family:'Noto Sans Mono',monospace !important;font-weight:700;}
+.sum-val{color:#63b3ed;font-family:'JetBrains Mono','Noto Sans KR',monospace !important;font-weight:700;}
 
 /* ════════════════════════════════════════════════
    3. MAIN LAYOUT
@@ -322,7 +345,7 @@ select.inp option{background:white;color:#111;}
 .inp-unit{
   position:absolute;right:10px;top:50%;transform:translateY(-50%);
   font-size:10px;font-weight:700;color:#9ca3af;
-  font-family:'Noto Sans Mono',monospace !important;pointer-events:none;
+  font-family:'JetBrains Mono','Noto Sans KR',monospace !important;pointer-events:none;
 }
 
 /* ════════════════════════════════════════════════
@@ -336,10 +359,10 @@ select.inp option{background:white;color:#111;}
 }
 .rc-val{
   font-size:22px;font-weight:900;line-height:1.1;
-  font-family:'Noto Sans Mono',monospace !important;
+  font-family:'JetBrains Mono','Noto Sans KR',monospace !important;
 }
 .rc-unit{font-size:12px;color:#9ca3af;margin-left:4px;font-family:'Noto Sans KR',sans-serif !important;}
-.rc-sub{font-size:10px;color:#6b7280;margin-top:4px;font-family:'Noto Sans Mono',monospace !important;}
+.rc-sub{font-size:10px;color:#6b7280;margin-top:4px;font-family:'JetBrains Mono','Noto Sans KR',monospace !important;}
 /* 색상 */
 .rc-blue{background:#eff6ff;border-color:#bfdbfe;}.rc-blue .rc-val{color:#1d4ed8;}
 .rc-sky{background:#f0f7ff;border-color:#93c5fd;}.rc-sky .rc-val{color:#1e40af;}
@@ -358,7 +381,7 @@ select.inp option{background:white;color:#111;}
 .result-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:9px;}
 .result-row:last-child{margin-bottom:0;}
 .rl{font-size:11px;font-weight:700;color:#6b7280;}
-.rv{font-family:'Noto Sans Mono',monospace !important;font-size:15px;font-weight:700;color:#1d4ed8;}
+.rv{font-family:'JetBrains Mono','Noto Sans KR',monospace !important;font-size:15px;font-weight:700;color:#1d4ed8;}
 .rv.lg{font-size:20px;color:#1e3a5f;}
 .rv.ok{color:#15803d;}
 .rv.err{color:#b91c1c;}
@@ -411,7 +434,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
 .lbk{font-size:11px;font-weight:700;color:#90cdf4;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;}
 .lbi{display:flex;gap:4px;font-size:11px;}
 .lbi-k{color:#90cdf4;font-weight:600;}
-.lbi-v{color:white;font-family:'Noto Sans Mono',monospace !important;font-weight:700;}
+.lbi-v{color:white;font-family:'JetBrains Mono','Noto Sans KR',monospace !important;font-weight:700;}
 .info-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:13px 14px;}
 .info-title{font-size:10px;font-weight:800;color:#1e40af;margin-bottom:8px;letter-spacing:.04em;}
 .info-list{list-style:none;}
@@ -425,7 +448,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
    12. FORMULA CODE
 ════════════════════════════════════════════════ */
 .fml{
-  font-family:'Noto Sans Mono',monospace !important;
+  font-family:'JetBrains Mono','Noto Sans KR',monospace !important;
   font-size:12px;font-weight:700;color:#1e40af;
   background:#eff6ff;border-radius:6px;
   padding:7px 11px;display:block;margin:5px 0;
@@ -460,7 +483,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
 }
 .ov-card:hover{border-color:#3182ce;transform:translateY(-2px);}
 .ov-icon{font-size:24px;margin-bottom:6px;}
-.ov-val{font-family:'Noto Sans Mono',monospace !important;font-size:20px;font-weight:900;color:#1d4ed8;margin-bottom:3px;}
+.ov-val{font-family:'JetBrains Mono','Noto Sans KR',monospace !important;font-size:20px;font-weight:900;color:#1d4ed8;margin-bottom:3px;}
 .ov-lbl{font-size:10px;color:#9ca3af;font-weight:700;letter-spacing:.04em;}
 
 /* ════════════════════════════════════════════════
@@ -548,7 +571,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
 .fml-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:8px;}
 .fml-card-ttl{font-size:12px;font-weight:700;color:#1e293b;margin-bottom:6px;}
 .fml-eq{
-  display:block;font-family:'Noto Sans Mono',monospace !important;
+  display:block;font-family:'JetBrains Mono','Noto Sans KR',monospace !important;
   font-size:12.5px;font-weight:700;color:#1e40af;
   background:#eff6ff;border-radius:6px;
   padding:7px 11px;margin:6px 0;word-break:break-all;line-height:1.6;
@@ -568,10 +591,10 @@ table.dt td b{color:#1e40af;font-weight:800;}
   max-width:100%;
   box-sizing:border-box;
   overflow:hidden;
-  background:#c8d0da;
+  background:#E8ECF1;
   padding:20px 0;          /* 좌우 반드시 0 — offset 계산 기준 */
   margin:0;                /* 외부 margin 차단 */
-  border-radius:8px;
+  border-radius:14px;
   position:relative;
   display:block;
 }
@@ -593,8 +616,8 @@ table.dt td b{color:#1e40af;font-weight:800;}
 .rpt-hint{
   display:none;
   align-items:center;gap:6px;
-  background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;
-  padding:8px 13px;font-size:10px;font-weight:600;color:#1e40af;
+  background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;
+  padding:8px 13px;font-size:10px;font-weight:600;color:#1E40AF;
   margin-bottom:10px;
 }
 @media(max-width:860px){.rpt-hint{display:flex;}}
@@ -673,6 +696,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
   .ov-grid{grid-template-columns:1fr;}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -687,7 +711,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
         <h1 class="hdr-h1">제연설비 설계 계산서</h1>
         <div class="hdr-desc">
           Smoke Control System Design Calculator · NFTC 501 적용&nbsp;
-          <span class="hdr-manmin">MANMIN · Ver-3.0</span>
+          <span class="hdr-manmin">MANMIN · Ver-5.0</span>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
@@ -1464,7 +1488,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
         </div>
       </div>
       <div style="text-align:right;margin-top:14px;font-size:10px;color:#9ca3af;">
-        <span style="font-family:'Orbitron',sans-serif !important;font-weight:700;letter-spacing:.08em;">MANMIN · Ver-3.0</span>
+        <span style="font-family:'Orbitron',sans-serif !important;font-weight:700;letter-spacing:.08em;">MANMIN · Ver-5.0</span>
         &nbsp;|&nbsp; NFTC 501 · 2024.10.01 기준
       </div>
     </div>
@@ -1476,36 +1500,9 @@ table.dt td b{color:#1e40af;font-weight:800;}
 <div class="tab-panel" id="tab-print">
 
   <!-- 액션 버튼 + 안내 -->
-  <div class="box no-print">
-    <div class="box-hd" style="background:linear-gradient(135deg,#374151,#4b5563);">
-      <span class="ico">◆</span>출력 · PDF 저장
-    </div>
-    <div class="box-bd">
-      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px;">
-        <button onclick="doPrint()" style="
-          display:flex;align-items:center;gap:8px;
-          background:linear-gradient(135deg,#1e3a5f,#2d5282);
-          color:white;border:none;border-radius:10px;
-          padding:13px 24px;font-size:13px;font-weight:800;
-          box-shadow:0 4px 14px rgba(30,58,95,.45);
-          transition:all .15s;
-        " onmouseover="this.style.transform='translateY(-2px)'"
-           onmouseout="this.style.transform=''">
-          <span style="font-size:18px;">🖨️</span> 인쇄 / PDF 저장
-        </button>
-        <div style="font-size:11px;color:#374151;line-height:1.7;">
-          💡 인쇄 대화상자에서 <b>「PDF로 저장」</b> 선택 시 PDF 파일로 저장됩니다.<br/>
-          &nbsp;&nbsp;&nbsp;용지: <b>A4 세로</b> · 여백: 기본값 · 배경 그래픽 인쇄 포함 권장
-        </div>
-      </div>
-      <div class="law-banner" style="margin-bottom:0;">
-        <span class="lbk">출력 설정 권장</span>
-        <span class="lbi"><span class="lbi-k">용지:</span><span class="lbi-v">A4 세로</span></span>
-        <span class="lbi"><span class="lbi-k">여백:</span><span class="lbi-v">상14·하22·좌14·우12 mm</span></span>
-        <span class="lbi"><span class="lbi-k">배경 그래픽:</span><span class="lbi-v">포함</span></span>
-        <span class="lbi"><span class="lbi-k">푸터:</span><span class="lbi-v">MANMIN-Ver3.0 자동 인쇄</span></span>
-      </div>
-    </div>
+  <div class="mm-out no-print">
+    <button id="btn-jpg" class="mm-btn mm-btn-jpg" onclick="window.mmSaveJPG&&window.mmSaveJPG()">🖼️ JPG 저장</button>
+    <button class="mm-btn mm-btn-pdf" onclick="doPrint()">🖨️ 인쇄 · PDF</button>
   </div>
 
   <!-- A4 미리보기 (화면) + 인쇄 본문 -->
@@ -1546,7 +1543,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
       <div class="fml-hd-row">
         <div>
           <div style="font-size:14px;font-weight:900;letter-spacing:.04em;margin-bottom:3px;">🌫️ 제연설비 계산서 안내</div>
-          <div style="font-size:10px;opacity:.65;font-weight:500;">NFTC 501 · 2024.10.01 시행 · MANMIN Ver-3.0</div>
+          <div style="font-size:10px;opacity:.65;font-weight:500;">NFTC 501 · 2024.10.01 시행 · MANMIN Ver-5.0</div>
         </div>
         <button class="fml-close" id="btn-modal-close">✕</button>
       </div>
@@ -1562,7 +1559,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
       <div class="fml-panel on" id="mp-0">
         <div style="background:linear-gradient(135deg,#0d1f33,#1e3a5f,#2d5282);border-radius:13px;padding:16px 18px;margin-bottom:16px;">
           <div style="font-size:13px;font-weight:900;color:#90cdf4;margin-bottom:5px;display:flex;align-items:center;gap:8px;"><span style="font-size:20px;">🌫️</span>제연설비 설계 계산서 이용방법</div>
-          <div style="font-size:10.5px;color:rgba(255,255,255,.75);line-height:1.7;">NFTC 501 제연설비의 화재안전기술기준 [시행 2024.10.1.] · MANMIN Ver-3.0</div>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.75);line-height:1.7;">NFTC 501 제연설비의 화재안전기술기준 [시행 2024.10.1.] · MANMIN Ver-5.0</div>
         </div>
         <div style="display:flex;gap:11px;align-items:flex-start;background:#f8fafc;border:1.5px solid #e2e8f0;border-left:4px solid #3182ce;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
           <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#3182ce,#1e3a5f);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0;">1</div>
@@ -1903,7 +1900,7 @@ function makeReportHTML() {
 
   /* ── 헬퍼: th / td ── */
   const TH = (t,w) => `<th style="border:${B};padding:6px 9px;background:#1e3a5f;color:white;font-weight:700;text-align:center;font-size:10px;white-space:nowrap;${w?'width:'+w+';':''}">${t}</th>`;
-  const TD = (t,align,mono,even) => `<td style="border:${B};padding:5px 9px;text-align:${align||'center'};font-size:10.5px;color:#111;${mono?'font-family:\'Noto Sans Mono\',monospace;font-weight:700;color:#1e3a5f;':''}${even?'background:#f8fafc;':''}">${t}</td>`;
+  const TD = (t,align,mono,even) => `<td style="border:${B};padding:5px 9px;text-align:${align||'center'};font-size:10.5px;color:#111;${mono?'font-family:\'JetBrains Mono\',\'Noto Sans KR\',monospace;font-weight:700;color:#1e3a5f;':''}${even?'background:#f8fafc;':''}">${t}</td>`;
 
   /* ── 배출량 테이블 ── */
   let exRows;
@@ -1915,9 +1912,9 @@ function makeReportHTML() {
     ];
     exRows = data.map((r,i) =>
       `<tr${i%2===1?' style="background:#f8fafc;"':''}>`+
-      `<td style="border:${B};padding:5px 9px;text-align:center;font-family:'Noto Sans Mono',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[0]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:center;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[0]}</td>`+
       `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10.5px;${r[5]?'font-weight:700;':''}color:#111;">${r[1]}</td>`+
-      `<td style="border:${B};padding:5px 9px;text-align:right;font-family:'Noto Sans Mono',monospace;font-weight:700;color:${r[5]?'#92400e':'#1e3a5f'};font-size:10.5px;${r[5]?'background:#fefce8;':''}">${r[2]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:right;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-weight:700;color:${r[5]?'#92400e':'#1e3a5f'};font-size:10.5px;${r[5]?'background:#fefce8;':''}">${r[2]}</td>`+
       `<td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#111;">${r[3]}</td>`+
       `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10px;color:#374151;">${r[4]}</td>`+
       '</tr>'
@@ -1936,9 +1933,9 @@ function makeReportHTML() {
     ];
     aiRows = data.map((r,i) =>
       `<tr${i%2===1?' style="background:#f8fafc;"':''}>`+
-      `<td style="border:${B};padding:5px 9px;text-align:center;font-family:'Noto Sans Mono',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[0]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:center;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[0]}</td>`+
       `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10.5px;color:#111;">${r[1]}</td>`+
-      `<td style="border:${B};padding:5px 9px;text-align:right;font-family:'Noto Sans Mono',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[2]}</td>`+
+      `<td style="border:${B};padding:5px 9px;text-align:right;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-weight:700;color:#1e3a5f;font-size:10.5px;">${r[2]}</td>`+
       `<td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#111;">${r[3]}</td>`+
       `<td style="border:${B};padding:5px 9px;text-align:left;font-size:10px;color:#374151;">${r[4]}</td>`+
       '</tr>'
@@ -1981,33 +1978,16 @@ function makeReportHTML() {
      계산서 HTML 본문 (서명란 없음)
   ══════════════════════════════════════════ */
   return `
-<div style="padding:9px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#1e3a5f,#2d5282);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-  <span style="font-size:13.5px;font-weight:900;letter-spacing:.04em;color:white;">제연설비 설계 계산서</span>
-  <span style="font-family:'Orbitron',sans-serif;font-size:9px;font-weight:900;color:#90cdf4;letter-spacing:.1em;">MANMIN-Ver3.0</span>
-</div>
-
-<div style="border:1px solid #cbd5e1;border-top:none;padding:8px 16px 9px;background:#eef4fb;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-  <div style="font-size:16px;font-weight:900;color:#1e3a5f;letter-spacing:.02em;">제연설비 설계 계산서</div>
-  <div style="font-size:9px;color:#475569;margin-top:3px;">화재안전기술기준(NFTC 501) · 화재안전성능기준(NFPC 501) 적용</div>
-</div>
-
-<div style="display:flex;border:1px solid #cbd5e1;border-top:none;margin-bottom:0;">
-  <div style="flex:2;padding:6px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">공사명</div>
-    <div style="font-size:12px;font-weight:800;color:#1e3a5f;">${name}</div>
-  </div>
-  <div style="flex:1;padding:6px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">설계자</div>
-    <div style="font-size:12px;font-weight:800;color:#1e3a5f;">${eng}</div>
-  </div>
-  <div style="flex:1;padding:6px 12px;border-right:1px solid #cbd5e1;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">작성일</div>
-    <div style="font-size:11px;font-weight:700;color:#1e3a5f;">${date}</div>
-  </div>
-  <div style="flex:1;padding:6px 12px;background:#f8fafc;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-    <div style="font-size:7.5px;font-weight:700;color:#64748b;letter-spacing:.06em;margin-bottom:2px;text-transform:uppercase;">적용기준</div>
-    <div style="font-size:10px;font-weight:700;color:#2d5282;">NFTC 501 (2024.10.01)</div>
-  </div>
+<!-- MANMIN 계산서 표제 규격 v5.0 — 01 옥내소화전 기준 (중앙 제목 + 부제 + 메타 1행표 + 이중선) -->
+<div style="text-align:center;margin-bottom:28px;border-bottom:3px double #334155;padding-bottom:16px;">
+  <div style="font-size:22px;font-weight:900;letter-spacing:0.06em;color:#111827;">제연설비 설계 계산서</div>
+  <div style="font-size:12px;color:#64748b;margin-top:6px;">화재안전기술기준(NFTC 501) · 화재안전성능기준(NFPC 501) 적용</div>
+  <table style="margin:12px auto 0;border-collapse:collapse;"><tbody><tr>
+    <td style="border:1px solid #cbd5e1;padding:5px 14px;font-size:12px;white-space:nowrap;"><b>공사명:</b> ${name}</td>
+    <td style="border:1px solid #cbd5e1;padding:5px 14px;font-size:12px;white-space:nowrap;"><b>설계자:</b> ${eng}</td>
+    <td style="border:1px solid #cbd5e1;padding:5px 14px;font-size:12px;white-space:nowrap;"><b>작성일:</b> ${date}</td>
+    <td style="border:1px solid #cbd5e1;padding:5px 14px;font-size:12px;white-space:nowrap;"><b>적용기준:</b> NFTC 501 (2024.10.01)</td>
+  </tr></tbody></table>
 </div>
 
 <div style="padding:0 0 24px;">
@@ -2042,16 +2022,16 @@ ${SecHd('blue','Ⅲ-2. 풍속 기준 검토 (NFTC 501 §2.6.2.2, §2.7.1)')}
 <table style="width:100%;border-collapse:collapse;">
   <thead><tr>${TH('구분')}${TH('기준 풍속','95px')}${TH('적용 조항','85px')}</tr></thead>
   <tbody>
-    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">배출기 흡입측 풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">15 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.6.2.2</td></tr>
-    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">배출기 배출측 풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">20 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.6.2.2</td></tr>
-    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">유입풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">20 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.7.1</td></tr>
-    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">공기유입구 유입 풍속</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">5 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.5.5</td></tr>
-    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">바닥 유입구 풍속</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'Noto Sans Mono',monospace;font-size:10.5px;">1 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.5.5 단서</td></tr>
+    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">배출기 흡입측 풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-size:10.5px;">15 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.6.2.2</td></tr>
+    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">배출기 배출측 풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-size:10.5px;">20 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.6.2.2</td></tr>
+    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">유입풍도 내</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-size:10.5px;">20 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.7.1</td></tr>
+    <tr style="background:#f8fafc;"><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">공기유입구 유입 풍속</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-size:10.5px;">5 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.5.5</td></tr>
+    <tr><td style="border:${B};padding:5px 9px;font-size:10.5px;color:#111;">바닥 유입구 풍속</td><td style="border:${B};padding:5px 9px;text-align:center;font-weight:700;color:#1e3a5f;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-size:10.5px;">1 ㎧ 이하</td><td style="border:${B};padding:5px 9px;text-align:center;font-size:10.5px;color:#374151;">§2.5.5 단서</td></tr>
   </tbody>
 </table>
 </div>
 
-<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver3.0</span></div>
+<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver5.0</span></div>
 
 <div style="break-before:page;page-break-before:always;">
 ${SecHd('gray','Ⅳ-1. 비상전원 및 기동장치 기준 (NFTC 501 §2.9)')}
@@ -2076,7 +2056,7 @@ ${SecHd('navy','▣ 적용 법령 및 기준')}
   ④ 건축법 시행령 제64조 (방화문), 제2조제10호 (불연재료), 제2조제9호 (난연재료)
 </div>
 
-<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver3.0</span></div>
+<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver5.0</span></div>
 </div>
 
 </div>
@@ -2261,7 +2241,7 @@ function bindLive(id, fn) {
 <script>
 /* ════════════════════════════════════════════════
    PWA — Service Worker + Install Prompt
-   제연설비 설계 계산서 MANMIN Ver-3.0
+   제연설비 설계 계산서 MANMIN Ver-5.0
    ── 수정 이력 ──
    · display:none/flex 충돌 → visible class 방식으로 통일
    · #sw-update-bar flex 레이아웃 분리 (display:flex + visibility)
@@ -2436,5 +2416,346 @@ function bindLive(id, fn) {
 
 })();
 </script>
+
+
+<div id="mm-print-stamp" style="display:none">MANMIN-Ver5.0</div>
+<script>window.MM_JPG_CONFIG={zone:'#report-zone',name:'제연설비',prepare:'buildReport'};</script>
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MANMIN 모바일 JPG 저장 v5.4
+     · 인쇄(PDF)와 동일한 계산서 DOM을 캡처한다 → 두 출력물이 어긋날 수 없다
+     · 쪽나눔 인식 : .page-break 클래스 + 인라인/계산 스타일(break-before:page) 모두
+     · 분할 단위   : 한 장보다 큰 블록은 실측 높이를 보고 자식으로 내려가 잘게 쪼갠다
+                    (블록이 통째로 넘어가 앞 장이 비는 현상 방지 · 최대 3단계)
+     · 넘침 보호   : 유효높이(261mm) 초과 시 다음 장으로, 표는 행 단위로 분할
+                    어떤 경우에도 내용을 잘라내지 않는다 (최후에는 페이지가 늘어난다)
+     · 캡처 전 rpt-inner 축소 transform 해제 · document.fonts.ready 대기 · 백지 배경
+     · 글자색 상속 : 캡처 페이지는 body 직속이라 #report-zone 의 color 규칙을 못 받는다.
+       다크 테마 잔재로 body 가 연회색(#e2e8f0)인 도구에서 본문이 흐리게 찍히므로
+       원본 계산서의 실제 글자색을 읽어 캡처 페이지에 명시한다 (밝으면 안전색 강제)
+     · 2매 이상이면 저장 시트를 띄운다 — 브라우저는 자동 연속 다운로드를 차단하므로
+       페이지마다 사용자가 직접 눌러 저장해야 전부 받을 수 있다 (전체 저장도 제공)
+     ═══════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  'use strict';
+  var CFG = window.MM_JPG_CONFIG || { zone:'#report-zone', name:'MANMIN', prepare:null };
+  var VER = 'MANMIN-Ver5.0';
+
+  var MM = function(v){ return v * 96 / 25.4; };
+  var PAGE_W = MM(210), PAGE_H = MM(297);
+  var PT = MM(14), PR = MM(12), PB = MM(22), PL = MM(14);
+  var BODY_H = PAGE_H - PT - PB;                 /* 261mm = 986.5px */
+
+  function two(n){ return (n<10?'0':'') + n; }
+
+  function fileStamp(zone){
+    var d = new Date();
+    var ymd = d.getFullYear() + two(d.getMonth()+1) + two(d.getDate());
+    var name = '';
+    try{
+      var tds = zone.querySelectorAll('td,th,div,span');
+      for(var i=0;i<tds.length && i<400;i++){
+        var t = (tds[i].textContent||'').trim();
+        if(t.indexOf('공사명') === 0 && t.length < 60){
+          name = t.replace(/^공사명\s*:?\s*/,'').trim(); break;
+        }
+      }
+    }catch(e){}
+    if(!name || name === '(미입력)') name = '';
+    name = name.replace(/[\\\/:*?"<>|\s]+/g,'').slice(0,30);
+    return (name ? name + '_' : '') + ymd;
+  }
+
+  /* 쪽나눔 판정 — 클래스·인라인 style·computed style 셋 다 본다 */
+  function isBreak(el){
+    if(!el || el.nodeType !== 1) return false;
+    if(el.classList && el.classList.contains('page-break')) return true;
+    var st = (el.getAttribute && el.getAttribute('style')) || '';
+    if(/break-before\s*:\s*page|page-break-before\s*:\s*always/i.test(st)) return true;
+    try{
+      var cs = window.getComputedStyle(el);
+      if(cs && (cs.breakBefore === 'page' || cs.pageBreakBefore === 'always')) return true;
+    }catch(e){}
+    return false;
+  }
+  function isSkipped(el){
+    if(!el || el.nodeType !== 1) return true;
+    if(el.id === 'dev-stamp' || el.id === 'mm-print-stamp') return true;
+    return !!(el.classList && el.classList.contains('no-print'));
+  }
+  function cleanClone(node){
+    var c = node.cloneNode(true);
+    if(c.querySelectorAll){
+      var junk = c.querySelectorAll('.no-print,#dev-stamp,#mm-print-stamp');
+      for(var i=0;i<junk.length;i++){ if(junk[i].parentNode) junk[i].parentNode.removeChild(junk[i]); }
+    }
+    return c;
+  }
+  function stampEl(css, text){
+    var d = document.createElement('div');
+    d.style.cssText = 'position:absolute;' + css;
+    d.textContent = text;
+    return d;
+  }
+
+  /* 한 장보다 큰 블록은 자식으로 내려가 분할 단위를 잘게 만든다.
+     원본(화면)에서 실측하므로 transform 해제 후에 호출해야 한다. */
+  function measure(el){
+    try{ return el.getBoundingClientRect().height; }catch(e){ return 0; }
+  }
+  function flatten(nodes, maxH, depth){
+    var out = [];
+    for(var i=0;i<nodes.length;i++){
+      var n = nodes[i];
+      if(isSkipped(n)) continue;
+      var kids = [];
+      if(n.children){
+        for(var j=0;j<n.children.length;j++){ if(!isSkipped(n.children[j])) kids.push(n.children[j]); }
+      }
+      if(depth < 3 && kids.length > 1 && n.tagName !== 'TABLE' && measure(n) > maxH){
+        out = out.concat(flatten(kids, maxH, depth + 1));
+      }else{
+        out.push(n);
+      }
+    }
+    return out;
+  }
+
+
+  function save(shot){
+    var a = document.createElement('a');
+    a.href = shot.url; a.download = shot.name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+
+  /* 2매 이상 저장 시트 — 브라우저는 스크립트가 연속으로 여러 파일을 내려받는 것을
+     차단한다. 페이지마다 사용자가 직접 누르면 전부 정상 저장된다. */
+  function openSheet(shots){
+    var prev = document.getElementById('mm-save-ov');
+    if(prev) prev.parentNode.removeChild(prev);
+    var ov = document.createElement('div');
+    ov.id = 'mm-save-ov';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,.62);' +
+      'display:flex;align-items:center;justify-content:center;padding:16px;' +
+      "font-family:'Noto Sans KR','Noto Sans KR Local',sans-serif;";
+    var bx = document.createElement('div');
+    bx.style.cssText = 'background:#fff;border-radius:14px;width:100%;max-width:680px;max-height:88vh;' +
+      'display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.32);';
+    var hd = document.createElement('div');
+    hd.style.cssText = 'background:#1E3A5F;color:#fff;padding:14px 18px;display:flex;' +
+      'align-items:center;justify-content:space-between;flex-shrink:0;';
+    hd.innerHTML = '<b style="font-size:14px;font-weight:700;">🖼️ JPG 저장 — 전체 ' + shots.length + '장</b>' +
+      '<span style="font-size:11px;opacity:.8;">페이지별로 눌러 저장하세요</span>';
+    var bd = document.createElement('div');
+    bd.style.cssText = 'padding:16px 18px;overflow-y:auto;display:grid;gap:12px;' +
+      'grid-template-columns:repeat(auto-fill,minmax(150px,1fr));';
+    shots.forEach(function(sh){
+      var card = document.createElement('div');
+      card.style.cssText = 'border:1px solid #E5E7EB;border-radius:10px;overflow:hidden;background:#F8FAFC;';
+      var img = document.createElement('img');
+      img.src = sh.url;
+      img.style.cssText = 'width:100%;display:block;background:#fff;border-bottom:1px solid #E5E7EB;';
+      var btn = document.createElement('button');
+      btn.textContent = sh.no + ' / ' + shots.length + '  저장';
+      btn.style.cssText = 'width:100%;border:none;background:#1E3A5F;color:#fff;padding:9px;' +
+        "font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;";
+      btn.onclick = function(){ save(sh); btn.textContent = '✓ 저장됨'; btn.style.background = '#15803D'; };
+      card.appendChild(img); card.appendChild(btn); bd.appendChild(card);
+    });
+    var ft = document.createElement('div');
+    ft.style.cssText = 'padding:12px 18px;border-top:1px solid #E5E7EB;display:flex;gap:8px;' +
+      'justify-content:flex-end;flex-shrink:0;background:#F8FAFC;';
+    var all = document.createElement('button');
+    all.textContent = '전체 저장 시도';
+    all.style.cssText = 'height:38px;padding:0 18px;border-radius:9px;border:1.5px solid #1E3A5F;' +
+      "background:#fff;color:#1E3A5F;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;";
+    all.onclick = function(){
+      shots.forEach(function(sh,i){ setTimeout(function(){ save(sh); }, i*420); });
+      all.textContent = '전체 저장 실행됨';
+    };
+    var cl = document.createElement('button');
+    cl.textContent = '닫기';
+    cl.style.cssText = 'height:38px;padding:0 18px;border-radius:9px;border:none;' +
+      "background:#1E3A5F;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;";
+    cl.onclick = function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); };
+    ft.appendChild(all); ft.appendChild(cl);
+    bx.appendChild(hd); bx.appendChild(bd); bx.appendChild(ft);
+    ov.appendChild(bx);
+    ov.addEventListener('click', function(e){ if(e.target === ov) cl.onclick(); });
+    document.body.appendChild(ov);
+  }
+
+  /* 원본 계산서의 실제 글자색을 읽어온다. 너무 밝으면(다크테마 잔재) 안전색으로 바꾼다. */
+  function inkOf(el){
+    var FALLBACK = '#111827';
+    try{
+      var c = window.getComputedStyle(el).color || '';
+      var m = c.match(/rgba?\(([^)]+)\)/);
+      if(!m) return FALLBACK;
+      var v = m[1].split(',');
+      var r = parseFloat(v[0]), g = parseFloat(v[1]), b = parseFloat(v[2]);
+      var a = (v.length > 3) ? parseFloat(v[3]) : 1;
+      if(a < 0.7) return FALLBACK;
+      var lum = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+      return (lum > 0.55) ? FALLBACK : c;      /* 흰 종이 위에서 흐린 색이면 교체 */
+    }catch(e){ return FALLBACK; }
+  }
+
+  function Builder(stage, base){
+    this.stage = stage;
+    this.base  = base || {};
+    this.pages = [];
+    this.newPage();
+  }
+  Builder.prototype.newPage = function(){
+    var p = document.createElement('div');
+    p.style.cssText =
+      'position:relative;box-sizing:border-box;background:#FFFFFF;' +
+      'width:' + PAGE_W + 'px;min-height:' + PAGE_H + 'px;' +   /* min-height : 잘라내지 않는다 */
+      'padding:' + PT + 'px ' + PR + 'px ' + PB + 'px ' + PL + 'px;' +
+      'color:' + (this.base.color || '#111827') + ';' +          /* 흐린 글자 방지 */
+      'font-size:' + (this.base.fontSize || '13px') + ';' +
+      'line-height:' + (this.base.lineHeight || '1.7') + ';' +
+      'font-family:' + (this.base.fontFamily || "'Noto Sans KR','Noto Sans KR Local',sans-serif") + ';';
+    var b = document.createElement('div');
+    b.style.cssText = 'display:flow-root;';                     /* 마진 상쇄 방지 */
+    p.appendChild(b); this.stage.appendChild(p);
+    this.cur = p; this.body = b; this.pages.push(p);
+  };
+  Builder.prototype.over  = function(){ return this.body.scrollHeight > BODY_H + 1; };
+  Builder.prototype.empty = function(){ return this.body.children.length === 0; };
+
+  Builder.prototype.add = function(node){
+    var c = cleanClone(node);
+    this.body.appendChild(c);
+    if(!this.over()) return;
+    if(this.body.children.length > 1){          /* ① 걸리면 통째로 다음 장 */
+      this.body.removeChild(c);
+      this.newPage();
+      this.body.appendChild(c);
+      if(!this.over()) return;
+    }
+    this.splitTall(c);                          /* ② 한 장보다 길면 표를 행 단위로 */
+  };
+
+  Builder.prototype.splitTall = function(node){
+    var table = (node.tagName === 'TABLE') ? node
+              : (node.querySelector ? node.querySelector('table') : null);
+    var tb = table && table.tBodies && table.tBodies[0];
+    if(!tb || tb.rows.length < 3) return;        /* 분할 불가 → 페이지가 늘어날 뿐, 잘리지 않음 */
+    var moved = [], guard = 0;
+    while(this.over() && tb.rows.length > 1 && guard++ < 2000){
+      moved.unshift(tb.rows[tb.rows.length-1]);
+      tb.deleteRow(-1);
+    }
+    if(!moved.length) return;
+    var cont = node.cloneNode(true);
+    var ctb = (cont.tagName === 'TABLE') ? cont.tBodies[0] : cont.querySelector('tbody');
+    if(!ctb) return;
+    while(ctb.firstChild) ctb.removeChild(ctb.firstChild);
+    for(var i=0;i<moved.length;i++) ctb.appendChild(moved[i]);
+    this.newPage();
+    this.body.appendChild(cont);
+    if(this.over()) this.splitTall(cont);
+  };
+
+  Builder.prototype.finish = function(){
+    var t = this.pages.length;
+    for(var i=0;i<t;i++){
+      this.pages[i].appendChild(stampEl(
+        'right:' + PR + 'px;bottom:' + MM(9) + 'px;' +
+        "font-family:'Orbitron','JetBrains Mono',sans-serif;font-weight:700;" +
+        'font-size:8pt;color:#9ca3af;letter-spacing:0.08em;', VER));
+      if(t > 1){                                 /* 2매 이상일 때만 쪽번호 */
+        this.pages[i].appendChild(stampEl(
+          'left:' + PL + 'px;bottom:' + MM(9) + 'px;' +
+          "font-family:'JetBrains Mono','Noto Sans KR',monospace;" +
+          'font-size:8pt;color:#9ca3af;letter-spacing:0.04em;', (i+1) + ' / ' + t));
+      }
+    }
+    return t;
+  };
+
+  window.mmSaveJPG = function(){
+    if(CFG.prepare && typeof window[CFG.prepare] === 'function'){
+      try{ window[CFG.prepare](); }catch(e){ console.warn('[MANMIN JPG] prepare', e); }
+    }
+    var zone  = document.querySelector(CFG.zone);
+    var inner = document.getElementById('rpt-inner');
+    var btn   = document.getElementById('btn-jpg');
+    if(!zone){ alert('계산서 영역을 찾지 못했습니다.'); return; }
+    if(typeof html2canvas !== 'function'){
+      alert('이미지 라이브러리를 불러오지 못했습니다.\n온라인 상태에서 한 번 실행하면 이후 오프라인에서도 저장됩니다.');
+      return;
+    }
+
+    var label = btn ? btn.textContent : '';
+    var keep  = inner ? inner.style.transform : '';
+    if(btn){ btn.textContent = '⏳ 생성 중...'; btn.disabled = true; }
+    if(inner){ inner.style.transform = 'none'; }
+
+    var stage = document.createElement('div');
+    stage.setAttribute('aria-hidden','true');
+    stage.style.cssText = 'position:fixed;left:-20000px;top:0;z-index:-1;background:#fff;';
+    document.body.appendChild(stage);
+
+    var stamp = fileStamp(zone);
+    var top = Array.prototype.slice.call(zone.children);
+    var nodes = flatten(top, BODY_H, 0);      /* transform 해제 후 실측 → 분할 단위 결정 */
+
+    var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+
+    ready.then(function(){
+      var zs = window.getComputedStyle(zone);
+      var b = new Builder(stage, {
+        color      : inkOf(zone),
+        fontSize   : zs.fontSize,
+        lineHeight : zs.lineHeight,
+        fontFamily : zs.fontFamily
+      });
+      nodes.forEach(function(n){
+        if(isBreak(n) && !b.empty()) b.newPage();
+        b.add(n);
+      });
+      var total = b.finish();
+      var shots = [];
+      var chain = Promise.resolve();
+      b.pages.forEach(function(page, i){
+        chain = chain.then(function(){
+          return html2canvas(page, {
+            scale: 2, backgroundColor: '#FFFFFF',
+            useCORS: true, allowTaint: true, logging: false,
+            windowWidth: Math.ceil(PAGE_W), width: Math.ceil(PAGE_W),
+            height: Math.ceil(page.getBoundingClientRect().height)
+          }).then(function(canvas){
+            shots.push({
+              url : canvas.toDataURL('image/jpeg', 0.95),
+              name: CFG.name + '_' + stamp + (total > 1 ? ('_' + (i+1)) : '') + '.jpg',
+              no  : (i+1)
+            });
+          });
+        });
+      });
+      return chain.then(function(){
+        if(shots.length === 1){ save(shots[0]); return; }
+        openSheet(shots);          /* 2매 이상 — 브라우저 연속 다운로드 차단 회피 */
+      });
+    }).catch(function(e){
+      console.error('[MANMIN JPG]', e);
+      alert('이미지 저장 중 오류가 발생했습니다.\n' + (e && e.message ? e.message : ''));
+    }).then(function(){
+      if(stage.parentNode) document.body.removeChild(stage);
+      if(inner) inner.style.transform = keep;
+      if(btn){ btn.textContent = label || '🖼️ JPG 저장'; btn.disabled = false; }
+    });
+  };
+})();
+</script>
+
+
+
 </body>
 </html>

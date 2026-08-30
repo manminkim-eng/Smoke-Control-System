@@ -1,10 +1,10 @@
 /* ════════════════════════════════════════════════════════════════
-   Service Worker — 제연설비 설계 계산서 MANMIN Ver-3.0
+   Service Worker — 제연설비 설계 계산서 MANMIN Ver-5.0
    전략: Cache-First (오프라인 완전 지원)
         + 네트워크 업데이트 감지 → 새 버전 알림
 ════════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME  = 'jeyeon-v3.0';
+const CACHE_NAME  = 'jeyeon-v5.0';
 const STATIC_URLS = [
   './',
   './index.html',
