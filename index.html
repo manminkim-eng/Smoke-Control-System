@@ -158,10 +158,12 @@ button{cursor:pointer;}
 /* ════════════════════════════════════════════════
    2. HEADER (옥외소화전 원본 동일 구조)
 ════════════════════════════════════════════════ */
+/* v5.0 — 헤더 고정 해제 (2026-08-31)
+   소방 마스터 01 옥내소화전에 position:sticky 는 0건이다. 헤더가 커서 고정하면
+   모바일 화면을 상시 점유하는데, 그 자리만큼 계산 영역이 줄어든다. */
 .site-header{
   background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 55%,#1a3050 100%);
   color:white;padding:20px 0 0;
-  position:sticky;top:0;z-index:800;
   box-shadow:0 4px 24px rgba(0,0,0,.55);
 }
 .hdr-inner{max-width:1300px;margin:0 auto;padding:0 24px;}
