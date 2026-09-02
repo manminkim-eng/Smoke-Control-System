@@ -165,13 +165,14 @@ button{cursor:pointer;}
 .site-header{
   background:linear-gradient(135deg,#0d1f33 0%,#1e3a5f 55%,#1a3050 100%);
   color:white;padding:20px 0 0;
-  box-shadow:0 4px 24px rgba(0,0,0,.55);
+  box-shadow:0 2px 20px rgba(30,58,95,.35);   /* v5.0-HDR — §3-8 형식(주도색 .35) */
 }
 .hdr-inner{max-width:1300px;margin:0 auto;padding:0 24px;}
-.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
-.hdr-eng{font-size:11px;font-weight:600;opacity:.7;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
-.hdr-h1{font-size:26px;font-weight:900;letter-spacing:.03em;line-height:1.2;}
-.hdr-desc{font-size:11px;margin-top:8px;opacity:.85;letter-spacing:.02em;}
+.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}   /* v5.0-HDR — 간격 16 */
+/* v5.0-HDR — 클래스명을 §3-1 규격(hdr-eyebrow · hdr-sub)으로 통일 */
+.hdr-eyebrow{font-size:11px;font-weight:600;opacity:.7;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.hdr-h1{font-size:26px;font-weight:900;letter-spacing:.04em;line-height:1.2;}
+.hdr-sub{font-size:11px;margin-top:8px;opacity:.85;letter-spacing:.02em;line-height:normal;}
 .hdr-manmin{
   font-family:'Orbitron',sans-serif !important;
   font-weight:900;font-size:12px;color:#90cdf4;
@@ -273,24 +274,25 @@ button{cursor:pointer;}
 
 /* ── 탭 바 ── */
 .tab-bar-wrap{
-  display:flex;overflow-x:auto;white-space:nowrap;
+  display:flex;gap:4px;padding-top:4px;overflow-x:auto;white-space:nowrap;   /* v5.0-HDR — 마스터 gap 4 · padding-top 4 → 162.2 */
   scrollbar-width:none;-webkit-overflow-scrolling:touch;
 }
 .tab-bar-wrap::-webkit-scrollbar{display:none;}
 .tab-btn{
-  padding:11px 22px;border:none;font-weight:700;font-size:13px;
+  padding:11px 16px;border:none;font-weight:700;font-size:13px;line-height:normal;   /* v5.0-HDR — 44px */
   letter-spacing:.02em;flex-shrink:0;transition:all .15s;
-  background:transparent;color:rgba(255,255,255,.7);
+  background:transparent;color:rgba(255,255,255,.75);
   border-bottom:3px solid transparent;
 }
 .tab-btn:hover:not(.active){color:white;background:rgba(255,255,255,.06);}
-.tab-btn.active{color:white;background:rgba(49,130,206,.3);border-bottom-color:#63b3ed;}
+/* v5.0-HDR (2026-09-02 확정) — 활성 탭 단색 배경 + 강조색 바 */
+.tab-btn.active{color:white;background:#3182ce;border-bottom-color:#90cdf4;}
 .tab-btn.print-tab{color:#fbbf24 !important;}
 .tab-btn.print-tab.active{background:rgba(251,191,36,.15) !important;border-bottom-color:#fbbf24 !important;}
 
 /* ── 요약 바 ── */
-.sum-bar-wrap{background:#0a1628;padding:9px 0;border-bottom:1px solid rgba(49,130,206,.15);}
-.sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
+.sum-bar-wrap{background:#0f172a;padding:10px 0;}   /* v5.0-HDR — 마스터 38px */
+.sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:14px;}
 .sum-item{font-size:12px;color:#94a3b8;}
 .sum-val{color:#63b3ed;font-family:'JetBrains Mono','Noto Sans KR',monospace !important;font-weight:700;}
 
@@ -663,18 +665,21 @@ table.dt td b{color:#1e40af;font-weight:800;}
 }
 /* 모바일 (≤768px) */
 @media(max-width:768px){
-  .site-header{padding:14px 0 0;}
-  .hdr-inner{padding:0 14px;}
-  .hdr-h1{font-size:20px !important;}
+  /* v5.0-HDR — 헤더 축소 규칙 폐지. 마스터는 768 에서 우측 근거 블록만 접는다 */
   .hdr-right{display:none;}
-  .tab-btn{padding:10px 16px;font-size:12px;}
   .main-outer{padding:14px 12px 80px;}
   .g-proj{grid-template-columns:1fr 1fr;}
   .g-2{grid-template-columns:1fr;}
   .box-hd{font-size:11px;padding:9px 14px;}
   .box-bd{padding:14px 12px;}
-  .sum-bar{padding:0 14px;gap:10px;}
   .fml-fab{bottom:18px;right:14px;}
+}
+/* v5.0-HDR — 모바일 헤더 (01 마스터 640 실측) : h1 18 · 좌우 14 · eyebrow/sub/각인/탭 불변 */
+@media(max-width:640px){
+  .hdr-inner{padding:0 14px;}
+  .hdr-h1{font-size:18px;}
+  .sum-bar{padding:0 14px;}
+  .sum-item{font-size:11px;}
 }
 /* 모바일 소형 (≤540px) */
 @media(max-width:540px){
@@ -683,8 +688,6 @@ table.dt td b{color:#1e40af;font-weight:800;}
   .g-2sm{grid-template-columns:1fr;}
   .g-4{grid-template-columns:1fr 1fr;}
   .ov-grid{grid-template-columns:1fr 1fr;}
-  .hdr-h1{font-size:17px !important;}
-  .tab-btn{padding:9px 12px;font-size:11px;}
   /* 모달 바텀시트 */
   .fml-overlay{padding:0;align-items:flex-end;}
   .fml-box{border-radius:20px 20px 0 0;max-height:92vh;}
@@ -710,9 +713,9 @@ table.dt td b{color:#1e40af;font-weight:800;}
   <div class="hdr-inner">
     <div class="hdr-row">
       <div>
-        <div class="hdr-eng">Smoke Control Equipment — NFTC 501</div>
+        <div class="hdr-eyebrow">Smoke Control Equipment — NFTC 501</div>
         <h1 class="hdr-h1">제연설비 설계 계산서</h1>
-        <div class="hdr-desc">
+        <div class="hdr-sub">
           Smoke Control System Design Calculator · NFTC 501 적용&nbsp;
           <span class="hdr-manmin">MANMIN · Ver-5.0</span>
         </div>

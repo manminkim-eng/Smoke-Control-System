@@ -14,7 +14,10 @@
    ⛔ 이 navigate 분기를 제거하지 말 것. 제거하면 배포가 화면에 반영되지 않는다.
 ════════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME  = 'jeyeon-v5.0.1';
+/* §17-1 (2026-09-02) — 도구 고유 접두어. 종전 `k !== CACHE_NAME` 필터는 같은 origin 의 39종 캐시를 전부 지웠다 */
+const PREFIX      = 'jeyeon-';
+const CACHE_NAME  = 'jeyeon-v5.0.2';
+const ORPHAN      = ['jeyeon-v5.0', 'jeyeon-v5.0.1'];
 const STATIC_URLS = [
   './',
   './index.html',
@@ -65,7 +68,7 @@ self.addEventListener('activate', function(e){
       .then(function(keys){
         return Promise.all(
           keys
-            .filter(function(k){ return k !== CACHE_NAME; })
+            .filter(function(k){ return k !== CACHE_NAME && (k.indexOf(PREFIX) === 0 || ORPHAN.indexOf(k) !== -1); })
             .map(function(k){
               console.log('[SW] 구버전 캐시 삭제:', k);
               return caches.delete(k);
