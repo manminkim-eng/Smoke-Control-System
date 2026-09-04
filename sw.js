@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
+   S2 회차 2026-09-04 — index 소급(R1·R21·R26 등) 동반 캐시명 v5.0.4
    R25 회차 2026-09-04 — 자기 접두어 캐시 조회 · cors 프리캐시 · opaque 가드 · 캐시명 v5.0.3 (S10)
    Service Worker — 제연설비 설계 계산서 MANMIN Ver-5.0
    ㈜대성건축사사무소 · 건축사 김만민
@@ -30,7 +31,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_NAME  = 'jeyeon-v5.0.3';
+const CACHE_NAME  = 'jeyeon-v5.0.4';
 const ORPHAN      = ['jeyeon-v5.0', 'jeyeon-v5.0.1'];
 const STATIC_URLS = [
   './',
