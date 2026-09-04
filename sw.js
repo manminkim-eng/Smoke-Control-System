@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
+   R25 회차 2026-09-04 — 자기 접두어 캐시 조회 · cors 프리캐시 · opaque 가드 · 캐시명 v5.0.3 (S10)
    Service Worker — 제연설비 설계 계산서 MANMIN Ver-5.0
    ㈜대성건축사사무소 · 건축사 김만민
 
@@ -16,7 +17,20 @@
 
 /* §17-1 (2026-09-02) — 도구 고유 접두어. 종전 `k !== CACHE_NAME` 필터는 같은 origin 의 39종 캐시를 전부 지웠다 */
 const PREFIX      = 'jeyeon-';
-const CACHE_NAME  = 'jeyeon-v5.0.2';
+/* ═ R25 (2026-09-04) — SW 캐시 origin 오염 차단 (S10 · 지시서 §21-1 R25)
+   전역 caches 의 match 는 origin 전체를 검색한다. manminkim-eng.github.io 는 34종이 한 origin 이라
+   다른 도구 캐시의 opaque 응답이 <script crossorigin>(cors) 요청에 돌아가 스크립트가 폐기됐다
+   (30 #root 빈 화면 · 40 html2canvas undefined). 자기 접두어 캐시만 조회하고, cross-origin
+   프리캐시는 cors 로 받으며, opaque↔cors 불일치 시 캐시를 쓰지 않는다. */
+const MM_EXCLUDE = [];   /* 내 접두어로 시작하지만 남의 캐시인 이름 (§17-1 충돌) */
+const mmOwn   = (k) => k.indexOf(PREFIX) === 0 && !MM_EXCLUDE.some((x) => k.indexOf(x) === 0);
+const mmReq   = (u) => (typeof u === 'string' && u.indexOf('http') === 0) ? new Request(u, { mode: 'cors' }) : u;
+const mmMatch = (req, opt) => caches.keys()
+  .then((ks) => ks.filter(mmOwn))
+  .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
+  .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
+
+const CACHE_NAME  = 'jeyeon-v5.0.3';
 const ORPHAN      = ['jeyeon-v5.0', 'jeyeon-v5.0.1'];
 const STATIC_URLS = [
   './',
@@ -48,7 +62,7 @@ self.addEventListener('install', function(e){
       .then(function(cache){
         return Promise.allSettled(
           STATIC_URLS.map(function(u){
-            return cache.add(u).catch(function(err){
+            return cache.add(mmReq(u)).catch(function(err){
               console.warn('[SW] precache skip:', u, err);
             });
           })
@@ -68,7 +82,7 @@ self.addEventListener('activate', function(e){
       .then(function(keys){
         return Promise.all(
           keys
-            .filter(function(k){ return k !== CACHE_NAME && (k.indexOf(PREFIX) === 0 || ORPHAN.indexOf(k) !== -1); })
+            .filter(function(k){ return k !== CACHE_NAME && (mmOwn(k) || ORPHAN.indexOf(k) !== -1); })
             .map(function(k){
               console.log('[SW] 구버전 캐시 삭제:', k);
               return caches.delete(k);
@@ -101,8 +115,8 @@ self.addEventListener('fetch', function(e){
           return netRes;
         })
         .catch(function(){
-          return caches.match(e.request)
-            .then(function(c){ return c || caches.match('./index.html'); });
+          return mmMatch(e.request)
+            .then(function(c){ return c || mmMatch('./index.html'); });
         })
     );
     return;
@@ -110,7 +124,7 @@ self.addEventListener('fetch', function(e){
 
   /* ══ 정적 자산: Cache-First + 백그라운드 갱신 ══ */
   e.respondWith(
-    caches.match(e.request)
+    mmMatch(e.request)
       .then(function(cached){
         if(cached){
           fetch(e.request)
