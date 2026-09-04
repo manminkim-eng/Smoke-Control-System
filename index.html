@@ -2433,7 +2433,7 @@ function bindLive(id, fn) {
 
 
 <!-- ═══════════════════════════════════════════════════════════════
-     MANMIN 모바일 JPG 저장 v5.4
+     MANMIN 모바일 JPG 저장 v5.5 (v5.4 + R28 소제목 동반 이관 2026-09-05)
      · 인쇄(PDF)와 동일한 계산서 DOM을 캡처한다 → 두 출력물이 어긋날 수 없다
      · 쪽나눔 인식 : .page-break 클래스 + 인라인/계산 스타일(break-before:page) 모두
      · 분할 단위   : 한 장보다 큰 블록은 실측 높이를 보고 자식으로 내려가 잘게 쪼갠다
@@ -2643,9 +2643,19 @@ function bindLive(id, fn) {
     if(!this.over()) return;
     if(this.body.children.length > 1){          /* ① 걸리면 통째로 다음 장 */
       this.body.removeChild(c);
-      this.newPage();
-      this.body.appendChild(c);
-      if(!this.over()) return;
+      /* v5.5 (2026-09-05 · S10 R28) — 직전 요소가 소제목(짧은 비표 블록)이면 함께 넘긴다.
+         인쇄의 .a4-sub+table{break-before:avoid} 와 같은 동작(§17-7). 소제목만 있는 쪽이면 넘기지 않고 아래 행 분할로 간다. */
+      var kids = this.body.children, h = kids[kids.length-1];
+      var isTit = !!h && h.tagName !== 'TABLE' && !h.querySelector('table') && h.getBoundingClientRect().height < 60;
+      if(isTit && kids.length === 1){
+        this.body.appendChild(c);
+      }else{
+        if(isTit) this.body.removeChild(h);
+        this.newPage();
+        if(isTit) this.body.appendChild(h);
+        this.body.appendChild(c);
+        if(!this.over()) return;
+      }
     }
     this.splitTall(c);                          /* ② 한 장보다 길면 표를 행 단위로 */
   };
