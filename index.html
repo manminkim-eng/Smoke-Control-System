@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <title>제연설비 설계 계산서 — NFTC 501</title>
 <meta name="theme-color" content="#1e3a5f"/>
-<meta name="description" content="제연설비의 화재안전기술기준 NFTC 501 (2024.10.1 시행) 적용 설계 계산서 — MANMIN Ver-5.0"/>
+<meta name="description" content="제연설비의 화재안전기술기준 NFTC 501 (2024.10.1 시행) 적용 설계 계산서 — MANMIN Ver-5.1"/>
 <!-- ══ PWA Manifest ══ -->
 <link rel="manifest" href="./manifest.json"/>
 <!-- ══ iOS PWA ══ -->
@@ -24,7 +24,7 @@
 <meta name="msapplication-TileColor" content="#1e3a5f"/>
 <meta name="msapplication-TileImage" content="./icons/icon-144x144.png"/>
 <!-- ══ OG / SNS ══ -->
-<meta property="og:title" content="제연설비 설계 계산서 — NFTC 501 MANMIN Ver-5.0"/>
+<meta property="og:title" content="제연설비 설계 계산서 — NFTC 501 MANMIN Ver-5.1"/>
 <meta property="og:description" content="제연설비의 화재안전기술기준 NFTC 501 기반 배출량·풍도·전원 설계 계산 웹앱"/>
 <meta property="og:image" content="./icons/icon-512x512.png"/>
 <meta property="og:type" content="website"/>
@@ -194,6 +194,11 @@ button{cursor:pointer;}
   animation:pwa-pulse 2.8s ease-in-out infinite;
 }
 .pwa-install-btn.visible{display:flex;}
+/* v5.1.0 — 사용자 매뉴얼 버튼(01 ~ 08 동일 문구) */
+.mm-manual-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.45);
+  background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:800;font-family:'Noto Sans KR',sans-serif;text-decoration:none;white-space:nowrap;flex-shrink:0;}
+.mm-manual-btn:hover{background:rgba(255,255,255,.22);}
+@media print{.mm-manual-btn{display:none!important;}}
 .pwa-install-btn:hover{
   background:linear-gradient(135deg,#2b6cb0,#3182ce);
   color:#fff;border-color:#63b3ed;animation:none;
@@ -720,10 +725,11 @@ table.dt td b{color:#1e40af;font-weight:800;}
         <h1 class="hdr-h1">제연설비 설계 계산서</h1>
         <div class="hdr-sub">
           Smoke Control System Design Calculator · NFTC 501 적용&nbsp;
-          <span class="hdr-manmin">MANMIN · Ver-5.0</span>
+          <span class="hdr-manmin">MANMIN · Ver-5.1</span>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
+        <a id="mm-manual-btn" class="mm-manual-btn" href="./manual/" target="_blank" rel="noopener" title="제연설비 설계 계산서 사용자 매뉴얼 (새 창)">📘 매뉴얼</a>
         <button id="pwa-hdr-btn" class="pwa-install-btn" onclick="pwaTriggerInstall('header')" title="제연설비 앱 설치">
           <span class="pwa-icon">&#128242;</span>
           <span class="pwa-txt">앱 설치</span>
@@ -857,7 +863,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
           </div>
         </div>
         <div>
-          <label class="lbl">제연구역 개수</label>
+          <label class="lbl">제연구역 개수 <span style="font-weight:600;color:#94a3b8;">(참고 · 계산에 쓰지 않음)</span></label>
           <input class="inp" id="zone-count" type="number" min="1" value="1"/>
         </div>
       </div>
@@ -1431,29 +1437,29 @@ table.dt td b{color:#1e40af;font-weight:800;}
     <div class="box-bd">
       <div class="g-2" style="gap:14px;">
         <div>
-          <div style="font-size:11px;font-weight:800;color:#1e40af;margin-bottom:8px;">표 2.3.2.1 — 직경 ≤ 40 m (§2.3.2.1)</div>
+          <div style="font-size:11px;font-weight:800;color:#1e40af;margin-bottom:8px;">표 2.3.2.1 — 직경 40 m 원 안 (§2.3.2.1)</div>
           <div class="tbl-wrap">
             <table class="dt">
               <thead><tr><th>수직거리</th><th>배출량 (㎥/h)</th></tr></thead>
               <tbody>
-                <tr><td class="L">2 m 미만</td><td>35,000</td></tr>
-                <tr><td class="L">2 m 이상 ~ 2.5 m 미만</td><td>40,000</td></tr>
-                <tr><td class="L">2.5 m 이상 ~ 3 m 미만</td><td>45,000</td></tr>
-                <tr><td class="L">3 m 이상</td><td>50,000</td></tr>
+                <tr><td class="L">2 m 이하</td><td>40,000</td></tr>
+                <tr><td class="L">2 m 초과 2.5 m 이하</td><td>45,000</td></tr>
+                <tr><td class="L">2.5 m 초과 3 m 이하</td><td>50,000</td></tr>
+                <tr><td class="L">3 m 초과</td><td>60,000</td></tr>
               </tbody>
             </table>
           </div>
         </div>
         <div>
-          <div style="font-size:11px;font-weight:800;color:#1e40af;margin-bottom:8px;">표 2.3.2.2 — 직경 &gt; 40 m / 통로 (§2.3.2.2, §2.3.3)</div>
+          <div style="font-size:11px;font-weight:800;color:#1e40af;margin-bottom:8px;">표 2.3.2.2 — 직경 40 m 원 초과 / 통로 (§2.3.2.2, §2.3.3)</div>
           <div class="tbl-wrap">
             <table class="dt">
               <thead><tr><th>수직거리</th><th>배출량 (㎥/h)</th></tr></thead>
               <tbody>
-                <tr><td class="L">2 m 미만</td><td>45,000</td></tr>
-                <tr><td class="L">2 m 이상 ~ 2.5 m 미만</td><td>50,000</td></tr>
-                <tr><td class="L">2.5 m 이상 ~ 3 m 미만</td><td>55,000</td></tr>
-                <tr><td class="L">3 m 이상</td><td>60,000</td></tr>
+                <tr><td class="L">2 m 이하</td><td>45,000</td></tr>
+                <tr><td class="L">2 m 초과 2.5 m 이하</td><td>50,000</td></tr>
+                <tr><td class="L">2.5 m 초과 3 m 이하</td><td>55,000</td></tr>
+                <tr><td class="L">3 m 초과</td><td>65,000</td></tr>
               </tbody>
             </table>
           </div>
@@ -1465,14 +1471,15 @@ table.dt td b{color:#1e40af;font-weight:800;}
           <table class="dt">
             <thead>
               <tr><th rowspan="2">보행중심선 길이</th><th colspan="4">수직거리별 배출량 (㎥/h)</th></tr>
-              <tr><th>2 m 미만</th><th>2~2.5 m</th><th>2.5~3 m</th><th>3 m 이상</th></tr>
+              <tr><th>2 m 이하</th><th>2 m 초과 2.5 m 이하</th><th>2.5 m 초과 3 m 이하</th><th>3 m 초과</th></tr>
             </thead>
             <tbody>
-              <tr><td class="L">40 m 미만</td><td>25,000</td><td>30,000</td><td>35,000</td><td>40,000</td></tr>
-              <tr><td class="L">40 m 이상 ~ 60 m 이하</td><td>30,000</td><td>35,000</td><td>40,000</td><td>45,000</td></tr>
+              <tr><td class="L">40 m 이하</td><td>25,000</td><td>30,000</td><td>35,000</td><td>45,000</td></tr>
+              <tr><td class="L">40 m 초과 60 m 이하</td><td>30,000</td><td>35,000</td><td>40,000</td><td>50,000</td></tr>
             </tbody>
           </table>
         </div>
+        <div style="font-size:10.5px;color:#64748b;margin-top:8px;line-height:1.6;">※ 표 값은 NFTC 501(공고 제2024-52호) 원문 표 그대로 · 2 m 이하 행은 벽으로 구획된 경우를 포함(표 2.3.1.2 비고) · 수직거리가 구획 부분에 따라 다르면 긴 것을 기준(§2.3.5)<br/>※ 400 ㎡ 미만 거실이라도 제연경계로만 구획되면 2.3.1(제연경계 구획 제외) 대상이 아니므로 표 2.3.2.1 · 2.3.2.2를 적용 — MANMIN 적용(통상 해석)</div>
       </div>
     </div>
   </div>
@@ -1485,7 +1492,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
       <div class="g-2" style="gap:14px;">
         <div class="law-box">
           <div class="law-ref">주 적용 기준</div>
-          <div class="law-text">제연설비의 화재안전기술기준(NFTC 501)<br/>국립소방연구원공고 제2024-52호 / 2024.10.01 시행<br/>화재예방연구과 : 041-559-0531</div>
+          <div class="law-text">제연설비의 화재안전기술기준(NFTC 501)<br/>국립소방연구원공고 제2024-52호 / 2024.10.01 시행<br/>제연설비의 화재안전성능기준(NFPC 501)<br/>소방청고시 제2024-48호 / 2024.10.01 시행<br/>화재예방연구과 : 041-559-0531</div>
         </div>
         <div class="law-box">
           <div class="law-ref">관련 법령</div>
@@ -1497,7 +1504,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
         </div>
       </div>
       <div style="text-align:right;margin-top:14px;font-size:10px;color:#9ca3af;">
-        <span style="font-family:'Orbitron',sans-serif !important;font-weight:700;letter-spacing:.08em;">MANMIN · Ver-5.0</span>
+        <span style="font-family:'Orbitron',sans-serif !important;font-weight:700;letter-spacing:.08em;">MANMIN · Ver-5.1</span>
         &nbsp;|&nbsp; NFTC 501 · 2024.10.01 기준
       </div>
     </div>
@@ -1552,7 +1559,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
       <div class="fml-hd-row">
         <div>
           <div style="font-size:14px;font-weight:900;letter-spacing:.04em;margin-bottom:3px;">🌫️ 제연설비 계산서 안내</div>
-          <div style="font-size:10px;opacity:.65;font-weight:500;">NFTC 501 · 2024.10.01 시행 · MANMIN Ver-5.0</div>
+          <div style="font-size:10px;opacity:.65;font-weight:500;">NFTC 501 · 2024.10.01 시행 · MANMIN Ver-5.1</div>
         </div>
         <button class="fml-close" id="btn-modal-close">✕</button>
       </div>
@@ -1568,7 +1575,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
       <div class="fml-panel on" id="mp-0">
         <div style="background:linear-gradient(135deg,#0d1f33,#1e3a5f,#2d5282);border-radius:13px;padding:16px 18px;margin-bottom:16px;">
           <div style="font-size:13px;font-weight:900;color:#90cdf4;margin-bottom:5px;display:flex;align-items:center;gap:8px;"><span style="font-size:20px;">🌫️</span>제연설비 설계 계산서 이용방법</div>
-          <div style="font-size:10.5px;color:rgba(255,255,255,.75);line-height:1.7;">NFTC 501 제연설비의 화재안전기술기준 [시행 2024.10.1.] · MANMIN Ver-5.0</div>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.75);line-height:1.7;">NFTC 501 제연설비의 화재안전기술기준 [시행 2024.10.1.] · MANMIN Ver-5.1</div>
         </div>
         <div style="display:flex;gap:11px;align-items:flex-start;background:#f8fafc;border:1.5px solid #e2e8f0;border-left:4px solid #3182ce;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
           <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#3182ce,#1e3a5f);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0;">1</div>
@@ -1592,7 +1599,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
         <div class="fml-sec">
           <div class="fml-sec-ttl" style="color:#1e40af;">💨 배출량 계산식 (§2.3)</div>
           <div class="fml-g2">
-            <div class="fml-card"><div class="fml-card-ttl">거실 &lt; 400 ㎡ (§2.3.1.1)</div><code class="fml-eq">Q = max(A × 1㎥/min/㎡ × 60, 5,000) [㎥/h]</code><div class="fml-note">A: 바닥면적(㎡) | 최소 5,000 ㎥/h</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">거실 &lt; 400 ㎡ · 벽 구획 (§2.3.1.1)</div><code class="fml-eq">Q = max(A × 1㎥/min/㎡ × 60, 5,000) [㎥/h]</code><div class="fml-note">A: 바닥면적(㎡) | 최소 5,000 ㎥/h</div></div>
             <div class="fml-card"><div class="fml-card-ttl">거실 ≥ 400 ㎡, 직경 ≤ 40 m (§2.3.2.1)</div><code class="fml-eq">Q ≥ 40,000 ㎥/h (벽 구획)</code><div class="fml-note">제연경계 시 수직거리별 표 2.3.2.1 적용</div></div>
             <div class="fml-card"><div class="fml-card-ttl">거실 ≥ 400 ㎡, 직경 &gt; 40 m (§2.3.2.2)</div><code class="fml-eq">Q ≥ 45,000 ㎥/h (벽 구획)</code><div class="fml-note">제연경계 시 수직거리별 표 2.3.2.2 적용</div></div>
             <div class="fml-card"><div class="fml-card-ttl">통로 예상제연구역 (§2.3.3)</div><code class="fml-eq">Q ≥ 45,000 ㎥/h</code><div class="fml-note">제연경계 시 표 2.3.2.2 적용</div></div>
@@ -1621,7 +1628,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
         <div class="fml-sec">
           <div class="fml-sec-ttl" style="color:#1e40af;">📥 참고 자료</div>
           <div class="fml-g2">
-            <div class="fml-card"><div class="fml-card-ttl">📄 NFTC 501 원문</div><div class="fml-note">국가법령정보센터 (www.law.go.kr)<br/>소방청 훈령 → 제연설비의 화재안전기술기준</div></div>
+            <div class="fml-card"><div class="fml-card-ttl">📄 NFTC 501 원문</div><div class="fml-note">국가법령정보센터 (www.law.go.kr)<br/>행정규칙 → 국립소방연구원공고 제2024-52호</div></div>
             <div class="fml-card"><div class="fml-card-ttl">📄 NFPC 501</div><div class="fml-note">제연설비의 화재안전성능기준<br/>성능 중심 기준 · NFTC와 병행 검토</div></div>
             <div class="fml-card"><div class="fml-card-ttl">🏛️ 소방청</div><div class="fml-note">www.nfa.go.kr<br/>소방법령·고시·예규 최신 개정사항</div></div>
             <div class="fml-card"><div class="fml-card-ttl">🔬 국립소방연구원</div><div class="fml-note">화재예방연구과 : 041-559-0531<br/>기준 해석 관련 문의</div></div>
@@ -1673,22 +1680,71 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 /* ════════════════════════════════════════
    2. 배출량 계산 핵심 로직
 ════════════════════════════════════════ */
+/* v5.1.0 (2026-10-16) — NFTC 501(공고 제2024-52호) 표 2.3.1.2 · 2.3.2.1 · 2.3.2.2 원문 값 · 경계로 정정
+   (기존 표 2.3.2.1 35,000~50,000 · 표 2.3.2.2 3 m 초과 60,000 · 표 2.3.1.2 3 m 초과 40,000/45,000 · 「40 m 미만」 → 원문 값 · 「40 m 이하」)
+   순수 함수 SMKENG.exhaust() — 화면 · A4 · 검증 도구(manual/_tools/verify_smk.py)가 같은 식을 쓴다 */
 function getQ_bdry(v, type) {
-  // 수직거리별 배출량 (표 2.3.2.1 / 2.3.2.2)
-  // 경계값: 2m 이하, 2m 초과~2.5m 이하, 2.5m 초과~3m 이하, 3m 초과
-  if (type === 'lt40') {
-    return v <= 2 ? 35000 : v <= 2.5 ? 40000 : v <= 3 ? 45000 : 50000;
-  } else {
-    return v <= 2 ? 45000 : v <= 2.5 ? 50000 : v <= 3 ? 55000 : 60000;
+  // 수직거리별 배출량 — 2 m 이하 / 2 m 초과 2.5 m 이하 / 2.5 m 초과 3 m 이하 / 3 m 초과
+  if (type === 'lt40') {   // 표 2.3.2.1 (직경 40 m 원 안)
+    return v <= 2 ? 40000 : v <= 2.5 ? 45000 : v <= 3 ? 50000 : 60000;
+  } else {                 // 표 2.3.2.2 (직경 40 m 원 초과 · 통로 2.3.3)
+    return v <= 2 ? 45000 : v <= 2.5 ? 50000 : v <= 3 ? 55000 : 65000;
   }
 }
 
 function getQ_corrOutlet(len, v) {
-  // 표 2.3.1.2 통로배출방식
-  // 경계값: 40m 미만 / 40m 이상
-  if (len < 40) return v <= 2 ? 25000 : v <= 2.5 ? 30000 : v <= 3 ? 35000 : 40000;
-  else          return v <= 2 ? 30000 : v <= 2.5 ? 35000 : v <= 3 ? 40000 : 45000;
+  // 표 2.3.1.2 통로배출방식 — 통로보행중심선 40 m 이하 / 40 m 초과 60 m 이하
+  if (len <= 40) return v <= 2 ? 25000 : v <= 2.5 ? 30000 : v <= 3 ? 35000 : 45000;
+  else           return v <= 2 ? 30000 : v <= 2.5 ? 35000 : v <= 3 ? 40000 : 50000;
 }
+
+window.SMKENG = {
+  exhaust: function (type, hasBnd, vd, area, corrLen) {
+    let Q = 0, ref = '', fml = '', basis = 'NFTC';
+    const warn = [];
+    const fmt = n => n.toLocaleString();
+    switch (type) {
+      case 'room_lt400':
+        if (area >= 400) warn.push('바닥면적 ' + fmt(area) + ' ㎡ ≥ 400 ㎡ — 「거실(≥ 400 ㎡)」 유형을 고르십시오');
+        if (hasBnd === 'boundary') {
+          // 2.3.1은 「400 ㎡ 미만으로 구획(제연경계에 따른 구획을 제외한다)」 — 제연경계 구획은 2.3.2 표 적용(MANMIN 적용 · 통상 해석)
+          Q = getQ_bdry(vd, 'lt40'); basis = 'MANMIN';
+          ref = '§2.3.2.1 표 2.3.2.1 (400 ㎡ 미만 · 제연경계 구획 — 2.3.1 적용 제외 · MANMIN 적용)';
+          fml = '거실(< 400 ㎡, 제연경계 구획, 수직거리 ' + vd + ' m) : 2.3.1 대상 아님 → 표 2.3.2.1 ' + fmt(Q) + ' ㎥/h (직경 40 m 원을 넘으면 「직경 > 40 m」 유형)';
+        } else {
+          Q = Math.max(area * 60, 5000); // 1 ㎥/min·㎡ × 60 = ㎥/h
+          ref = '§2.3.1.1 (벽 구획)';
+          fml = 'Q = max(' + area + ' ㎡ × 1 ㎥/min·㎡ × 60, 5,000) = ' + fmt(Q) + ' ㎥/h';
+        }
+        break;
+      case 'room_ge400_lt40':
+        if (area < 400) warn.push('바닥면적 ' + fmt(area) + ' ㎡ < 400 ㎡ — 「거실(< 400 ㎡)」 유형을 고르십시오');
+        if (hasBnd === 'wall') { Q = 40000; ref = '§2.3.2.1 (벽 구획)'; fml = '거실(≥ 400 ㎡, 직경 40 m 원 안, 벽 구획) : 40,000 ㎥/h'; }
+        else { Q = getQ_bdry(vd, 'lt40'); ref = '§2.3.2.1 표 2.3.2.1 (제연경계)'; fml = '거실(≥ 400 ㎡, 직경 40 m 원 안, 제연경계, 수직거리 ' + vd + ' m) : ' + fmt(Q) + ' ㎥/h'; }
+        break;
+      case 'room_ge400_gt40':
+        if (area < 400) warn.push('바닥면적 ' + fmt(area) + ' ㎡ < 400 ㎡ — 「거실(< 400 ㎡)」 유형을 고르십시오');
+        if (hasBnd === 'wall') { Q = 45000; ref = '§2.3.2.2 (벽 구획)'; fml = '거실(≥ 400 ㎡, 직경 40 m 원 초과, 벽 구획) : 45,000 ㎥/h'; }
+        else { Q = getQ_bdry(vd, 'gt40'); ref = '§2.3.2.2 표 2.3.2.2 (제연경계)'; fml = '거실(≥ 400 ㎡, 직경 40 m 원 초과, 제연경계, 수직거리 ' + vd + ' m) : ' + fmt(Q) + ' ㎥/h'; }
+        break;
+      case 'corridor':
+        if (corrLen > 60) warn.push('보행중심선 ' + corrLen + ' m > 60 m — 통로상 제연구역 한도 초과(§2.1.1.3)');
+        if (hasBnd === 'wall') { Q = 45000; ref = '§2.3.3 (벽 구획)'; fml = '통로 예상제연구역 (벽 구획) : 45,000 ㎥/h'; }
+        else { Q = getQ_bdry(vd, 'gt40'); ref = '§2.3.3 표 2.3.2.2 (제연경계)'; fml = '통로(제연경계, 수직거리 ' + vd + ' m) : ' + fmt(Q) + ' ㎥/h'; }
+        break;
+      case 'corr_outlet':
+        if (area >= 50) warn.push('바닥면적 ' + fmt(area) + ' ㎡ ≥ 50 ㎡ — 통로배출방식 대상 아님(§2.2.2 · 2.3.1.2)');
+        if (corrLen > 60) warn.push('보행중심선 ' + corrLen + ' m > 60 m — 표 2.3.1.2 범위 · 통로 한도 초과(§2.1.1.3)');
+        Q = getQ_corrOutlet(corrLen, vd);
+        ref = '§2.3.1.2 표 2.3.1.2 (통로배출방식)';
+        fml = '통로배출방식 (보행중심선 ' + corrLen + ' m ' + (corrLen <= 40 ? '— 40 m 이하' : '— 40 m 초과 60 m 이하') + ', 수직거리 ' + vd + ' m) : ' + fmt(Q) + ' ㎥/h';
+        break;
+    }
+    const Qmin = Q / 60;
+    const Ai = Math.ceil(Qmin * 35 - 1e-9); // §2.5.6 「35 ㎠ 이상」 → 올림
+    return { Q: Q, Qmin: Qmin, Ai: Ai, ref: ref, fml: fml, warn: warn, basis: basis };
+  }
+};
 
 document.getElementById('zone-type').addEventListener('change', () => {
   const t = document.getElementById('zone-type').value;
@@ -1705,36 +1761,9 @@ function calcExhaust() {
   const area    = parseFloat(document.getElementById('floor-area').value) || 0;
   const corrLen = parseFloat(document.getElementById('corr-len').value) || 0;
 
-  let Q = 0, ref = '', fml = '';
-
-  switch (type) {
-    case 'room_lt400':
-      Q = Math.max(area * 60, 5000); // 1㎥/min/㎡ × 60 = ㎥/h
-      ref = 'NFTC 501 §2.3.1.1';
-      fml = 'Q = max(' + area + '㎡ × 1㎥/min/㎡ × 60, 5,000) = ' + Q.toLocaleString() + ' ㎥/h';
-      if (hasBnd === 'boundary') ref += ' (제연경계 — §2.3.1.2 참조)';
-      break;
-    case 'room_ge400_lt40':
-      if (hasBnd === 'wall') { Q = 40000; ref = '§2.3.2.1 (벽 구획)'; fml = '거실(≥400㎡, 직경≤40m, 벽 구획) : 40,000 ㎥/h'; }
-      else { Q = getQ_bdry(vd, 'lt40'); ref = '§2.3.2.1 표2.3.2.1 (제연경계)'; fml = '거실(≥400㎡, 직경≤40m, 제연경계, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h'; }
-      break;
-    case 'room_ge400_gt40':
-      if (hasBnd === 'wall') { Q = 45000; ref = '§2.3.2.2 (벽 구획)'; fml = '거실(≥400㎡, 직경>40m, 벽 구획) : 45,000 ㎥/h'; }
-      else { Q = getQ_bdry(vd, 'gt40'); ref = '§2.3.2.2 표2.3.2.2 (제연경계)'; fml = '거실(≥400㎡, 직경>40m, 제연경계, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h'; }
-      break;
-    case 'corridor':
-      if (hasBnd === 'wall') { Q = 45000; ref = '§2.3.3 (벽 구획)'; fml = '통로 예상제연구역 (벽 구획) : 45,000 ㎥/h'; }
-      else { Q = getQ_bdry(vd, 'gt40'); ref = '§2.3.3 표2.3.2.2 (제연경계)'; fml = '통로(제연경계, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h'; }
-      break;
-    case 'corr_outlet':
-      Q = getQ_corrOutlet(corrLen, vd);
-      ref = '§2.3.1.2 표2.3.1.2 (통로배출방식)';
-      fml = '통로배출방식 (보행중심선 ' + corrLen + 'm, 수직거리 ' + vd + 'm) : ' + Q.toLocaleString() + ' ㎥/h';
-      break;
-  }
-
-  const Qmin = Q / 60;
-  const Ai   = Qmin * 35; // ㎠
+  const E = SMKENG.exhaust(type, hasBnd, vd, area, corrLen);
+  const Q = E.Q, ref = E.ref, fml = E.fml, Qmin = E.Qmin, Ai = E.Ai;
+  G.warn = E.warn; G.basis = E.basis;
 
   // 전역 상태 저장
   G.exhaust = Q; G.exhaustMin = Qmin; G.inletCm2 = Ai;
@@ -1756,7 +1785,9 @@ function calcExhaust() {
   setText('r-q-min', Qmin.toFixed(1) + ' ㎥/min');
   setHTML('r-ai', Math.round(Ai).toLocaleString() + '<span class="rc-unit">㎠</span>');
   setText('r-ai-m2', (Ai / 10000).toFixed(4) + ' ㎡');
-  setHTML('r-judge', '<span class="badge badge-ok">✔ 기준 충족</span>');
+  setHTML('r-judge', E.warn.length
+    ? E.warn.map(w => '<div style="margin-bottom:4px;"><span class="badge badge-ng">✗ ' + w + '</span></div>').join('')
+    : '<span class="badge badge-ok">✔ 산정 완료</span><div style="font-size:10.5px;color:#64748b;margin-top:4px;">구획 · 풍도 · 성능 판정은 ② ~ ⑤ 탭</div>');
 
   // 상세 결과
   setText('r-ref', ref);
@@ -2007,6 +2038,7 @@ ${SecHd('navy','Ⅰ-1. 배출량 산출 (NFTC 501 §2.3)')}
   <thead><tr>${TH('기호','36px')}${TH('항목')}${TH('수치','82px')}${TH('단위','50px')}${TH('산출 근거')}</tr></thead>
   <tbody>${exRows}</tbody>
 </table>
+${G.calculated?`<div style="border:1px solid #cbd5e1;border-top:none;padding:6px 12px;background:#f0f7ff;font-size:10px;color:#1e3a5f;line-height:1.6;">산출식 : ${G.formula}${(G.warn&&G.warn.length)?'<br/><b style="color:#b91c1c;">⚠ '+G.warn.join(' / ')+'</b>':''}</div>`:''}
 </div>
 
 <div style="break-inside:avoid;page-break-inside:avoid;">
@@ -2040,7 +2072,7 @@ ${SecHd('blue','Ⅲ-2. 풍속 기준 검토 (NFTC 501 §2.6.2.2, §2.7.1)')}
 </table>
 </div>
 
-<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver5.0</span></div>
+<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver5.1</span></div>
 
 <div style="break-before:page;page-break-before:always;">
 ${SecHd('gray','Ⅳ-1. 비상전원 및 기동장치 기준 (NFTC 501 §2.9)')}
@@ -2057,15 +2089,15 @@ ${SecHd('gray','Ⅳ-1. 비상전원 및 기동장치 기준 (NFTC 501 §2.9)')}
 ${SecHd('navy','▣ 적용 법령 및 기준')}
 <div style="border:${B};border-top:none;padding:9px 12px;font-size:10px;color:#374151;line-height:1.95;">
   ① 화재안전기술기준 NFTC 501 (제연설비의 화재안전기술기준) — 국립소방연구원공고 제2024-52호, 2024.10.01 시행<br/>
-  &nbsp;&nbsp;&nbsp;- §2.3 (배출량): 거실 &lt;400㎡ : 1㎥/min/㎡ 이상(최소 5,000㎥/h) / 거실 ≥400㎡·직경≤40m : 40,000㎥/h / 직경&gt;40m : 45,000㎥/h<br/>
+  &nbsp;&nbsp;&nbsp;- §2.3 (배출량): 거실 &lt;400㎡(벽 구획) : 1㎥/min·㎡ 이상(최소 5,000㎥/h) / 거실 ≥400㎡·직경 40m 원 안 : 40,000㎥/h(제연경계 표 2.3.2.1 40,000~60,000) / 원 초과 · 통로 : 45,000㎥/h(표 2.3.2.2 45,000~65,000) / 통로배출방식 표 2.3.1.2<br/>
   &nbsp;&nbsp;&nbsp;- §2.5.6 (유입구): 배출량 1㎥/min당 유입구 면적 35㎠ 이상<br/>
   &nbsp;&nbsp;&nbsp;- §2.8 (댐퍼): 점검구 설치·제어반 상시 확인·공조겸용 자동 개구율 조절 [신설 2024.10.1]<br/>
-  ② 화재안전성능기준 NFPC 501 (제연설비의 화재안전성능기준)<br/>
+  ② 화재안전성능기준 NFPC 501 (제연설비의 화재안전성능기준) — 소방청고시 제2024-48호, 2024.10.01 시행<br/>
   ③ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4 제5호가목1)~5)<br/>
   ④ 건축법 시행령 제64조 (방화문), 제2조제10호 (불연재료), 제2조제9호 (난연재료)
 </div>
 
-<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver5.0</span></div>
+<div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:1px solid #e2e8f0;-webkit-print-color-adjust:exact;print-color-adjust:exact;"><span style="font-size:7.5px;color:#9ca3af;letter-spacing:.04em;margin-right:8px;font-family:'Noto Sans KR',sans-serif;">NFTC 501 &middot; 2024.10.01 기준</span><span style="font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;color:#6b7280;letter-spacing:.1em;border-left:2px solid #cbd5e1;padding-left:8px;">MANMIN-Ver5.1</span></div>
 </div>
 
 </div>
@@ -2250,7 +2282,7 @@ function bindLive(id, fn) {
 <script>
 /* ════════════════════════════════════════════════
    PWA — Service Worker + Install Prompt
-   제연설비 설계 계산서 MANMIN Ver-5.0
+   제연설비 설계 계산서 MANMIN Ver-5.1
    ── 수정 이력 ──
    · display:none/flex 충돌 → visible class 방식으로 통일
    · #sw-update-bar flex 레이아웃 분리 (display:flex + visibility)
@@ -2427,7 +2459,7 @@ function bindLive(id, fn) {
 </script>
 
 
-<div id="mm-print-stamp" style="display:none">MANMIN-Ver5.0</div>
+<div id="mm-print-stamp" style="display:none">MANMIN-Ver5.1</div>
 <script>window.MM_JPG_CONFIG={zone:'#report-zone',name:'제연설비',prepare:'buildReport'};</script>
 
 
@@ -2451,7 +2483,7 @@ function bindLive(id, fn) {
 (function(){
   'use strict';
   var CFG = window.MM_JPG_CONFIG || { zone:'#report-zone', name:'MANMIN', prepare:null };
-  var VER = 'MANMIN-Ver5.0';
+  var VER = 'MANMIN-Ver5.1';
 
   var MM = function(v){ return v * 96 / 25.4; };
   var PAGE_W = MM(210), PAGE_H = MM(297);

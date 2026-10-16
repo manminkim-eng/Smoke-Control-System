@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
+   v5.1.0 회차 2026-10-16 — NFTC 501 표 2.3.1.2 · 2.3.2.1 · 2.3.2.2 원문 값 정정 · 매뉴얼(/manual/ 캐시 제외) · 캐시명 v5.1.0
    S9 회차 2026-09-05 — R28 JPG v5.5 소제목 동반 이관 동반 캐시명 v5.0.7
    S4 회차 2026-09-04 — R1b #mm-print-stamp 인쇄 비표시 동반 캐시명 v5.0.6
    S3-0 회차 2026-09-04 — R27 html2canvas 클론 정화 동반 캐시명 v5.0.5
@@ -34,7 +35,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_NAME  = 'jeyeon-v5.0.7';
+const CACHE_NAME  = 'jeyeon-v5.1.0';
 const ORPHAN      = ['jeyeon-v5.0', 'jeyeon-v5.0.1'];
 const STATIC_URLS = [
   './',
@@ -104,6 +105,8 @@ self.addEventListener('fetch', function(e){
   /* POST · chrome-extension 등 무시 */
   if(e.request.method !== 'GET') return;
   if(!e.request.url.startsWith('http')) return;
+  /* v5.1.0 — 사용자 매뉴얼(/manual/)은 온라인 전용 · 캐시하지 않음 */
+  if(new URL(e.request.url).pathname.indexOf('/manual/') !== -1) return;
 
   /* ══ ⛔ v5.0.1 핵심 ══
      HTML 문서는 Network-first.
