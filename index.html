@@ -1737,7 +1737,7 @@ window.SMKENG = {
         if (corrLen > 60) warn.push('보행중심선 ' + corrLen + ' m > 60 m — 표 2.3.1.2 범위 · 통로 한도 초과(§2.1.1.3)');
         Q = getQ_corrOutlet(corrLen, vd);
         ref = '§2.3.1.2 표 2.3.1.2 (통로배출방식)';
-        fml = '통로배출방식 (보행중심선 ' + corrLen + ' m ' + (corrLen <= 40 ? '— 40 m 이하' : '— 40 m 초과 60 m 이하') + ', 수직거리 ' + vd + ' m) : ' + fmt(Q) + ' ㎥/h';
+        fml = '통로배출방식 (보행중심선 ' + corrLen + ' m ' + (corrLen <= 40 ? '— 40 m 이하' : corrLen <= 60 ? '— 40 m 초과 60 m 이하' : '— 60 m 초과 · 표 범위 밖(40 m 초과 행 참고)') + ', 수직거리 ' + vd + ' m) : ' + fmt(Q) + ' ㎥/h';
         break;
     }
     const Qmin = Q / 60;

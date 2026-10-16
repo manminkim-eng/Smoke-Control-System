@@ -26,6 +26,8 @@
 | C5 | 제연구역 개수 | 계산 미사용 입력란 | 「참고 · 계산에 쓰지 않음」 표시 |
 | C6 | 버전 · 매뉴얼 | Ver-5.0 · sw jeyeon-v5.0.7 | Ver-5.1 · sw jeyeon-v5.1.0(/manual/ 캐시 제외) · 헤더 「📘 매뉴얼」 |
 
+매뉴얼: `manual/` Ver-5.1(HTML · PDF 23쪽 · `manual/_tools/build.sh` — capture_smk.js → gen_manual_smk.py → pdf_smk.js → audit_responsive.js 360 ~ 1024 px 넘침 0).
+
 검증: `manual/_tools/verify_smk.py` — 원문 표를 따로 적은 독립 구현과 앱 `SMKENG.exhaust()` 61,830건 대조 불일치 0 · 오류 주입 4종 모두 검출 · `smoke_smk.js` 화면 6건 · 1440 / 390 px 가로 넘침 0 · 오류 0.
 
 ---
