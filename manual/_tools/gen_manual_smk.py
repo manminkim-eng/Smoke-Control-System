@@ -8,7 +8,7 @@ import os, sys, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manual_engine import fig, T, render, B, MARKS
 
-VER, REL, DATE = 'Ver-5.1', 'v5.1.0', '2026-10-16'
+VER, REL, DATE = 'Ver-5.1', 'v5.1.1', '2026-10-16'
 PDF = '제연설비설계계산서_사용자매뉴얼_Ver-5.1.pdf'
 APP_URL = 'https://manminkim-eng.github.io/Smoke-Control-System/'
 APP = '제연설비 설계 계산서'
@@ -96,7 +96,7 @@ S_.append(f"""<section class="ch" id="ch2"><h2><span class="n">02</span>1분 따
 S_.append(f"""<section class="ch" id="ch3"><h2><span class="n">03</span>화면별 기능</h2>
 <h3 id="s3-1">3-1. 머리 · 매뉴얼</h3>
 {F('s02_header', '머리')}
-<p>「📘 매뉴얼」은 이 문서를 새 창으로 엽니다(온라인 전용). 오른쪽은 적용 기준과 시행일입니다.</p>
+<p>탭 막대 오른쪽 끝의 「📘 매뉴얼」은 이 문서를 새 창으로 엽니다(온라인 전용 — 인터넷 연결이 없으면 안내만 표시). 오른쪽은 적용 기준과 시행일입니다.</p>
 <h3 id="s3-2">3-2. 제연구역 조건 입력</h3>
 {F('s03_input', 'Ⅰ-1. 제연구역 조건 입력')}
 {K(T([
@@ -227,12 +227,13 @@ S_.append(f"""<section class="ch" id="ch5"><h2><span class="n">05</span>실무 �
  ['400 ㎡ 미만인데 40,000 ㎥/h가 나와요', '제연경계 구획을 골랐기 때문입니다(4-4) — 벽 구획이면 면적 × 60'],
  ['통로배출방식에 경고가 떠요', '50 ㎡ 이상 거실이거나 보행중심선이 60 m를 넘었습니다'],
  ['부속실 차압은요', 'NFTC 501A 대상 — 이 도구 범위 밖입니다'],
- ['화면이 예전 판이에요', '새로 고침(Ctrl+F5) — v5.1.0부터 캐시 이름이 jeyeon-v5.1.0입니다'],
+ ['화면이 예전 판이에요', '새로 고침(Ctrl+F5) — v5.1.1부터 캐시 이름이 jeyeon-v5.1.1입니다'],
 ], ['증상', '해결']))}
 </section>""")
 S_.append(f"""<section class="ch" id="ch6"><h2><span class="n">부록</span></h2>
 <h3 id="a1">A1. 버전 변경 내역</h3>
 {K(T([
+ [f'Ver-5.1 · v5.1.1 ({DATE})', '「📘 매뉴얼」 버튼을 머리에서 탭 막대 오른쪽 끝으로 옮김 · 절대주소 · 오프라인 안내 · sw jeyeon-v5.1.1'],
  [f'Ver-5.1 · v5.1.0 ({DATE})', 'NFTC 501 원문 표 대조 정정(<a href="#s4-10">4-10</a>) · 경고 · 유입구 올림 · NFPC 판 번호 · 「📘 매뉴얼」 · sw jeyeon-v5.1.0'],
  ['Ver-5.0 (2026-08-30 ~ 09-05)', 'MANMIN 디자인 통일 · A4 규격 · JPG 저장 · sw 정비(v5.0.1 ~ 5.0.7)'],
 ], ['버전', '내용']))}

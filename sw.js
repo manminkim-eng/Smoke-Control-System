@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
+   v5.1.1 회차 2026-10-16 — 「📘 매뉴얼」 헤더 → 탭 막대 오른쪽 끝(작업지시서 §4) · 절대주소 · 오프라인 안내 · 캐시명 v5.1.1
    v5.1.0 회차 2026-10-16 — NFTC 501 표 2.3.1.2 · 2.3.2.1 · 2.3.2.2 원문 값 정정 · 매뉴얼(/manual/ 캐시 제외) · 캐시명 v5.1.0
    S9 회차 2026-09-05 — R28 JPG v5.5 소제목 동반 이관 동반 캐시명 v5.0.7
    S4 회차 2026-09-04 — R1b #mm-print-stamp 인쇄 비표시 동반 캐시명 v5.0.6
@@ -35,7 +36,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_NAME  = 'jeyeon-v5.1.0';
+const CACHE_NAME  = 'jeyeon-v5.1.1';
 const ORPHAN      = ['jeyeon-v5.0', 'jeyeon-v5.0.1'];
 const STATIC_URLS = [
   './',

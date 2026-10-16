@@ -195,10 +195,8 @@ button{cursor:pointer;}
 }
 .pwa-install-btn.visible{display:flex;}
 /* v5.1.0 — 사용자 매뉴얼 버튼(01 ~ 08 동일 문구) */
-.mm-manual-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.45);
-  background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:800;font-family:'Noto Sans KR',sans-serif;text-decoration:none;white-space:nowrap;flex-shrink:0;}
-.mm-manual-btn:hover{background:rgba(255,255,255,.22);}
-@media print{.mm-manual-btn{display:none!important;}}
+.tb-manual{margin-left:auto;padding:11px 16px;font-weight:700;font-size:13px;color:rgba(255,255,255,.85);text-decoration:none;border-bottom:3px solid transparent;flex-shrink:0;font-family:'Noto Sans KR','Noto Sans KR Local',sans-serif;}   /* v5.1.1 — 작업지시서 §4 · 소방 계산서(옥내 · 옥외 · SP · 간이 · 겸용)와 같은 위치 · 같은 모양 */
+@media print{.tb-manual{display:none!important;}}
 .pwa-install-btn:hover{
   background:linear-gradient(135deg,#2b6cb0,#3182ce);
   color:#fff;border-color:#63b3ed;animation:none;
@@ -729,7 +727,6 @@ table.dt td b{color:#1e40af;font-weight:800;}
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <a id="mm-manual-btn" class="mm-manual-btn" href="./manual/" target="_blank" rel="noopener" title="제연설비 설계 계산서 사용자 매뉴얼 (새 창)">📘 매뉴얼</a>
         <button id="pwa-hdr-btn" class="pwa-install-btn" onclick="pwaTriggerInstall('header')" title="제연설비 앱 설치">
           <span class="pwa-icon">&#128242;</span>
           <span class="pwa-txt">앱 설치</span>
@@ -750,6 +747,7 @@ table.dt td b{color:#1e40af;font-weight:800;}
       <button class="tab-btn" data-tab="check">⑤ 성능 확인</button>
       <button class="tab-btn" data-tab="law">⑥ 법규 요람</button>
       <button class="tab-btn print-tab" data-tab="print">🖨️ 계산서 출력</button>
+      <a id="mm-manual-btn" class="tb-manual" href="https://manminkim-eng.github.io/Smoke-Control-System/manual/" target="_blank" rel="noopener" title="제연설비 설계 계산서 사용자 매뉴얼 (새 창)" onclick="if(navigator.onLine===false){event.preventDefault();var t=document.createElement('div');t.textContent='매뉴얼은 인터넷 연결 시 열립니다';t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:9999';document.body.appendChild(t);setTimeout(function(){t.remove();},2200);}">📘 매뉴얼</a>
     </div>
   </div>
 </header>

@@ -17,8 +17,8 @@ window.__fml=i=>{document.getElementById('modal').style.display='flex';document.
 window.__fmlClose=()=>{document.getElementById('modal').style.display='none';};`;
 const EXA="__ex('room_ge400_lt40','boundary','2','600','30')";
 const SHOTS=[
- {id:'s01_overview',pre:EXA+";window.scrollTo(0,0)",clip:'viewport',m:[['nth:.tab-btn|0','작업 탭 6개 + 계산서 출력'],['.mm-manual-btn','📘 매뉴얼'],['.sum-bar','요약 바'],['.law-banner','핵심기준 띠'],['box:Ⅰ-0','프로젝트 정보']]},
- {id:'s02_header',clip:'.site-header',m:[['.hdr-h1','도구 이름 · Ver-5.1'],['.mm-manual-btn','📘 매뉴얼'],['.hdr-right','NFTC 501 · 시행 2024. 10. 1.'],['.tab-bar-wrap','탭 7개']]},
+ {id:'s01_overview',pre:EXA+";window.scrollTo(0,0)",clip:'viewport',m:[['nth:.tab-btn|0','작업 탭 6개 + 계산서 출력'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.sum-bar','요약 바'],['.law-banner','핵심기준 띠'],['box:Ⅰ-0','프로젝트 정보']]},
+ {id:'s02_header',clip:'.site-header',m:[['.hdr-h1','도구 이름 · Ver-5.1'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.hdr-right','NFTC 501 · 시행 2024. 10. 1.'],['.tab-bar-wrap','탭 7개']]},
  {id:'s03_input',clip:'box:Ⅰ-1',m:[['up:1|#zone-type','예상제연구역 유형 5가지'],['up:1|#has-boundary','벽 / 제연경계 구획'],['up:2|#vert-dist','수직거리'],['up:2|#floor-area','바닥면적'],['up:1|#zone-count','제연구역 개수(참고)'],['#btn-calc','💨 배출량 계산']]},
  {id:'s04_result',clip:'#result-area',m:[['up:1|#r-ref-short','적용 조항'],['up:1|#r-q','필요 배출량'],['up:1|#r-ai','유입구 최소 면적(올림)'],['up:1|#r-judge','판정 · 경고'],['#r-formula','산출식']]},
  {id:'s05_b_outlet',pre:"__ex('corr_outlet','wall','3.2','40','45')",clip:'#result-area',m:[['up:1|#r-q','표 2.3.1.2 — 40 m 초과 · 3 m 초과'],['#r-formula','산출식']]},
