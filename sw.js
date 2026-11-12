@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
+   v6.1.0 (2026-11-12) — 입력값 경고 표시: 수직거리 빈 값 · 0 → 1.0 m(제연경계 · 통로배출) · 풍도 단면적 · 설계 배출량 빈 값 · 0 → 1 · 바닥면적 등 음수 — 계산 값 불변 · 계산서 끝 「입력 확인」 줄(정밀검토 B10 · 작업지시서 §25-6-79) · 판 6.1 · 캐시명 v6.1.0 (종전 jeyeon-v5.1.9)
    v5.1.1 회차 2026-10-16 — 「📘 매뉴얼」 헤더 → 탭 막대 오른쪽 끝(작업지시서 §4) · 절대주소 · 오프라인 안내 · 캐시명 v5.1.1
    v5.1.0 회차 2026-10-16 — NFTC 501 표 2.3.1.2 · 2.3.2.1 · 2.3.2.2 원문 값 정정 · 매뉴얼(/manual/ 캐시 제외) · 캐시명 v5.1.0
    S9 회차 2026-09-05 — R28 JPG v5.5 소제목 동반 이관 동반 캐시명 v5.0.7
@@ -36,7 +37,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_NAME  = 'jeyeon-v5.1.9';
+const CACHE_NAME  = 'jeyeon-v6.1.0';
 const ORPHAN      = ['jeyeon-v5.0', 'jeyeon-v5.0.1'];
 const STATIC_URLS = [
   './',
