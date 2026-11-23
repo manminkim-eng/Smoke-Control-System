@@ -1409,8 +1409,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
             ▸ 화장실·목욕실<br/>
             ▸ 주차장<br/>
             ▸ 발코니 설치 숙박시설 객실 (가족호텔·휴양콘도미니엄 한함)<br/>
-            ▸ 기계실·전기실·공조실<br/>
-            ▸ 50 ㎡ 미만 창고
+            ▸ 사람이 상주하지 않는 기계실·전기실·공조실·50 ㎡ 미만의 창고 등
           </div>
         </div>
       </div>
@@ -1450,7 +1449,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
             <tr><td class="L"><b>§2.9.3</b></td><td class="L">수동기동장치 높이 0.8~1.5 m, 작동사항 3가지 포함</td><td class="L"><span class="tag new">신설</span></td></tr>
             <tr><td class="L"><b>§2.10.3.1</b></td><td class="L">배출구별 측정 ≥ 설계값 60%, 구역 합계 ≥ 설계배출량</td><td class="L"><span class="tag new">신설</span></td></tr>
             <tr><td class="L"><b>§2.10.3.2</b></td><td class="L">유입구별 측정 ≥ 설계값 60%</td><td class="L"><span class="tag new">신설</span></td></tr>
-            <tr><td class="L"><b>§2.11</b></td><td class="L">화장실·주차장·50 ㎡ 미만 창고 등 설치 제외 가능</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.11</b></td><td class="L">화장실·목욕실·주차장·발코니 숙박 객실, 사람이 상주하지 않는 기계실·전기실·공조실·50 ㎡ 미만 창고 등 설치 제외 가능</td><td>—</td></tr>
           </tbody>
         </table>
       </div>
@@ -1781,7 +1780,9 @@ document.getElementById('zone-type').addEventListener('change', () => {
 
 document.getElementById('btn-calc').addEventListener('click', calcExhaust);
 
-function calcExhaust() {
+/* v6.1.4 (2026-11-24) — 교차검증 2026-11-23 P2: 계산서(A4)를 만들 때 지금 입력으로 다시 계산(calcExhaust(false) — 화면 이동 없음).
+   종전에는 계산 뒤 입력을 바꾸고 [배출량 계산]을 다시 누르지 않으면 A4에 옛 배출량이 경고 없이 실렸다(풍도 두께만 출력 시점 값). */
+function calcExhaust(scroll) {
   const type    = document.getElementById('zone-type').value;
   const hasBnd  = document.getElementById('has-boundary').value;
   const vd      = parseFloat(document.getElementById('vert-dist').value) || 1.0;
@@ -1827,7 +1828,7 @@ function calcExhaust() {
   // 결과 영역 표시
   const ra = document.getElementById('result-area');
   ra.style.display = 'block';
-  ra.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (scroll !== false) ra.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /* ════════════════════════════════════════
@@ -1893,13 +1894,24 @@ function calcDuctThick() {
   setHTML('d-thick', t + '<span class="rc-unit">mm</span>');
 }
 
+/* v6.1.4 (2026-11-24) — 교차검증 2026-11-23 P3: 판정은 반올림 전 실제값으로(59.96 % · 15.004 ㎧ 「적합」 결함).
+   표시는 기본 자릿수, 표시값이 판정과 어긋나면 자릿수를 늘려 보여 줌(예 59.96 % · 15.004 ㎧) */
+function mmJudgeFmt(v, lim, dp, le) {
+  const ok = le ? v <= lim : v >= lim;
+  const agree = t => (le ? parseFloat(t) <= lim : parseFloat(t) >= lim) === ok;
+  let t = v.toFixed(dp);
+  for (let k = dp + 1; k <= dp + 4 && !agree(t); k++) t = v.toFixed(k);
+  if (!agree(t)) t = String(v);
+  return { ok: ok, s: t };
+}
+
 function calcWindspeed() {
   const q = parseFloat(document.getElementById('ws-q').value) || 0;
   const a = parseFloat(document.getElementById('ws-a').value) || 1;
   const type = document.getElementById('ws-type').value;
-  const ws = (q / 3600 / a).toFixed(2);
   const limit = type === 'suction' ? 15 : 20;
-  const ok = parseFloat(ws) <= limit;
+  const J = mmJudgeFmt(q / 3600 / a, limit, 2, true);   /* v6.1.4 P3 — 실제값 판정 */
+  const ws = J.s, ok = J.ok;
   setHTML('ws-result', ws + '<span class="rc-unit">㎧</span>');
   setHTML('ws-limit', limit + '<span class="rc-unit">㎧</span>');
   setHTML('ws-judge', ok
@@ -1930,9 +1942,9 @@ bindLive('mh-input', checkManualHeight);
 function calcPerf(designId, measId, pctId, limitId, judgeId, barId, pctLblId) {
   const d = parseFloat(document.getElementById(designId).value) || 1;
   const m = parseFloat(document.getElementById(measId).value) || 0;
-  const pct = (m / d * 100).toFixed(1);
+  const J = mmJudgeFmt(m / d * 100, 60, 1, false);   /* v6.1.4 P3 — 실제값 판정 */
+  const pct = J.s, ok = J.ok;
   const limit = Math.round(d * 0.6);
-  const ok = parseFloat(pct) >= 60;
   setHTML(pctId, pct + '<span class="rc-unit">%</span>');
   setHTML(limitId, limit.toLocaleString() + '<span class="rc-unit">㎥/h</span>');
   setHTML(judgeId, ok
@@ -1964,6 +1976,9 @@ function makeReportHTML() {
   const date = (document.getElementById('proj-date').value || '—');
 
   const B = '1px solid #cbd5e1';
+
+  /* v6.1.4 P2 — 한 번 계산했으면 출력 시점 입력으로 다시 계산(배출량 · 유입구 · 풍도 두께가 같은 시점 값) */
+  if (G.calculated) calcExhaust(false);
 
   /* ── 헬퍼: th / td ── */
   const TH = (t,w) => `<th style="border:${B};padding:6px 9px;background:#1e3a5f;color:white;font-weight:700;text-align:center;font-size:10px;white-space:nowrap;${w?'width:'+w+';':''}">${t}</th>`;
@@ -2139,6 +2154,8 @@ function buildReport() {
   const pz = document.getElementById('rpt-print-doc');
   if (pz) pz.innerHTML = html;
 }
+
+addEventListener('beforeprint', buildReport);   /* v6.1.4 P2 — 인쇄 직전 계산서 다시 만들기(입력 경고 줄은 뒤에 등록된 mm-warn이 붙임) */
 
 function scaleReport() {
   const outer = document.getElementById('rpt-outer');
@@ -2996,9 +3013,11 @@ input[data-mm-warn]{outline:2px solid #d32f2f!important;outline-offset:1px;backg
 .mm-warn-note{-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid;}}
 </style>
 <script id="mm-warn-cfg">
-window.MM_WARN_CFG={report:'#report-zone',rules:[
+/* v6.1.4 (2026-11-24) — 교차검증 2026-11-23 P1: 종전에는 보이는 칸만 판정해 계산서 탭(입력 칸 숨김)에서 A4 끝 「⚠ 입력 확인」 줄이 한 번도 나오지 않았다.
+   all:true(숨은 칸도 판정) · report에 인쇄 구역 #rpt-print-doc 추가 · 보행중심선은 통로 · 통로배출 유형일 때만 */
+window.MM_WARN_CFG={all:true,report:['#report-zone','#rpt-print-doc'],rules:[
  {sel:'#vert-dist',empty:'1.0 m',zero:'1.0 m',neg:true,cond:function(){return document.getElementById('has-boundary').value==='boundary'||document.getElementById('zone-type').value==='corr_outlet';}},
- {sel:'#floor-area',empty:'0 ㎡',neg:true},{sel:'#corr-len',empty:'0 m',neg:true},{sel:'#ws-a',empty:'1 ㎡',zero:'1 ㎡',neg:true},{sel:'#pe-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#pi-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#za-input',empty:'0',neg:true},{sel:'#zd-input',empty:'0',neg:true},{sel:'#bw-input',empty:'0',neg:true},{sel:'#bv-input',empty:'0',neg:true},{sel:'#wl-input',empty:'0',neg:true},{sel:'#ds-input',empty:'0',neg:true},{sel:'#dl-input',empty:'0',neg:true},{sel:'#ws-q',empty:'0',neg:true},{sel:'#mh-input',empty:'0',neg:true},{sel:'#pe-meas',empty:'0',neg:true},{sel:'#pi-meas',empty:'0',neg:true}]};
+ {sel:'#floor-area',empty:'0 ㎡',neg:true},{sel:'#corr-len',empty:'0 m',neg:true,cond:function(){var t=document.getElementById('zone-type').value;return t==='corridor'||t==='corr_outlet';}},{sel:'#ws-a',empty:'1 ㎡',zero:'1 ㎡',neg:true},{sel:'#pe-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#pi-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#za-input',empty:'0',neg:true},{sel:'#zd-input',empty:'0',neg:true},{sel:'#bw-input',empty:'0',neg:true},{sel:'#bv-input',empty:'0',neg:true},{sel:'#wl-input',empty:'0',neg:true},{sel:'#ds-input',empty:'0',neg:true},{sel:'#dl-input',empty:'0',neg:true},{sel:'#ws-q',empty:'0',neg:true},{sel:'#mh-input',empty:'0',neg:true},{sel:'#pe-meas',empty:'0',neg:true},{sel:'#pi-meas',empty:'0',neg:true}]};
 </script>
 <script id="mm-warn-js">
 (function(){
