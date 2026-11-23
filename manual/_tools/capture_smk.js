@@ -19,13 +19,13 @@ const EXA="__ex('room_ge400_lt40','boundary','2','600','30')";
 const SHOTS=[
  {id:'s01_overview',pre:EXA+";window.scrollTo(0,0)",clip:'viewport',m:[['nth:.tab-btn|0','작업 탭 6개 + 계산서 출력'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.sum-bar','요약 바'],['.law-banner','핵심기준 띠'],['box:Ⅰ-0','프로젝트 정보']]},
  {id:'s02_header',clip:'.site-header',m:[['.hdr-h1','도구 이름 · Ver-6.1'],['#mm-manual-btn','📘 매뉴얼 — 탭 막대 끝'],['.hdr-right','NFTC 501 · 시행 2024. 10. 1.'],['.tab-bar-wrap','탭 7개']]},
- {id:'s03_input',clip:'box:Ⅰ-1',m:[['up:1|#zone-type','예상제연구역 유형 5가지'],['up:1|#has-boundary','벽 / 제연경계 구획'],['up:2|#vert-dist','수직거리'],['up:2|#floor-area','바닥면적'],['up:1|#zone-count','제연구역 개수(참고)'],['#btn-calc','💨 배출량 계산']]},
+ {id:'s03_input',clip:'box:Ⅰ-1',m:[['up:1|#zone-type','예상제연구역 유형 5가지'],['up:1|#has-boundary','벽 / 제연경계 구획'],['up:2|#vert-dist','수직거리'],['up:2|#floor-area','바닥면적'],['up:1|#zone-count','제연구역 개수(참고)'],['div.tbl-note:has(+ #btn-calc)','공동예상제연구역 — 범위 밖 안내'],['#btn-calc','💨 배출량 계산']]},
  {id:'s04_result',clip:'#result-area',m:[['up:1|#r-ref-short','적용 조항'],['up:1|#r-q','필요 배출량'],['up:1|#r-ai','유입구 최소 면적(올림)'],['up:1|#r-judge','판정 · 경고'],['#r-formula','산출식']]},
- {id:'s05_b_outlet',pre:"__ex('corr_outlet','wall','3.2','40','45')",clip:'#result-area',m:[['up:1|#r-q','표 2.3.1.2 — 40 m 초과 · 3 m 초과'],['#r-formula','산출식']]},
+ {id:'s05_b_outlet',pre:"__ex('corr_outlet','wall','3.2','40','45')",clip:'#result-area',m:[['up:1|#r-q','표 2.3.1.2 — 40 m 초과 · 3 m 초과'],['up:1|#r-judge','⚠ 통로배출 전제 · 2 m 초과 사유'],['#r-formula','산출식']]},
  {id:'s06_c_lt400',pre:"__ex('room_lt400','boundary','1.8','300','30')",clip:'#result-area',post:EXA,m:[['up:1|#r-ref-short','2.3.1 제외 → 표 2.3.2.1'],['up:1|#r-q','필요 배출량']]},
- {id:'s07_warn',pre:"__ex('corr_outlet','wall','2','80','65')",clip:'#result-area',post:EXA,m:[['up:1|#r-judge','경고 2건']]},
+ {id:'s07_warn',pre:"__ex('corr_outlet','wall','2','80','65')",clip:'#result-area',post:EXA,m:[['up:1|#r-judge','경고 2건 · ⚠ 전제 안내 2건']]},
  {id:'s08_zone',pre:"__tab('zone');__set('za-input','600');__set('zd-input','38');__set('bw-input','0.6');__set('bv-input','2');__set('wl-input','45');window.scrollTo(0,0)",clip:'#tab-zone',m:[['box:Ⅱ-1','Ⅱ-1 면적 ≤ 1,000 ㎡'],['box:Ⅱ-2','Ⅱ-2 직경 60 m 원'],['box:Ⅱ-3','Ⅱ-3 경계 폭 · 수직거리'],['box:Ⅱ-4','Ⅱ-4 통로 · 제연방식']]},
- {id:'s09_duct',pre:"__tab('duct');__set('ds-input','800');__set('dl-input','1000');__set('ws-q','40000');__set('ws-a','0.8');__set('ws-type','suction');window.scrollTo(0,0)",clip:'#tab-duct',m:[['box:Ⅲ-1','Ⅲ-1 강판 두께'],['box:Ⅲ-2','Ⅲ-2 풍속 15 · 20 · 20 ㎧'],['box:Ⅲ-3','Ⅲ-3 댐퍼(신설)']]},
+ {id:'s09_duct',pre:"__tab('duct');__set('ds-input','800');__set('dl-input','1000');__set('ws-q','40000');__set('ws-a','0.8');__set('ws-type','suction');window.scrollTo(0,0)",clip:'#tab-duct',m:[['box:Ⅲ-1','Ⅲ-1 강판 두께(원형은 직경)'],['box:Ⅲ-2','Ⅲ-2 풍속 15 · 20 · 20 ㎧'],['box:Ⅲ-3','Ⅲ-3 댐퍼(신설)']]},
  {id:'s10_power',pre:"__tab('power');__set('mh-input','1.2');window.scrollTo(0,0)",clip:'#tab-power',m:[['box:Ⅳ-1','Ⅳ-1 비상전원 20분'],['box:Ⅳ-2','Ⅳ-2 기동 · 작동사항'],['box:수동기동장치 설치 높이','수동기동 0.8 ~ 1.5 m']]},
  {id:'s11_check',pre:"__tab('check');__set('pe-design','20000');__set('pe-meas','13000');__set('pi-design','18000');__set('pi-meas','12000');window.scrollTo(0,0)",clip:'#tab-check',m:[['box:Ⅴ-1','Ⅴ-1 배출구별 60 %'],['box:Ⅴ-2','Ⅴ-2 유입구별 60 %'],['box:Ⅴ-3','Ⅴ-3 시험 · 설치제외']]},
  {id:'s12_law_list',pre:"__tab('law');window.scrollTo(0,0)",clip:'box:Ⅵ-1',m:[]},
@@ -68,6 +68,8 @@ const SHOTS=[
  }
  // 예제 값(앱 엔진 결과)
  const EX=await pg.evaluate(()=>({A:SMKENG.exhaust('room_ge400_lt40','boundary',2,600,30),B:SMKENG.exhaust('corr_outlet','wall',3.2,40,45),C:SMKENG.exhaust('room_lt400','boundary',1.8,300,30),W:SMKENG.exhaust('corr_outlet','wall',2,80,65)}));
+ // v6.1.5 P5 · P13 — 판정 칸 · A4 「▣ 확인 사항」 ⚠ 전제 안내(smkNotes, 배출량 값 불변)
+ EX.N=await pg.evaluate(()=>({A:smkNotes('room_ge400_lt40','boundary',2),B:smkNotes('corr_outlet','wall',3.2),C:smkNotes('room_lt400','boundary',1.8),W:smkNotes('corr_outlet','wall',2)}));
  // v6.1.4 P3 — 성능 · 풍속은 반올림 전 실제값으로 판정(화면 DOM 결과)
  EX.P3=await pg.evaluate(()=>{const tx=id=>document.getElementById(id).textContent.replace(/\s+/g,' ').trim();
   __tab('duct');__set('ws-type','suction');__set('ws-a','1');__set('ws-q','54014.4');const ws={q:54014.4,a:1,result:tx('ws-result'),judge:tx('ws-judge')};
