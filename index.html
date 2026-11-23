@@ -894,6 +894,9 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <input class="inp" id="zone-count" type="number" min="1" value="1"/>
         </div>
       </div>
+      <div class="tbl-note" style="margin-top:12px;">
+        ▸ 공동예상제연구역(§2.3.4 — 2개 이상 구역을 동시 배출)은 이 계산서 범위 밖입니다. 벽 구획(출입구만 제연경계 포함)은 각 구역 배출량의 합(400 ㎡ 미만은 1 ㎥/min·㎡, 전체 5,000 ㎥/h 이상) · 제연경계 구획은 각 구역 배출량 중 최대값(거실은 1,000 ㎡ 이하 · 직경 40 m 원 안, 통로는 보행중심선 40 m 이하) · 거실과 통로는 공동예상제연구역으로 할 수 없음
+      </div>
       <button class="calc-btn" id="btn-calc">💨 배출량 계산</button>
     </div>
   </div>
@@ -1037,7 +1040,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
         </div>
       </div>
       <div class="tbl-note" style="margin-top:12px;">
-        ▸ 제연경계의 폭: 0.6 m 이상 (§2.1.2.2) &nbsp;|&nbsp; 수직거리: 2 m 이내 (구조상 불가피 시 초과 가능)<br/>
+        ▸ 제연경계의 폭: 0.6 m 이상 (§2.1.2.2) &nbsp;|&nbsp; 수직거리: 2 m 이내 (구조상 불가피 시 초과 가능 — NFTC 단서 · NFPC 제4조②2에는 없음)<br/>
         ▸ 재질: 내화재료·불연재료 또는 성능인정품, 기밀성 확보 (§2.1.2.1)<br/>
         ▸ 제연경계벽: 배연 기류에 흔들리지 않을 것, 가동식은 급속 하강 시 인명 위해 없을 것 (§2.1.2.3)
       </div>
@@ -1119,7 +1122,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
             </div>
           </div>
           <div>
-            <label class="lbl">풍도 장변 치수</label>
+            <label class="lbl">풍도 장변 치수 (원형은 직경)</label>
             <div class="inp-wrap">
               <input class="inp" id="dl-input" type="number" step="50" value="900"/>
               <span class="inp-unit">mm</span>
@@ -1127,12 +1130,12 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           </div>
         </div>
         <div class="g-2" style="gap:10px;margin-bottom:12px;">
-          <div class="rc rc-blue"><div class="rc-label">장변 기준</div><div class="rc-val" id="d-ref">900<span class="rc-unit">mm</span></div></div>
+          <div class="rc rc-blue"><div class="rc-label">장변 · 직경 기준</div><div class="rc-val" id="d-ref">900<span class="rc-unit">mm</span></div></div>
           <div class="rc rc-sky"><div class="rc-label">최소 강판 두께</div><div class="rc-val" id="d-thick">0.8<span class="rc-unit">mm</span></div></div>
         </div>
         <div class="tbl-wrap">
           <table class="dt">
-            <thead><tr><th>풍도 장변 크기</th><th>최소 강판 두께</th></tr></thead>
+            <thead><tr><th>풍도단면의 긴 변 또는 직경</th><th>최소 강판 두께</th></tr></thead>
             <tbody>
               <tr><td class="L">450 mm 이하</td><td>0.5 mm</td></tr>
               <tr><td class="L">450 초과 ~ 750 mm 이하</td><td>0.6 mm</td></tr>
@@ -1439,8 +1442,9 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
             <tr><td class="L"><b>§2.3.2.1</b></td><td class="L">≥ 400 ㎡, 직경 ≤ 40 m : 40,000 ㎥/h (제연경계 시 표 적용)</td><td>—</td></tr>
             <tr><td class="L"><b>§2.3.2.2</b></td><td class="L">≥ 400 ㎡, 직경 &gt; 40 m : 45,000 ㎥/h (제연경계 시 표 적용)</td><td>—</td></tr>
             <tr><td class="L"><b>§2.3.3</b></td><td class="L">통로 예상제연구역 : 45,000 ㎥/h 이상</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.3.4</b></td><td class="L">공동예상제연구역 : 벽 구획 합산 · 제연경계 최대값 (이 계산서 범위 밖)</td><td>—</td></tr>
             <tr><td class="L"><b>§2.4.2</b></td><td class="L">배출구까지 수평거리 ≤ 10 m</td><td>—</td></tr>
-            <tr><td class="L"><b>§2.5.5</b></td><td class="L">유입 풍속 ≤ 5 ㎧ (바닥 유입구 ≤ 1 ㎧)</td><td>—</td></tr>
+            <tr><td class="L"><b>§2.5.5</b></td><td class="L">유입 풍속 ≤ 5 ㎧ (바닥 유입구 ≤ 1 ㎧ — NFTC 단서)</td><td>—</td></tr>
             <tr><td class="L"><b>§2.5.6</b></td><td class="L">유입구 크기 ≥ 35 ㎠/㎥/min</td><td>—</td></tr>
             <tr><td class="L"><b>§2.6.2.2</b></td><td class="L">흡입측 ≤ 15 ㎧, 배출측 ≤ 20 ㎧</td><td>—</td></tr>
             <tr><td class="L"><b>§2.7.1</b></td><td class="L">유입풍도 내 풍속 ≤ 20 ㎧</td><td>—</td></tr>
@@ -1523,9 +1527,10 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
         <div class="law-box">
           <div class="law-ref">관련 법령</div>
           <div class="law-text">
-            ▸ 소방시설 설치 및 관리에 관한 법률 제2조제1항제6호나목<br/>
+            ▸ 소방시설 설치 및 관리에 관한 법률 제2조제1항제6호 가목(NFPC — 성능기준) · 나목(NFTC — 기술기준)<br/>
             ▸ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4 제5호가목1)~5)<br/>
-            ▸ 건축법 시행령 제64조 (방화문) / 제2조제10호 (불연재료)
+            ▸ 건축법 시행령 제64조 (방화문) / 제2조제10호 (불연재료)<br/>
+            ▸ 경과조치: 2024.10.01 전 건축허가 등 신청 · 신고 또는 착공신고분은 댐퍼(§2.8) · 전원 · 기동(§2.9) · 성능확인(§2.10) 개정 부분에 종전 기준(NFPC 501 부칙 제2024-48호 제2조) · 2022.12.01 전분은 종전 NFSC 501(NFTC 1.5.1)
           </div>
         </div>
       </div>
@@ -1642,7 +1647,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
       <div class="fml-panel" id="mp-2">
         <div class="fml-sec">
           <div class="fml-sec-ttl" style="color:#166534;">📋 적용 법규</div>
-          <div class="fml-hibox"><div class="fml-card-ttl" style="color:#166534;">주 적용 기준</div><div class="fml-note" style="font-size:11px;line-height:2;">제연설비의 화재안전기술기준(NFTC 501)<br/>국립소방연구원공고 제2024-52호 / 2024.10.01 시행<br/>소방시설 설치 및 관리에 관한 법률 제2조제1항제6호나목</div></div>
+          <div class="fml-hibox"><div class="fml-card-ttl" style="color:#166534;">주 적용 기준</div><div class="fml-note" style="font-size:11px;line-height:2;">제연설비의 화재안전기술기준(NFTC 501)<br/>국립소방연구원공고 제2024-52호 / 2024.10.01 시행<br/>소방시설 설치 및 관리에 관한 법률 제2조제1항제6호나목 (NFPC 501은 같은 호 가목)</div></div>
         </div>
         <div class="fml-sec">
           <div class="fml-sec-ttl" style="color:#166534;">🆕 2024.10.1 주요 개정사항</div>
@@ -1736,7 +1741,7 @@ window.SMKENG = {
           // 2.3.1은 「400 ㎡ 미만으로 구획(제연경계에 따른 구획을 제외한다)」 — 제연경계 구획은 2.3.2 표 적용(MANMIN 적용 · 통상 해석)
           Q = getQ_bdry(vd, 'lt40'); basis = 'MANMIN';
           ref = '§2.3.2.1 표 2.3.2.1 (400 ㎡ 미만 · 제연경계 구획 — 2.3.1 적용 제외 · MANMIN 적용)';
-          fml = '거실(< 400 ㎡, 제연경계 구획, 수직거리 ' + vd + ' m) : 2.3.1 대상 아님 → 표 2.3.2.1 ' + fmt(Q) + ' ㎥/h (직경 40 m 원을 넘으면 「직경 > 40 m」 유형)';
+          fml = '거실(< 400 ㎡, 제연경계 구획, 수직거리 ' + vd + ' m) : 2.3.1 대상 아님 → 표 2.3.2.1 ' + fmt(Q) + ' ㎥/h (MANMIN 적용 · 40 m 원 초과는 해석례 없음)';
         } else {
           Q = Math.max(area * 60, 5000); // 1 ㎥/min·㎡ × 60 = ㎥/h
           ref = '§2.3.1.1 (벽 구획)';
@@ -1780,6 +1785,22 @@ document.getElementById('zone-type').addEventListener('change', () => {
 
 document.getElementById('btn-calc').addEventListener('click', calcExhaust);
 
+/* v6.1.5 (2026-11-24) — 교차검증 2026-11-23 P5 · P13 · P14: 배출량은 그대로 두고 확인할 전제만 ⚠ 안내(화면 판정 칸 · A4 2쪽 「▣ 확인 사항」).
+   통로배출방식 — NFTC 501 2.2.2 · NFPC 501 제5조② (50 ㎡ 미만 구획은 제연경계 구획 제외, 거실과 통로 사이는 예외 · 경유거실은 직접 배출)
+   수직거리 2 m 초과 — NFTC 501 2.1.2.2 단서 「구조상 불가피한 경우」(NFPC 501 제4조②2에는 단서 없음) */
+function smkNotes(type, hasBnd, vd) {
+  const n = [];
+  if (type === 'corr_outlet') {
+    n.push(hasBnd === 'boundary'
+      ? '통로배출방식 전제(§2.2.2): 거실은 50 ㎡ 미만으로 구획하되 제연경계 구획은 제외(거실과 통로 사이만 제연경계 가능) — 거실 안을 제연경계로 나눈 경우는 대상 아님'
+      : '통로배출방식 전제(§2.2.2): 통로에 인접한 거실이 50 ㎡ 미만으로 구획(제연경계 구획 제외 · 거실과 통로 사이는 예외)');
+    n.push('그 거실이 다른 거실의 피난 경유거실이면 통로배출 불가 — 거실에서 직접 배출(§2.2.2 단서)');
+  }
+  if ((hasBnd === 'boundary' || type === 'corr_outlet') && vd > 2)
+    n.push('수직거리 ' + vd + ' m > 2 m — 구조상 불가피한 경우만 허용(NFTC §2.1.2.2 단서 · NFPC 제4조②2에는 단서 없음) · 사유를 설계도서에 적을 것');
+  return n;
+}
+
 /* v6.1.4 (2026-11-24) — 교차검증 2026-11-23 P2: 계산서(A4)를 만들 때 지금 입력으로 다시 계산(calcExhaust(false) — 화면 이동 없음).
    종전에는 계산 뒤 입력을 바꾸고 [배출량 계산]을 다시 누르지 않으면 A4에 옛 배출량이 경고 없이 실렸다(풍도 두께만 출력 시점 값). */
 function calcExhaust(scroll) {
@@ -1792,6 +1813,7 @@ function calcExhaust(scroll) {
   const E = SMKENG.exhaust(type, hasBnd, vd, area, corrLen);
   const Q = E.Q, ref = E.ref, fml = E.fml, Qmin = E.Qmin, Ai = E.Ai;
   G.warn = E.warn; G.basis = E.basis;
+  G.notes = smkNotes(type, hasBnd, vd);   /* v6.1.5 P5 · P13 */
 
   // 전역 상태 저장
   G.exhaust = Q; G.exhaustMin = Qmin; G.inletCm2 = Ai;
@@ -1816,6 +1838,8 @@ function calcExhaust(scroll) {
   setHTML('r-judge', E.warn.length
     ? E.warn.map(w => '<div style="margin-bottom:4px;"><span class="badge badge-ng">✗ ' + w + '</span></div>').join('')
     : '<span class="badge badge-ok">✔ 산정 완료</span><div style="font-size:11px;color:#64748b;margin-top:4px;">구획 · 풍도 · 성능 판정은 ② ~ ⑤ 탭</div>');
+  if (G.notes.length) document.getElementById('r-judge').insertAdjacentHTML('beforeend',
+    G.notes.map(w => '<div style="margin-top:4px;"><span class="badge badge-warn" style="white-space:normal;text-align:left;">⚠ ' + w + '</span></div>').join(''));   /* v6.1.5 */
 
   // 상세 결과
   setText('r-ref', ref);
@@ -1866,7 +1890,7 @@ function checkBoundary() {
     : '<span class="badge badge-ng">✗ 폭 부적합 (' + w + 'm &lt; 0.6m)</span>');
   setHTML('bv-result', v <= 2
     ? '<span class="badge badge-ok">✔ 수직거리 적합 (' + v + 'm ≤ 2m)</span>'
-    : '<span class="badge badge-warn">⚠ 수직거리 초과 (' + v + 'm > 2m) — 구조상 불가피 여부 검토 필요</span>');
+    : '<span class="badge badge-warn">⚠ 수직거리 초과 (' + v + 'm > 2m) — 구조상 불가피 여부 검토 필요(NFTC §2.1.2.2 단서 · NFPC에는 단서 없음) · 사유를 설계도서에 기재</span>');
 }
 
 function checkWalkLen() {
@@ -1889,9 +1913,9 @@ function calcDuctThick() {
   const s = parseFloat(document.getElementById('ds-input').value) || 0;
   const l = parseFloat(document.getElementById('dl-input').value) || 0;
   const ref = Math.max(s, l);
-  const t = ref <= 450 ? '0.5' : ref <= 750 ? '0.6' : ref <= 1500 ? '0.8' : ref <= 2250 ? '1.0' : '1.2';
+  const t = ref <= 0 ? '—' : ref <= 450 ? '0.5' : ref <= 750 ? '0.6' : ref <= 1500 ? '0.8' : ref <= 2250 ? '1.0' : '1.2';   /* v6.1.5 P11 — 치수 0이면 「—」(종전 0.5) */
   setHTML('d-ref', ref + '<span class="rc-unit">mm</span>');
-  setHTML('d-thick', t + '<span class="rc-unit">mm</span>');
+  setHTML('d-thick', t === '—' ? '—' : t + '<span class="rc-unit">mm</span>');
 }
 
 /* v6.1.4 (2026-11-24) — 교차검증 2026-11-23 P3: 판정은 반올림 전 실제값으로(59.96 % · 15.004 ㎧ 「적합」 결함).
@@ -2094,10 +2118,10 @@ ${SecHd('blue','Ⅰ-2. 공기유입구 산출 (NFTC 501 §2.5.6)')}
 <div style="break-inside:avoid;page-break-inside:avoid;">
 ${SecHd('gray','Ⅲ-1. 배출풍도 강판 두께 기준 (NFTC 501 §2.6.2.1 표 2.6.2.1)')}
 <table style="width:100%;border-collapse:collapse;">
-  <thead><tr>${TH('풍도 장변 크기')}${TH('최소 강판 두께','100px')}${TH('비고')}</tr></thead>
+  <thead><tr>${TH('풍도단면의 긴 변 또는 직경')}${TH('최소 강판 두께','100px')}${TH('비고')}</tr></thead>
   <tbody>${dRows}</tbody>
 </table>
-${dRef>0?`<div style="border:1px solid #cbd5e1;border-top:none;padding:6px 12px;background:#f0f7ff;font-size:10px;color:#1e3a5f;">입력 장변 ${dRef}mm → 최소 강판 두께 <b>${dThick} mm</b> 적용 (유입풍도 동일 §2.7.1)</div>`:''}
+${dRef>0?`<div style="border:1px solid #cbd5e1;border-top:none;padding:6px 12px;background:#f0f7ff;font-size:10px;color:#1e3a5f;">입력 장변(원형은 직경) ${dRef}mm → 최소 강판 두께 <b>${dThick} mm</b> 적용 (유입풍도 동일 §2.7.1)</div>`:''}
 </div>
 
 <div style="break-inside:avoid;page-break-inside:avoid;">
@@ -2128,13 +2152,15 @@ ${SecHd('gray','Ⅳ-1. 비상전원 및 기동장치 기준 (NFTC 501 §2.9)')}
   </tbody>
 </table>
 
+${(G.calculated&&G.notes&&G.notes.length)?SecHd('navy','▣ 확인 사항 (배출량 산정 전제 — NFTC 501 §2.1.2.2 · §2.2.2)')+'<div style="border:'+B+';border-top:none;padding:7px 12px;font-size:10px;color:#92400e;line-height:1.8;">'+G.notes.map(w=>'⚠ '+w).join('<br/>')+'</div>':''}
 ${SecHd('navy','▣ 적용 법령 및 기준')}
 <div style="border:${B};border-top:none;padding:9px 12px;font-size:10px;color:#374151;line-height:1.95;">
   ① 화재안전기술기준 NFTC 501 (제연설비의 화재안전기술기준) — 국립소방연구원공고 제2024-52호, 2024.10.01 시행<br/>
   &nbsp;&nbsp;&nbsp;- §2.3 (배출량): 거실 &lt;400㎡(벽 구획) : 1㎥/min·㎡ 이상(최소 5,000㎥/h) / 거실 ≥400㎡·직경 40m 원 안 : 40,000㎥/h(제연경계 표 2.3.2.1 40,000~60,000) / 원 초과 · 통로 : 45,000㎥/h(표 2.3.2.2 45,000~65,000) / 통로배출방식 표 2.3.1.2<br/>
   &nbsp;&nbsp;&nbsp;- §2.5.6 (유입구): 배출량 1㎥/min당 유입구 면적 35㎠ 이상<br/>
   &nbsp;&nbsp;&nbsp;- §2.8 (댐퍼): 점검구 설치·제어반 상시 확인·공조겸용 자동 개구율 조절 [신설 2024.10.1]<br/>
-  ② 화재안전성능기준 NFPC 501 (제연설비의 화재안전성능기준) — 소방청고시 제2024-48호, 2024.10.01 시행<br/>
+  ② 화재안전성능기준 NFPC 501 (제연설비의 화재안전성능기준) — 소방청고시 제2024-48호, 2024.10.01 시행 (법 제2조제1항제6호가목 · NFTC는 같은 호 나목)<br/>
+  &nbsp;&nbsp;&nbsp;- 경과조치: 2024.10.01 전 건축허가 등 신청 · 신고 또는 착공신고분은 §2.8 · §2.9 · §2.10 개정 부분에 종전 기준(NFPC 부칙 제2024-48호 제2조)<br/>
   ③ 소방시설 설치 및 관리에 관한 법률 시행령 별표 4 제5호가목1)~5)<br/>
   ④ 건축법 시행령 제64조 (방화문), 제2조제10호 (불연재료), 제2조제9호 (난연재료)
 </div>
@@ -3015,9 +3041,10 @@ input[data-mm-warn]{outline:2px solid #d32f2f!important;outline-offset:1px;backg
 <script id="mm-warn-cfg">
 /* v6.1.4 (2026-11-24) — 교차검증 2026-11-23 P1: 종전에는 보이는 칸만 판정해 계산서 탭(입력 칸 숨김)에서 A4 끝 「⚠ 입력 확인」 줄이 한 번도 나오지 않았다.
    all:true(숨은 칸도 판정) · report에 인쇄 구역 #rpt-print-doc 추가 · 보행중심선은 통로 · 통로배출 유형일 때만 */
+/* v6.1.5 (2026-11-24) — 교차검증 2026-11-23 P11: 바닥면적 0 경고(종전에는 조용히 5,000 ㎥/h) */
 window.MM_WARN_CFG={all:true,report:['#report-zone','#rpt-print-doc'],rules:[
  {sel:'#vert-dist',empty:'1.0 m',zero:'1.0 m',neg:true,cond:function(){return document.getElementById('has-boundary').value==='boundary'||document.getElementById('zone-type').value==='corr_outlet';}},
- {sel:'#floor-area',empty:'0 ㎡',neg:true},{sel:'#corr-len',empty:'0 m',neg:true,cond:function(){var t=document.getElementById('zone-type').value;return t==='corridor'||t==='corr_outlet';}},{sel:'#ws-a',empty:'1 ㎡',zero:'1 ㎡',neg:true},{sel:'#pe-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#pi-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#za-input',empty:'0',neg:true},{sel:'#zd-input',empty:'0',neg:true},{sel:'#bw-input',empty:'0',neg:true},{sel:'#bv-input',empty:'0',neg:true},{sel:'#wl-input',empty:'0',neg:true},{sel:'#ds-input',empty:'0',neg:true},{sel:'#dl-input',empty:'0',neg:true},{sel:'#ws-q',empty:'0',neg:true},{sel:'#mh-input',empty:'0',neg:true},{sel:'#pe-meas',empty:'0',neg:true},{sel:'#pi-meas',empty:'0',neg:true}]};
+ {sel:'#floor-area',empty:'0 ㎡',neg:true,extra:function(el,n){if(n!==0)return null;return (document.getElementById('zone-type').value==='room_lt400'&&document.getElementById('has-boundary').value==='wall')?'0 ㎡ — 최저 배출량 5,000 ㎥/h만 적용됨(바닥면적 확인)':'0 ㎡ — 바닥면적 확인';}},{sel:'#corr-len',empty:'0 m',neg:true,cond:function(){var t=document.getElementById('zone-type').value;return t==='corridor'||t==='corr_outlet';}},{sel:'#ws-a',empty:'1 ㎡',zero:'1 ㎡',neg:true},{sel:'#pe-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#pi-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#za-input',empty:'0',neg:true},{sel:'#zd-input',empty:'0',neg:true},{sel:'#bw-input',empty:'0',neg:true},{sel:'#bv-input',empty:'0',neg:true},{sel:'#wl-input',empty:'0',neg:true},{sel:'#ds-input',empty:'0',neg:true},{sel:'#dl-input',empty:'0',neg:true},{sel:'#ws-q',empty:'0',neg:true},{sel:'#mh-input',empty:'0',neg:true},{sel:'#pe-meas',empty:'0',neg:true},{sel:'#pi-meas',empty:'0',neg:true}]};
 </script>
 <script id="mm-warn-js">
 (function(){

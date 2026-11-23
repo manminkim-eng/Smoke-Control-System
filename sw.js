@@ -1,4 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
+   v6.1.5 (2026-11-24) — 교차검증 2026-11-23 권장 · 권고 반영: 통로배출 전제(§2.2.2) · 수직거리 2 m 초과 사유 안내(P5 · P13) · 바닥면적 0 경고 · 풍도 0 「—」(P11) · 공동예상제연구역 범위 밖 안내(P6) · 원형 풍도 직경(P9) · 경과조치(P10) · NFPC 가목 · NFTC 단서 표기(P14) · 400 ㎡ 미만 제연경계 안내 순환 해소(P4) · 배출량 값 불변 · 캐시명 v6.1.5 (종전 v6.1.4)
    v6.1.4 (2026-11-24) — 교차검증 2026-11-23 필수 반영: A4 끝 「⚠ 입력 확인」 줄 작동(P1) · 계산서 출력 시점 재계산(P2) · 성능 · 풍속 실제값 판정(P3) · 설치제외 「사람이 상주하지 않는」(P8, NFTC 501 2.11.1) · 캐시명 v6.1.4 (종전 v6.1.3)
    v6.1.3 (2026-11-12) — html2canvas 1.4.1 머리 태그 SRI(integrity sha384 · crossorigin) · 공통 인쇄 원본 MM-PRINT v1.0 → v1.1(지연 로더도 SRI)(정밀검토 B8 · html2canvas SRI) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-87 · 캐시명 v6.1.3 (종전 v6.1.2)
    v6.1.2 (2026-11-12) — Pretendard CSS SRI(integrity · crossorigin)(정밀검토 C2) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-82 · 캐시명 v6.1.2 (종전 v6.1.1)
@@ -41,7 +42,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE_NAME  = 'jeyeon-v6.1.4';
+const CACHE_NAME  = 'jeyeon-v6.1.5';
 const ORPHAN      = ['jeyeon-v5.0', 'jeyeon-v5.0.1'];
 const STATIC_URLS = [
   './',
