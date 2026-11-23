@@ -863,6 +863,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <label class="lbl">제연경계 구획 여부</label>
           <select class="inp" id="has-boundary">
             <option value="wall">벽으로 구획</option>
+            <option value="wall_corr">벽 구획 (거실과 통로 사이만 제연경계 — 400 ㎡ 미만 거실)</option>
             <option value="boundary">제연경계(보·경계벽)로 구획</option>
           </select>
         </div>
@@ -895,6 +896,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
         </div>
       </div>
       <div class="tbl-note" style="margin-top:12px;">
+        ▸ 400 ㎡ 미만 거실의 구획: 벽 구획 · 「벽 구획(거실과 통로 사이만 제연경계)」은 §2.3.1.1(1 ㎥/min·㎡, 최소 5,000 ㎥/h — §2.3.1 괄호 「제연경계에 따른 구획을 제외한다. 다만, 거실과 통로와의 구획은 그렇지 않다」) · 거실 안을 제연경계로 나눈 경우는 「제연경계로 구획」(표 2.3.2.1 · MANMIN 적용)<br/>
         ▸ 공동예상제연구역(§2.3.4 — 2개 이상 구역을 동시 배출)은 이 계산서 범위 밖입니다. 벽 구획(출입구만 제연경계 포함)은 각 구역 배출량의 합(400 ㎡ 미만은 1 ㎥/min·㎡, 전체 5,000 ㎥/h 이상) · 제연경계 구획은 각 구역 배출량 중 최대값(거실은 1,000 ㎡ 이하 · 직경 40 m 원 안, 통로는 보행중심선 40 m 이하) · 거실과 통로는 공동예상제연구역으로 할 수 없음
       </div>
       <button class="calc-btn" id="btn-calc">💨 배출량 계산</button>
@@ -963,6 +965,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
 
 <!-- ══════════ TAB ② 제연구역 설계 ══════════ -->
 <div class="tab-panel" id="tab-zone">
+  <label class="inc-a4 no-print" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;padding:8px 12px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;cursor:pointer;"><input type="checkbox" id="inc-zone" style="margin-top:2px;accent-color:#22c55e;flex-shrink:0;"/><span style="font-size:11.5px;color:#374151;line-height:1.5;"><b>계산서(A4)에 포함</b> — ② 면적 · 직경 · 제연경계 폭 · 수직거리(2 m 초과 사유) · 보행중심선 판정 <span style="color:#64748b;">(체크한 탭만 A4 2쪽 「▣ 검토 결과」 표에 실립니다 · 기본 해제)</span></span></label>
   <div class="law-banner">
     <span class="lbk">§2.1 구획 기준</span>
     <span class="lbi"><span class="lbi-k">면적:</span><span class="lbi-v">≤ 1,000 ㎡</span></span>
@@ -1037,6 +1040,10 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
             <span class="inp-unit">m</span>
           </div>
           <div id="bv-result"></div>
+          <div id="bv-reason-wrap" style="display:none;margin-top:10px;">
+            <label class="lbl">구조상 불가피 사유 (NFTC §2.1.2.2 단서 — 2 m 초과 시)</label>
+            <textarea class="inp" id="bv-reason" rows="2" style="resize:vertical;min-height:44px;" placeholder="예: 기존 보 하단 높이 2.4 m — 제연경계벽 연장 불가"></textarea>
+          </div>
         </div>
       </div>
       <div class="tbl-note" style="margin-top:12px;">
@@ -1105,6 +1112,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
 
 <!-- ══════════ TAB ③ 풍도 설계 ══════════ -->
 <div class="tab-panel" id="tab-duct">
+  <label class="inc-a4 no-print" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;padding:8px 12px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;cursor:pointer;"><input type="checkbox" id="inc-duct" style="margin-top:2px;accent-color:#22c55e;flex-shrink:0;"/><span style="font-size:11.5px;color:#374151;line-height:1.5;"><b>계산서(A4)에 포함</b> — ③ 풍속 계산 결과(Ⅲ-2 — 강판 두께는 종전대로 A4에 있음) <span style="color:#64748b;">(체크한 탭만 A4 2쪽 「▣ 검토 결과」 표에 실립니다 · 기본 해제)</span></span></label>
 
   <div class="g-2" style="gap:14px;margin-bottom:0;">
     <!-- 강판 두께 -->
@@ -1226,6 +1234,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
 
 <!-- ══════════ TAB ④ 전원·기동 ══════════ -->
 <div class="tab-panel" id="tab-power">
+  <label class="inc-a4 no-print" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;padding:8px 12px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;cursor:pointer;"><input type="checkbox" id="inc-power" style="margin-top:2px;accent-color:#22c55e;flex-shrink:0;"/><span style="font-size:11.5px;color:#374151;line-height:1.5;"><b>계산서(A4)에 포함</b> — ④ 수동기동장치 설치 높이 판정 <span style="color:#64748b;">(체크한 탭만 A4 2쪽 「▣ 검토 결과」 표에 실립니다 · 기본 해제)</span></span></label>
   <div class="box" style="margin-bottom:14px;">
     <div class="box-hd" style="background:linear-gradient(135deg,#1e3a5f,#16a34a);">
       <span class="ico">◆</span>Ⅳ-1. 비상전원 기준 (§2.9.1)
@@ -1309,6 +1318,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
 
 <!-- ══════════ TAB ⑤ 성능 확인 ══════════ -->
 <div class="tab-panel" id="tab-check">
+  <label class="inc-a4 no-print" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;padding:8px 12px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;cursor:pointer;"><input type="checkbox" id="inc-check" style="margin-top:2px;accent-color:#22c55e;flex-shrink:0;"/><span style="font-size:11.5px;color:#374151;line-height:1.5;"><b>계산서(A4)에 포함</b> — ⑤ 배출구 · 유입구별 60 % 판정 · 구역 합계 판정 <span style="color:#64748b;">(체크한 탭만 A4 2쪽 「▣ 검토 결과」 표에 실립니다 · 기본 해제)</span></span></label>
   <div class="law-banner">
     <span class="lbk">§2.10 성능확인 <span class="tag new">신설 2024.10.1</span></span>
     <span class="lbi"><span class="lbi-k">배출구 달성률:</span><span class="lbi-v">≥ 60%</span></span>
@@ -1344,8 +1354,11 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
         </div>
         <div class="tbl-note" style="margin-top:10px;">
           ▸ 배출구별 ≥ 설계배출량의 60% 이상 (§2.10.3.1)<br/>
-          ▸ 제연구역별 배출구 합계 ≥ 설계배출량
+          ▸ 제연구역별 배출구 합계 ≥ 설계배출량 — 배출구가 여럿이면 [＋ 배출구 추가] (NFPC 제11조의2③1 · NFTC §2.10.3.1)
         </div>
+        <div id="pe-rows"></div>
+        <button type="button" class="no-print" id="pe-add" style="margin-top:10px;padding:6px 12px;border:1px solid #86efac;border-radius:8px;background:#f0fdf4;color:#15803d;font-size:11.5px;font-weight:800;cursor:pointer;">＋ 배출구 추가</button>
+        <div id="pe-sum"></div>
       </div>
     </div>
     <!-- 유입구 -->
@@ -1377,6 +1390,9 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           ▸ 유입구별 ≥ 설계유입량의 60% 이상 (§2.10.3.2)<br/>
           ▸ §2.10.3.3: 배출량 충족 시 유입량 일부 미달도 적합 인정 가능
         </div>
+        <div id="pi-rows"></div>
+        <button type="button" class="no-print" id="pi-add" style="margin-top:10px;padding:6px 12px;border:1px solid #86efac;border-radius:8px;background:#f0fdf4;color:#15803d;font-size:11.5px;font-weight:800;cursor:pointer;">＋ 유입구 추가</button>
+        <div id="pi-sum"></div>
       </div>
     </div>
   </div>
@@ -1781,22 +1797,33 @@ document.getElementById('zone-type').addEventListener('change', () => {
   const t = document.getElementById('zone-type').value;
   document.getElementById('corr-len-wrap').style.display =
     (t === 'corridor' || t === 'corr_outlet') ? 'block' : 'none';
+  smkBndOpt();
 });
+/* v6.1.6 (2026-11-24) P4 — 「벽 구획(거실과 통로 사이만 제연경계)」은 400 ㎡ 미만 거실 유형에서만 고를 수 있음(다른 유형에서 이미 골라져 있으면 계산 시 ✗ 안내) */
+function smkBndOpt() {
+  const o = document.querySelector('#has-boundary option[value="wall_corr"]');
+  if (o) o.disabled = document.getElementById('zone-type').value !== 'room_lt400';
+}
+smkBndOpt();
 
 document.getElementById('btn-calc').addEventListener('click', calcExhaust);
 
 /* v6.1.5 (2026-11-24) — 교차검증 2026-11-23 P5 · P13 · P14: 배출량은 그대로 두고 확인할 전제만 ⚠ 안내(화면 판정 칸 · A4 2쪽 「▣ 확인 사항」).
    통로배출방식 — NFTC 501 2.2.2 · NFPC 501 제5조② (50 ㎡ 미만 구획은 제연경계 구획 제외, 거실과 통로 사이는 예외 · 경유거실은 직접 배출)
    수직거리 2 m 초과 — NFTC 501 2.1.2.2 단서 「구조상 불가피한 경우」(NFPC 501 제4조②2에는 단서 없음) */
+/* v6.1.6 P4 — NFTC 501 2.3.1 · NFPC 501 제6조① 괄호 단서(lawmcp 2026-11-24 원문): 「400 ㎡ 미만으로 구획(제연경계에 따른 구획을 제외한다. 다만, 거실과 통로와의 구획은 그렇지 않다)」 */
+const SMK_2_3_1 = '거실의 바닥면적이 400 ㎡ 미만으로 구획(제연경계에 따른 구획을 제외한다. 다만, 거실과 통로와의 구획은 그렇지 않다)';
 function smkNotes(type, hasBnd, vd) {
   const n = [];
+  if (type === 'room_lt400' && hasBnd === 'wall_corr')
+    n.push('§2.3.1 괄호 단서 적용: 「' + SMK_2_3_1 + '」 — 거실과 통로 사이만 제연경계이므로 §2.3.1.1(1 ㎥/min·㎡, 최소 5,000 ㎥/h). 거실 안을 제연경계로 나눈 경우는 「제연경계로 구획」을 고를 것');
   if (type === 'corr_outlet') {
     n.push(hasBnd === 'boundary'
       ? '통로배출방식 전제(§2.2.2): 거실은 50 ㎡ 미만으로 구획하되 제연경계 구획은 제외(거실과 통로 사이만 제연경계 가능) — 거실 안을 제연경계로 나눈 경우는 대상 아님'
       : '통로배출방식 전제(§2.2.2): 통로에 인접한 거실이 50 ㎡ 미만으로 구획(제연경계 구획 제외 · 거실과 통로 사이는 예외)');
     n.push('그 거실이 다른 거실의 피난 경유거실이면 통로배출 불가 — 거실에서 직접 배출(§2.2.2 단서)');
   }
-  if ((hasBnd === 'boundary' || type === 'corr_outlet') && vd > 2)
+  if ((hasBnd === 'boundary' || hasBnd === 'wall_corr' || type === 'corr_outlet') && vd > 2)
     n.push('수직거리 ' + vd + ' m > 2 m — 구조상 불가피한 경우만 허용(NFTC §2.1.2.2 단서 · NFPC 제4조②2에는 단서 없음) · 사유를 설계도서에 적을 것');
   return n;
 }
@@ -1805,15 +1832,24 @@ function smkNotes(type, hasBnd, vd) {
    종전에는 계산 뒤 입력을 바꾸고 [배출량 계산]을 다시 누르지 않으면 A4에 옛 배출량이 경고 없이 실렸다(풍도 두께만 출력 시점 값). */
 function calcExhaust(scroll) {
   const type    = document.getElementById('zone-type').value;
-  const hasBnd  = document.getElementById('has-boundary').value;
+  const bndRaw  = document.getElementById('has-boundary').value;
   const vd      = parseFloat(document.getElementById('vert-dist').value) || 1.0;
   const area    = parseFloat(document.getElementById('floor-area').value) || 0;
   const corrLen = parseFloat(document.getElementById('corr-len').value) || 0;
 
+  /* v6.1.6 P4 — 「벽 구획(거실과 통로 사이만 제연경계)」: 400 ㎡ 미만 거실은 §2.3.1.1(엔진에는 'wall'로 넘김 · 엔진 불변),
+     다른 유형은 이 단서가 없으므로 제연경계 구획으로 계산하고 ✗ 안내 */
+  let hasBnd = bndRaw, refFix = '';
+  const wExtra = [];
+  if (bndRaw === 'wall_corr') {
+    if (type === 'room_lt400') { hasBnd = 'wall'; refFix = '§2.3.1.1 (벽 구획 · 거실과 통로 사이만 제연경계 — §2.3.1 괄호 단서)'; }
+    else { hasBnd = 'boundary'; wExtra.push('「벽 구획(거실과 통로 사이만 제연경계)」은 400 ㎡ 미만 거실(§2.3.1 괄호 단서) 전용 — 이 유형은 제연경계 구획으로 계산함'); }
+  }
   const E = SMKENG.exhaust(type, hasBnd, vd, area, corrLen);
-  const Q = E.Q, ref = E.ref, fml = E.fml, Qmin = E.Qmin, Ai = E.Ai;
-  G.warn = E.warn; G.basis = E.basis;
-  G.notes = smkNotes(type, hasBnd, vd);   /* v6.1.5 P5 · P13 */
+  const Q = E.Q, ref = refFix || E.ref, fml = E.fml, Qmin = E.Qmin, Ai = E.Ai;
+  G.warn = E.warn.concat(wExtra); G.basis = E.basis;
+  G.notes = smkNotes(type, bndRaw, vd);   /* v6.1.5 P5 · P13 · v6.1.6 P4 */
+  G.notes231 = (type === 'room_lt400' && bndRaw === 'wall_corr');
 
   // 전역 상태 저장
   G.exhaust = Q; G.exhaustMin = Qmin; G.inletCm2 = Ai;
@@ -1835,8 +1871,8 @@ function calcExhaust(scroll) {
   setText('r-q-min', Qmin.toFixed(1) + ' ㎥/min');
   setHTML('r-ai', Math.round(Ai).toLocaleString() + '<span class="rc-unit">㎠</span>');
   setText('r-ai-m2', (Ai / 10000).toFixed(4) + ' ㎡');
-  setHTML('r-judge', E.warn.length
-    ? E.warn.map(w => '<div style="margin-bottom:4px;"><span class="badge badge-ng">✗ ' + w + '</span></div>').join('')
+  setHTML('r-judge', G.warn.length
+    ? G.warn.map(w => '<div style="margin-bottom:4px;"><span class="badge badge-ng">✗ ' + w + '</span></div>').join('')
     : '<span class="badge badge-ok">✔ 산정 완료</span><div style="font-size:11px;color:#64748b;margin-top:4px;">구획 · 풍도 · 성능 판정은 ② ~ ⑤ 탭</div>');
   if (G.notes.length) document.getElementById('r-judge').insertAdjacentHTML('beforeend',
     G.notes.map(w => '<div style="margin-top:4px;"><span class="badge badge-warn" style="white-space:normal;text-align:left;">⚠ ' + w + '</span></div>').join(''));   /* v6.1.5 */
@@ -1891,6 +1927,7 @@ function checkBoundary() {
   setHTML('bv-result', v <= 2
     ? '<span class="badge badge-ok">✔ 수직거리 적합 (' + v + 'm ≤ 2m)</span>'
     : '<span class="badge badge-warn">⚠ 수직거리 초과 (' + v + 'm > 2m) — 구조상 불가피 여부 검토 필요(NFTC §2.1.2.2 단서 · NFPC에는 단서 없음) · 사유를 설계도서에 기재</span>');
+  document.getElementById('bv-reason-wrap').style.display = v > 2 ? 'block' : 'none';   /* v6.1.6 P13 */
 }
 
 function checkWalkLen() {
@@ -1988,6 +2025,122 @@ function calcPerfI() { calcPerf('pi-design','pi-meas','pi-pct','pi-limit','pi-ju
 
 bindLive('pe-design', calcPerfE); bindLive('pe-meas', calcPerfE);
 bindLive('pi-design', calcPerfI); bindLive('pi-meas', calcPerfI);
+
+/* v6.1.6 (2026-11-24) P7 — 성능확인 여러 줄: NFPC 501 제11조의2③ · NFTC 501 2.10.3(lawmcp 2026-11-24 원문)
+   ③1 · 2.10.3.1 배출구별 배출량 ≥ 배출구별 설계 배출량의 60 % · 제연구역별 배출구 배출량 합계 ≥ 설계배출량
+   ③2 · 2.10.3.2 유입구별 공기유입량 ≥ 유입구별 설계 유입량의 60 % · 제연구역별 합계 ≥ 설계유입량
+   ③3 · 2.10.3.3 구획이 설계조건과 같은 조건에서 배출량이 설계배출량 이상이면 공기유입량이 일부 미달되더라도 적합
+   — 1줄(기본)이면 종전 화면 그대로(합계 칸 없음). 2줄 이상이면 줄마다 판정 + 합계 판정. 합계 기준 = 줄별 설계값의 합(MANMIN 적용) */
+function perfRows(k) {
+  const v = id => document.getElementById(id).value;
+  const rows = [{ d: parseFloat(v(k + '-design')) || 1, m: parseFloat(v(k + '-meas')) || 0 }];
+  document.querySelectorAll('#' + k + '-rows .perf-row').forEach(r => {
+    rows.push({ d: parseFloat(r.querySelector('.pr-d').value) || 1, m: parseFloat(r.querySelector('.pr-m').value) || 0, el: r });
+  });
+  rows.forEach(r => { r.J = mmJudgeFmt(r.m / r.d * 100, 60, 1, false); });
+  const sd = rows.reduce((a, r) => a + r.d, 0), sm = rows.reduce((a, r) => a + r.m, 0);
+  return { rows: rows, sd: sd, sm: sm, each: rows.every(r => r.J.ok), tot: sm >= sd };
+}
+function perfState() {
+  const E = perfRows('pe'), I = perfRows('pi');
+  const exOK = E.each && E.tot;                       /* 2.10.3.3 전제: 배출량이 설계배출량 이상 */
+  I.special = I.each && !I.tot && exOK;               /* 개별 60 %는 충족 · 합계만 일부 미달 */
+  return { E: E, I: I, exOK: exOK };
+}
+function perfAddRow(k, d, m) {
+  const box = document.getElementById(k + '-rows');
+  const nm = k === 'pe' ? '배출구' : '유입구';
+  const r = document.createElement('div');
+  r.className = 'perf-row';
+  r.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-top:10px;padding-top:10px;border-top:1px dashed #cbd5e1;';
+  r.innerHTML = '<div class="pr-no" style="font-size:11px;font-weight:800;color:#1e3a5f;min-width:56px;padding-bottom:9px;"></div>'
+    + '<div style="flex:1 1 110px;min-width:0;"><label class="lbl">설계 (' + nm + '별)</label><div class="inp-wrap"><input class="inp pr-d" type="number" step="100" value="' + d + '"/><span class="inp-unit">㎥/h</span></div></div>'
+    + '<div style="flex:1 1 110px;min-width:0;"><label class="lbl">측정 (' + nm + '별)</label><div class="inp-wrap"><input class="inp pr-m" type="number" step="100" value="' + m + '"/><span class="inp-unit">㎥/h</span></div></div>'
+    + '<div class="pr-j" style="flex:1 1 140px;padding-bottom:6px;"></div>'
+    + '<button type="button" class="pr-del no-print" title="이 줄 삭제" style="padding:6px 10px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2;color:#b91c1c;font-weight:800;cursor:pointer;margin-bottom:4px;">✕</button>';
+  box.appendChild(r);
+  perfRender();
+}
+function perfRender() {
+  const S = perfState();
+  [['pe', S.E, '배출구', '§2.10.3.1 · NFPC 제11조의2③1'], ['pi', S.I, '유입구', '§2.10.3.2 · NFPC 제11조의2③2']].forEach(([k, P, nm, law]) => {
+    P.rows.forEach((r, i) => {
+      if (!r.el) return;
+      r.el.querySelector('.pr-no').textContent = nm + ' ' + (i + 1);
+      r.el.querySelector('.pr-j').innerHTML = r.J.ok
+        ? '<span class="badge badge-ok">✔ ' + r.J.s + '% ≥ 60%</span>'
+        : '<span class="badge badge-ng">✗ ' + r.J.s + '% &lt; 60%</span>';
+    });
+    const sum = document.getElementById(k + '-sum');
+    if (P.rows.length < 2) { sum.innerHTML = ''; return; }
+    const f = n => n.toLocaleString();
+    const nOk = P.rows.filter(r => r.J.ok).length;
+    let tj;
+    if (P.tot) tj = '<span class="badge badge-ok">✔ 합계 적합 (' + f(P.sm) + ' ≥ ' + f(P.sd) + ' ㎥/h)</span>';
+    else if (k === 'pi' && P.special) tj = '<span class="badge badge-warn" style="white-space:normal;text-align:left;">△ 합계 일부 미달 (' + f(P.sm) + ' &lt; ' + f(P.sd) + ' ㎥/h) — 배출량이 설계배출량 이상이므로 적합으로 봄(§2.10.3.3 · NFPC 제11조의2③3, 구획이 설계조건과 같은 조건일 때)</span>';
+    else tj = '<span class="badge badge-ng">✗ 합계 미달 (' + f(P.sm) + ' &lt; ' + f(P.sd) + ' ㎥/h)</span>';
+    let qref = '';
+    if (k === 'pe' && G.calculated) qref = '<div class="result-row"><span class="rl">참고 · ① 산정 배출량 Q</span><span>' + (P.sd >= G.exhaust
+      ? '<span class="badge badge-ok">✔ 설계 합계 ' + f(P.sd) + ' ≥ Q ' + f(G.exhaust) + ' ㎥/h</span>'
+      : '<span class="badge badge-warn">⚠ 설계 합계 ' + f(P.sd) + ' &lt; Q ' + f(G.exhaust) + ' ㎥/h — 설계값 확인</span>') + '</span></div>';
+    sum.innerHTML = '<div class="result-box" style="margin-top:12px;">'
+      + '<div class="result-row"><span class="rl">' + nm + ' 수</span><span class="rv">' + P.rows.length + ' 개</span></div>'
+      + '<div class="result-row"><span class="rl">' + nm + '별 60 % (' + law + ')</span><span>' + (P.each ? '<span class="badge badge-ok">✔ ' + nOk + ' / ' + P.rows.length + ' 적합</span>' : '<span class="badge badge-ng">✗ ' + nOk + ' / ' + P.rows.length + ' 적합</span>') + '</span></div>'
+      + '<div class="result-row"><span class="rl">설계 합계 / 측정 합계</span><span class="rv">' + f(P.sd) + ' / ' + f(P.sm) + ' ㎥/h</span></div>'
+      + '<div class="result-row"><span class="rl">제연구역 합계 판정</span><span>' + tj + '</span></div>' + qref
+      + '</div>';
+  });
+}
+['pe', 'pi'].forEach(k => {
+  document.getElementById(k + '-add').addEventListener('click', () => perfAddRow(k, document.getElementById(k + '-design').value, ''));
+  document.getElementById(k + '-rows').addEventListener('click', e => { const b = e.target.closest('.pr-del'); if (b) { b.closest('.perf-row').remove(); perfRender(); } });
+});
+document.getElementById('tab-check').addEventListener('input', perfRender);
+document.getElementById('tab-check').addEventListener('change', perfRender);
+
+/* v6.1.6 (2026-11-24) P13 — 체크한 탭의 검토 결과(입력 · 판정 · 근거) — A4 2쪽 「▣ 검토 결과」 (기본 해제 · 해제 시 A4 종전과 같음) */
+function smkEsc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function smkReview() {
+  const on = id => { const e = document.getElementById(id); return !!(e && e.checked); };
+  const n = id => parseFloat(document.getElementById(id).value) || 0;
+  const OK = t => '<span style="color:#15803d;font-weight:800;">✔ ' + t + '</span>';
+  const NG = t => '<span style="color:#b91c1c;font-weight:800;">✗ ' + t + '</span>';
+  const WN = t => '<span style="color:#92400e;font-weight:800;">⚠ ' + t + '</span>';
+  const R = [];
+  if (on('inc-zone')) {
+    const za = n('za-input'), zd = n('zd-input'), bw = n('bw-input'), bv = n('bv-input'), wl = n('wl-input');
+    const why = (document.getElementById('bv-reason').value || '').trim();
+    R.push(['② 제연구역 면적', za.toLocaleString() + ' ㎡', za <= 1000 ? OK('적합 (≤ 1,000 ㎡)') : NG('부적합 (> 1,000 ㎡)'), '§2.1.1.1 · NFPC 제4조①1']);
+    R.push(['② 직경 60 m 원', zd + ' m', zd <= 60 ? OK('적합 (≤ 60 m)') : NG('부적합 (> 60 m)'), '§2.1.1.4 · NFPC 제4조①4']);
+    R.push(['② 제연경계 폭', bw + ' m', bw >= 0.6 ? OK('적합 (≥ 0.6 m)') : NG('부적합 (< 0.6 m)'), '§2.1.2.2 · NFPC 제4조②2']);
+    R.push(['② 수직거리', bv + ' m', bv <= 2 ? OK('적합 (≤ 2 m)')
+      : WN('2 m 초과 — 구조상 불가피한 경우만') + '<br/>' + (why ? '사유: ' + smkEsc(why) : WN('사유 미기재')),
+      '§2.1.2.2 단서(NFTC) · NFPC 제4조②2에는 단서 없음']);
+    R.push(['② 통로 보행중심선', wl + ' m', wl <= 60 ? OK('적합 (≤ 60 m)') : NG('부적합 (> 60 m)'), '§2.1.1.3 · NFPC 제4조①3']);
+  }
+  if (on('inc-duct')) {
+    const q = n('ws-q'), a = parseFloat(document.getElementById('ws-a').value) || 1, t = document.getElementById('ws-type').value;
+    const lim = t === 'suction' ? 15 : 20, J = mmJudgeFmt(q / 3600 / a, lim, 2, true);
+    const pos = t === 'suction' ? '배출기 흡입측' : t === 'exhaust' ? '배출기 배출측' : '유입풍도';
+    R.push(['③ 풍속 (' + pos + ')', q.toLocaleString() + ' ㎥/h ÷ 3,600 ÷ ' + a + ' ㎡ = ' + J.s + ' ㎧', J.ok ? OK('적합 (≤ ' + lim + ' ㎧)') : NG('부적합 (> ' + lim + ' ㎧)'),
+      t === 'inlet' ? '§2.7.1 · NFPC 제10조①' : '§2.6.2.2 · NFPC 제9조②2']);
+  }
+  if (on('inc-power')) {
+    const mh = n('mh-input');
+    R.push(['④ 수동기동장치 높이', mh + ' m', (mh >= 0.8 && mh <= 1.5) ? OK('적합 (0.8 ~ 1.5 m)') : NG('부적합 (0.8 ~ 1.5 m 밖)'), '§2.9.3 · NFPC 제11조③']);
+  }
+  if (on('inc-check')) {
+    const S = perfState(), f = x => x.toLocaleString();
+    [['pe', S.E, '배출구', '§2.10.3.1 · NFPC 제11조의2③1'], ['pi', S.I, '유입구', '§2.10.3.2 · NFPC 제11조의2③2']].forEach(([k, P, nm, law]) => {
+      P.rows.forEach((r, i) => R.push(['⑤ ' + nm + (P.rows.length > 1 ? ' ' + (i + 1) : '별'), '설계 ' + f(r.d) + ' / 측정 ' + f(r.m) + ' ㎥/h (' + r.J.s + ' %)',
+        r.J.ok ? OK('적합 (≥ 60 %)') : NG('부적합 (< 60 %)'), law]));
+      if (P.rows.length > 1) R.push(['⑤ ' + nm + ' 합계', '설계 ' + f(P.sd) + ' / 측정 ' + f(P.sm) + ' ㎥/h',
+        P.tot ? OK('적합 (합계 ≥ 설계)') : (k === 'pi' && P.special) ? WN('일부 미달 — 배출량 충족으로 적합으로 봄') : NG('미달 (합계 < 설계)'),
+        (k === 'pi' && P.special) ? '§2.10.3.3 · NFPC 제11조의2③3' : law]);
+    });
+  }
+  return R;
+}
 
 /* ════════════════════════════════════════
    7. 계산서 출력 탭
@@ -2152,7 +2305,8 @@ ${SecHd('gray','Ⅳ-1. 비상전원 및 기동장치 기준 (NFTC 501 §2.9)')}
   </tbody>
 </table>
 
-${(G.calculated&&G.notes&&G.notes.length)?SecHd('navy','▣ 확인 사항 (배출량 산정 전제 — NFTC 501 §2.1.2.2 · §2.2.2)')+'<div style="border:'+B+';border-top:none;padding:7px 12px;font-size:10px;color:#92400e;line-height:1.8;">'+G.notes.map(w=>'⚠ '+w).join('<br/>')+'</div>':''}
+${(()=>{const RV=smkReview();if(!RV.length)return '';return '<div style="break-inside:avoid;page-break-inside:avoid;">'+SecHd('navy','▣ 검토 결과 (계산서에 포함으로 체크한 탭 — 입력 · 판정 · 근거)')+'<table style="width:100%;border-collapse:collapse;"><thead><tr>'+TH('구분','118px')+TH('입력 · 계산')+TH('판정','150px')+TH('근거','150px')+'</tr></thead><tbody>'+RV.map((r,i)=>'<tr'+(i%2===1?' style="background:#f8fafc;"':'')+'><td style="border:'+B+';padding:5px 9px;font-size:10px;font-weight:700;color:#1e3a5f;">'+r[0]+'</td><td style="border:'+B+';padding:5px 9px;font-size:10px;color:#111;">'+r[1]+'</td><td style="border:'+B+';padding:5px 9px;font-size:10px;">'+r[2]+'</td><td style="border:'+B+';padding:5px 9px;font-size:9.5px;color:#374151;">'+r[3]+'</td></tr>').join('')+'</tbody></table></div>';})()}
+${(G.calculated&&G.notes&&G.notes.length)?SecHd('navy','▣ 확인 사항 (배출량 산정 전제 — NFTC 501 §2.1.2.2 · §2.2.2'+(G.notes231?' · §2.3.1':'')+')')+'<div style="border:'+B+';border-top:none;padding:7px 12px;font-size:10px;color:#92400e;line-height:1.8;">'+G.notes.map(w=>'⚠ '+w).join('<br/>')+'</div>':''}
 ${SecHd('navy','▣ 적용 법령 및 기준')}
 <div style="border:${B};border-top:none;padding:9px 12px;font-size:10px;color:#374151;line-height:1.95;">
   ① 화재안전기술기준 NFTC 501 (제연설비의 화재안전기술기준) — 국립소방연구원공고 제2024-52호, 2024.10.01 시행<br/>
@@ -3043,8 +3197,8 @@ input[data-mm-warn]{outline:2px solid #d32f2f!important;outline-offset:1px;backg
    all:true(숨은 칸도 판정) · report에 인쇄 구역 #rpt-print-doc 추가 · 보행중심선은 통로 · 통로배출 유형일 때만 */
 /* v6.1.5 (2026-11-24) — 교차검증 2026-11-23 P11: 바닥면적 0 경고(종전에는 조용히 5,000 ㎥/h) */
 window.MM_WARN_CFG={all:true,report:['#report-zone','#rpt-print-doc'],rules:[
- {sel:'#vert-dist',empty:'1.0 m',zero:'1.0 m',neg:true,cond:function(){return document.getElementById('has-boundary').value==='boundary'||document.getElementById('zone-type').value==='corr_outlet';}},
- {sel:'#floor-area',empty:'0 ㎡',neg:true,extra:function(el,n){if(n!==0)return null;return (document.getElementById('zone-type').value==='room_lt400'&&document.getElementById('has-boundary').value==='wall')?'0 ㎡ — 최저 배출량 5,000 ㎥/h만 적용됨(바닥면적 확인)':'0 ㎡ — 바닥면적 확인';}},{sel:'#corr-len',empty:'0 m',neg:true,cond:function(){var t=document.getElementById('zone-type').value;return t==='corridor'||t==='corr_outlet';}},{sel:'#ws-a',empty:'1 ㎡',zero:'1 ㎡',neg:true},{sel:'#pe-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#pi-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#za-input',empty:'0',neg:true},{sel:'#zd-input',empty:'0',neg:true},{sel:'#bw-input',empty:'0',neg:true},{sel:'#bv-input',empty:'0',neg:true},{sel:'#wl-input',empty:'0',neg:true},{sel:'#ds-input',empty:'0',neg:true},{sel:'#dl-input',empty:'0',neg:true},{sel:'#ws-q',empty:'0',neg:true},{sel:'#mh-input',empty:'0',neg:true},{sel:'#pe-meas',empty:'0',neg:true},{sel:'#pi-meas',empty:'0',neg:true}]};
+ {sel:'#vert-dist',empty:'1.0 m',zero:'1.0 m',neg:true,cond:function(){var b=document.getElementById('has-boundary').value;return b==='boundary'||b==='wall_corr'||document.getElementById('zone-type').value==='corr_outlet';}},
+ {sel:'#floor-area',empty:'0 ㎡',neg:true,extra:function(el,n){if(n!==0)return null;return (document.getElementById('zone-type').value==='room_lt400'&&/^wall/.test(document.getElementById('has-boundary').value))?'0 ㎡ — 최저 배출량 5,000 ㎥/h만 적용됨(바닥면적 확인)':'0 ㎡ — 바닥면적 확인';}},{sel:'#corr-len',empty:'0 m',neg:true,cond:function(){var t=document.getElementById('zone-type').value;return t==='corridor'||t==='corr_outlet';}},{sel:'#ws-a',empty:'1 ㎡',zero:'1 ㎡',neg:true},{sel:'#pe-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#pi-design',empty:'1 ㎥/h',zero:'1 ㎥/h',neg:true},{sel:'#za-input',empty:'0',neg:true},{sel:'#zd-input',empty:'0',neg:true},{sel:'#bw-input',empty:'0',neg:true},{sel:'#bv-input',empty:'0',neg:true},{sel:'#wl-input',empty:'0',neg:true},{sel:'#ds-input',empty:'0',neg:true},{sel:'#dl-input',empty:'0',neg:true},{sel:'#ws-q',empty:'0',neg:true},{sel:'#mh-input',empty:'0',neg:true},{sel:'#pe-meas',empty:'0',neg:true},{sel:'#pi-meas',empty:'0',neg:true}]};
 </script>
 <script id="mm-warn-js">
 (function(){
