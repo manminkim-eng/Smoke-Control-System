@@ -4,16 +4,18 @@
    근거(LawMCP 원문 대조 2026-10-16): 제연설비의 화재안전기술기준(NFTC 501) 국립소방연구원공고 제2024-52호(2024. 10. 1.) ·
    제연설비의 화재안전성능기준(NFPC 501) 소방청고시 제2024-48호(2024. 10. 1.) — 표 2.3.1.2 · 2.3.2.1 · 2.3.2.2 · 2.6.2.1은 원문 PDF 표 그림 판독
    예제 값은 capture_smk.js 가 앱 엔진(SMKENG)에서 읽은 <raw>/_example.json"""
-import os, sys, json
+import os, re, sys, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manual_engine import fig, T, render, B, MARKS
 
-VER, REL, DATE = 'Ver-5.1', 'v6.1.6', '2026-10-16'
-APPVER = 'Ver-6.1'   # 화면 표기(v6.1.0부터) — 매뉴얼 판 · PDF 파일 이름은 Ver-5.1 유지
-UPD = '2026-11-24'   # v6.1.4 — 교차검증 2026-11-23 필수 4건(A4 입력 확인 줄 · 출력 시 재계산 · 반올림 전 판정 · 설치제외 문구)
+VER, DATE = 'Ver-6.1', '2026-10-16'
+REL = 'v' + '.'.join(map(str, max(tuple(map(int, v.split('.'))) for v in re.findall(r'v(6\.\d+\.\d+)', open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'sw.js'), encoding='utf-8').read()))))   # 도구 판 = sw.js 캐시 판(2026-11-25 Ver-6.1 표기 통일 — 하드코딩 폐지)
+APPVER = 'Ver-6.1'   # 화면 표기(v6.1.0부터) — 매뉴얼 판 · PDF 이름도 2026-11-25부터 Ver-6.1(옛 Ver-5.1)
+UPD0 = '2026-11-24'   # v6.1.4 — 교차검증 2026-11-23 필수 4건(A4 입력 확인 줄 · 출력 시 재계산 · 반올림 전 판정 · 설치제외 문구)
                      # v6.1.5 — 같은 교차검증 권장 · 권고(통로배출 전제 · 2 m 초과 사유 · 면적 0 경고 · 공동예상제연구역 범위 밖 · 원형 풍도 직경 · 경과조치 · NFPC 가목/NFTC 나목)
                      # v6.1.6 — 판단 필요 3건 추천안(벽 구획(거실과 통로 사이만 제연경계) · ⑤ 여러 줄 · ②~⑤ 「계산서(A4)에 포함」 · 2 m 초과 사유 칸)
-PDF = '제연설비설계계산서_사용자매뉴얼_Ver-5.1.pdf'
+UPD = '2026-11-25'   # Ver-6.1 표기 통일(판 이름 · PDF 이름 · 대상 프로그램 판 · 판 표기가 찍힌 그림), 본문 · 계산 · 예제 변경 없음
+PDF = '제연설비설계계산서_사용자매뉴얼_Ver-6.1.pdf'
 APP_URL = 'https://manminkim-eng.github.io/Smoke-Control-System/'
 APP = '제연설비 설계 계산서'
 EX = json.load(open(os.environ.get('MM_EX', os.path.join(os.path.dirname(os.path.abspath(__file__)), '_example.json')), encoding='utf-8'))
@@ -76,7 +78,7 @@ S_.append(f"""{EXTRA_CSS}<section class="ch" id="ch0"><h2><span class="n">00</sp
 {K(T([
  ['대상 프로그램', f'{APP} <b>MANMIN {APPVER}</b>({REL})'],
  ['접속 주소', f'<a href="{APP_URL}" target="_blank" rel="noopener">manminkim-eng.github.io/Smoke-Control-System</a>'],
- ['매뉴얼 판', f'<b>{VER}</b> (초판 {DATE}) · 개정 {UPD} — 화면 {APPVER}({REL}) 대응 · 작성 김만민 건축사(㈜대성건축사사무소)'],
+ ['매뉴얼 판', f'<b>{VER}</b> (도구 판 6.1.x와 맞춘 판 번호, 옛 Ver-5.1 · 초판 {DATE}) · 개정 {UPD} — 화면 {APPVER}({REL}) 대응 · 작성 김만민 건축사(㈜대성건축사사무소)'],
  ['내려받기', f'<a href="{PDF}" download>PDF(A4)</a> · <a href="../index.html">계산서 열기</a>'],
  ['근거', LAW + ' — LawMCP(국가법령정보센터) 원문 대조(2026-10-16) · 표 2.3.1.2 · 2.3.2.1 · 2.3.2.2 · 2.6.2.1은 공고 원문 PDF의 표 그림으로 확인'],
  ['범위', '거실 제연(NFTC 501) — 특별피난계단의 계단실 및 부속실 제연(NFTC 501A, 차압 · 급기)은 이 도구 범위 밖입니다'],
@@ -284,7 +286,8 @@ S_.append(f"""<section class="ch" id="ch5"><h2><span class="n">05</span>실무 �
 S_.append(f"""<section class="ch" id="ch6"><h2><span class="n">부록</span></h2>
 <h3 id="a1">A1. 버전 변경 내역</h3>
 {K(T([
- [f'Ver-6.1 · v6.1.4 ~ 6.1.6 ({UPD})', '6.1.6: 벽 구획(거실-통로) · ⑤ 여러 줄 · A4 검토 결과 / 6.1.5: ⚠ 전제 안내 · 「▣ 확인 사항」 · 면적 0 경고 · 원형 풍도 직경 · 경과조치 / 6.1.4: 입력 확인 줄 · 출력 시 재계산 · 실제값 판정 / 6.1.0 ~ 6.1.3: SRI 등'],
+ [f'Ver-6.1 · {REL} ({UPD})', '매뉴얼 판 표기 통일 — Ver-5.1 → Ver-6.1(도구 판 6.1.x와 맞춤) · PDF 이름 「…_Ver-6.1.pdf」 · 대상 프로그램 판 · 작성일 갱신 — 본문 · 계산 · 예제 변경 없음'],
+ [f'Ver-6.1 · v6.1.4 ~ 6.1.6 ({UPD0})', '6.1.6: 벽 구획(거실-통로) · ⑤ 여러 줄 · A4 검토 결과 / 6.1.5: ⚠ 전제 안내 · 「▣ 확인 사항」 · 면적 0 경고 · 원형 풍도 직경 · 경과조치 / 6.1.4: 입력 확인 줄 · 출력 시 재계산 · 실제값 판정 / 6.1.0 ~ 6.1.3: SRI 등'],
  ['Ver-5.1 · v5.1.9 (2026-11-09)', '「🏢 건물개요」 저장 · 불러오기 — 공사명 · 설계자을(를) 다른 MANMIN 도구와 공유, 파일 내보내기 · 가져오기(공통 원본 MM-PROJECT v1.2, 계산 변경 없음)'],
  [f'Ver-5.1 · v5.1.1 ({DATE})', '「📘 매뉴얼」 버튼을 머리에서 탭 막대 오른쪽 끝으로 옮김 · 절대주소 · 오프라인 안내 · sw jeyeon-v5.1.1'],
  [f'Ver-5.1 · v5.1.0 ({DATE})', 'NFTC 501 원문 표 대조 정정(<a href="#s4-10">4-10</a>) · 경고 · 유입구 올림 · NFPC 판 번호 · 「📘 매뉴얼」 · sw jeyeon-v5.1.0'],
